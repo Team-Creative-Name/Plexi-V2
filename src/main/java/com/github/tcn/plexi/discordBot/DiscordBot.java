@@ -3,6 +3,7 @@ package com.github.tcn.plexi.discordBot;
 import com.github.tcn.plexi.Settings;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +56,8 @@ public class DiscordBot {
         }
         //set global botInstance obj to the newly created one
         this.botInstance = botInstance;
+        botInstance.getPresence().setActivity(Activity.watching("some movies"));
+        botInstance.addEventListener(new CommandHandler());
 
     }
 
