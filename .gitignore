@@ -101,3 +101,7 @@ fabric.properties
 #Mac Specific Items
 .DS_Store
 ._*
+
+.gradle/
+
+.idea/

@@ -1,0 +1,30 @@
+<configuration>
+    <timestamp key="fullTimeStamp" datePattern="yyyy-MM-dd'_'HH-mm-ss"/>
+
+    <property name="LOG_PATH" value="${LOG_PATH}"/>
+
+    <!-- Settings for file logger -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_PATH}/logs/Plexi-Log-${fullTimeStamp}.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>[%d{HH:mm:ss.SS}] [%level]: [%logger{35}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Settings for System.out logger | info and above info only -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>[%d{HH:mm:ss.SS}] [%level]: [%logger{35}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Log information to both the console and file appender -->
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>

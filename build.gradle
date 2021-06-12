@@ -1,0 +1,65 @@
+
+plugins {
+    id 'java'
+    id 'edu.sc.seis.launch4j' version '2.4.6'
+}
+
+group 'com.github.tcn.plexi'
+version 'v1.1'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
+    jcenter()
+}
+def mainClassName
+mainClassName = "com.github.tcn.plexi.Main"
+dependencies {
+    compile group: 'junit', name: 'junit', version: '4.12'
+    compile 'com.google.code.gson:gson:2.8.6'
+    compile 'net.dv8tion:JDA:4.2.1_276'
+    compile 'com.squareup.okhttp3:okhttp:4.2.2'
+    compile 'com.typesafe:config:1.4.0'
+    compile 'com.vdurmont:emoji-java:5.1.1'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    // Trove Collections
+    implementation group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    from {
+        configurations
+                .compile
+                .findAll { !it.name.endsWith('pom') }
+                .collect {
+            it.isDirectory()? it: zipTree(it)
+        }
+    }
+}
+
+javadoc {
+    configure( options ) {
+        tags(
+                'todo:X"',
+                'apiNote:a:"API Note:"',
+                'implSpec:a:"Implementation Requirements:"',
+                'implNote:a:"Implementation Note:"'
+        )
+    }
+}
+
+launch4j {
+    mainClassName = 'com.github.tcn.plexi.Main'
+
+    icon = "${projectDir}/src/main/resources/assets/Plexi.ico"
+}
+
+

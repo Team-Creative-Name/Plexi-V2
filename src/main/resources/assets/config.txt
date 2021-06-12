@@ -1,0 +1,38 @@
+﻿/////////////////////////////////////////////////////////
+//               /$$                     /$$           //
+//              | $$                    |__/           //
+//      /$$$$$$ | $$  /$$$$$$  /$$   /$$ /$$           //
+//     /$$__  $$| $$ /$$__  $$|  $$ /$$/| $$           //
+//    | $$  \ $$| $$| $$$$$$$$ \  $$$$/ | $$           //
+//    | $$  | $$| $$| $$_____/  >$$  $$ | $$           //
+//    | $$$$$$$/| $$|  $$$$$$$ /$$/\  $$| $$           //
+//    | $$____/ |__/ \_______/|__/  \__/|__/           //
+//    | $$                                             //
+//    | $$                  The Configuration File     //
+//    |__/                                             //
+/////////////////////////////////////////////////////////
+// Any line starting with // is ignored                //
+// Open in a decent text editor for best results       //
+// All values MUST have a value or plexi will not work //
+/////////////////////////////////////////////////////////
+
+
+// Bot (not user) token
+token = "BOT_TOKEN_HERE"
+
+// Owner ID
+ownerID = "0"
+
+// Bot prefix
+prefix = "."
+
+//Ombi URL
+ombiURL = "URL_HERE"
+
+//Ombi Key
+ombiKey = "KEY_HERE"
+
+//Allow users other than the bot owner to view media requests (default is true)
+usersViewRequests = "true"
+
+//end of config
