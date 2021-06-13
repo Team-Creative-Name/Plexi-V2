@@ -20,7 +20,7 @@ repositories {
 def mainClassName
 mainClassName = "com.github.tcn.plexi.Main"
 dependencies {
-    compile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'junit', name: 'junit', version: '4.13.2'
     compile 'com.google.code.gson:gson:2.8.7'
     compile 'net.dv8tion:JDA:4.3.0_277'
     compile 'com.squareup.okhttp3:okhttp:4.9.1'
