@@ -1,7 +1,7 @@
 
 plugins {
     id 'java'
-    id 'edu.sc.seis.launch4j' version '2.4.6'
+    id 'edu.sc.seis.launch4j' version '2.5.0'
 }
 
 group 'com.github.tcn.plexi'
