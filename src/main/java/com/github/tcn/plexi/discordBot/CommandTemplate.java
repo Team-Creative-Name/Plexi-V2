@@ -11,6 +11,9 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.requests.restaction.WebhookMessageUpdateAction;
+import net.dv8tion.jda.internal.requests.restaction.operator.FlatMapRestAction;
 
 import java.util.function.Consumer;
 
@@ -35,10 +38,13 @@ public abstract class CommandTemplate {
         DiscordBot.getInstance().getJDAInstance().upsertCommand(commandName, help).queue();
     }
 
-    //reply methods
+    protected void registerDefaultSlashCommand(){
+        DiscordBot.getInstance().getJDAInstance().upsertCommand(getCommandName(), getHelp()).queue();
+    }
 
 
 
+//text based command responses
     protected void reply(GuildMessageReceivedEvent event, String message){
         reply(event, message, null);
     }
@@ -65,13 +71,29 @@ public abstract class CommandTemplate {
 
 
 
-    protected void reply(SlashCommandEvent event, String message){
-
+//slash command responses
+    protected void reply(SlashCommandEvent event, String message, boolean ephemeral){
+        event.reply(message).setEphemeral(ephemeral).queue();
     }
 
-    protected void reply(SlashCommandEvent event, Message message, Consumer<Message> successConsumer){
-        event.reply(message).queue();
+    protected void reply(SlashCommandEvent event, String message, boolean ephemeral, FlatMapRestAction action){
+        event.reply(message).setEphemeral(ephemeral).flatMap(v->action).queue();
     }
+
+    protected void reply(SlashCommandEvent event, Message message,boolean ephemeral, FlatMapRestAction action) {
+        event.reply(message).setEphemeral(ephemeral).flatMap(v -> action).queue();
+    }
+
+    protected void reply(SlashCommandEvent event, Message message, FlatMapRestAction action){
+        event.reply(message).setEphemeral(false).flatMap(v -> action).queue();
+    }
+    protected void reply(SlashCommandEvent event, String message, WebhookMessageUpdateAction<Message> editOriginalFormat) {
+        event.reply(message).setEphemeral(false).flatMap(v -> editOriginalFormat).queue();
+    }
+    protected void reply(SlashCommandEvent event, MessageEmbed embed, boolean ephemeral){
+        event.reply(" ").addEmbeds(embed).setEphemeral(ephemeral).queue();
+    }
+
 
 
 

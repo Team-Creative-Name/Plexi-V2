@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 public class DiscordBot {
     private static DiscordBot botObj = null;
+    private CommandHandler handler = null;
     private JDA botInstance = null;
 
     //we lock the constructor so the bot cant be created multiple times
@@ -28,6 +29,10 @@ public class DiscordBot {
             return null;
         }
         return botInstance;
+    }
+
+    public CommandHandler getCommandHandler(){
+        return handler;
     }
 
     public boolean isRunning() {
@@ -57,7 +62,8 @@ public class DiscordBot {
         //set global botInstance obj to the newly created one
         this.botInstance = botInstance;
         botInstance.getPresence().setActivity(Activity.watching("some movies"));
-        botInstance.addEventListener(new CommandHandler());
+        this.handler = new CommandHandler();
+        botInstance.addEventListener(handler);
 
     }
 

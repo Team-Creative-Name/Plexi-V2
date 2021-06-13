@@ -1,6 +1,7 @@
 package com.github.tcn.plexi.discordBot;
 
 import com.github.tcn.plexi.Settings;
+import com.github.tcn.plexi.discordBot.commands.HelpCommand;
 import com.github.tcn.plexi.discordBot.commands.PingCommand;
 import com.github.tcn.plexi.utils.Misc;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
@@ -9,6 +10,8 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -24,6 +27,9 @@ public class CommandHandler extends ListenerAdapter {
     public CommandHandler(){
         //register commands here
         registerCommand(new PingCommand());
+        registerCommand(new HelpCommand());
+
+        LoggerFactory.getLogger("Plexi: Commands").info("loaded " + commandSet.size() + " commands!");
     }
 
     @Override
@@ -41,13 +47,13 @@ public class CommandHandler extends ListenerAdapter {
             for(CommandTemplate command : commandSet){
                 //check the name of the command against the one provided
                 if(rawMessage.toLowerCase().startsWith(prefix.toLowerCase() + command.getCommandName().toLowerCase() + ' ') || rawMessage.equalsIgnoreCase(prefix + command.getCommandName())){
-                    LoggerFactory.getLogger("Plexi: Commands").info(event.getAuthor() + " has used the " + command.getCommandName() + "chat command!");
+                    LoggerFactory.getLogger("Plexi: Commands").info(event.getAuthor().getName() + " has used the " + command.getCommandName() + " chat command!");
                     executeChatCommand(command, command.getCommandName(), prefix, rawMessage, event );
                 }else{
                     //check to see if this matches any of the command aliases instead
                     for(String commandAlias : command.getAliases()){
                         if(rawMessage.toLowerCase().startsWith(prefix.toLowerCase() + commandAlias.toLowerCase() + ' ') || rawMessage.equalsIgnoreCase(prefix + commandAlias)){
-                            LoggerFactory.getLogger("Plexi: Commands").info(event.getAuthor() + " has used the " + command.getCommandName() + "chat command!");
+                            LoggerFactory.getLogger("Plexi: Commands").info(event.getAuthor().getName() + " has used the " + command.getCommandName() + " chat command!");
                             executeChatCommand(command, commandAlias, prefix, rawMessage, event);
 
                         }
@@ -63,7 +69,7 @@ public class CommandHandler extends ListenerAdapter {
         //all we need to do is find the right command
         for(CommandTemplate command : commandSet){
             if(event.getName().equalsIgnoreCase(command.getCommandName())){
-                LoggerFactory.getLogger("Plexi: Commands").info(event.getUser().getName() + "has used the " + command.getCommandName() + " slash command!");
+                LoggerFactory.getLogger("Plexi: Commands").info(event.getUser().getName() + " has used the " + command.getCommandName() + " slash command!");
                 executeSlashCommand(command, event);
             }else{
                 //we should also check to see if the commands are a sub slash command
@@ -113,6 +119,10 @@ public class CommandHandler extends ListenerAdapter {
             toStrip = toStrip.substring(1);
         }
         return toStrip;
+    }
+
+    public Set<CommandTemplate> getCommandSet(){
+        return Collections.unmodifiableSet(new HashSet<>(commandSet));
     }
 
 

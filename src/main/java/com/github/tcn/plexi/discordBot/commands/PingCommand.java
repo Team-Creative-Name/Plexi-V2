@@ -7,13 +7,26 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.RateLimitedException;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.requests.restaction.WebhookMessageUpdateAction;
+import net.dv8tion.jda.api.utils.AttachmentOption;
+import net.dv8tion.jda.internal.requests.restaction.operator.FlatMapRestAction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.InputStream;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 
 public class PingCommand extends CommandTemplate {
 
     public PingCommand(){
-        registerSlashCommand("ping", "gets Plexi's ping time to the discord gateway");
+        registerDefaultSlashCommand();
     }
 
     @Override
@@ -24,7 +37,9 @@ public class PingCommand extends CommandTemplate {
 
     @Override
     public void executeSlashCommand(SlashCommandEvent event) {
+        long time = System.currentTimeMillis();
 
+        reply(event, "test",event.getHook().editOriginalFormat("Pong: %d ms", System.currentTimeMillis() - time));
     }
 
     @Override
