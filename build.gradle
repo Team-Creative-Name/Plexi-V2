@@ -1,7 +1,7 @@
 
 plugins {
     id 'java'
-    id 'edu.sc.seis.launch4j' version '2.4.6'
+    id 'edu.sc.seis.launch4j' version '2.5.0'
 }
 
 group 'com.github.tcn.plexi'
@@ -20,11 +20,11 @@ repositories {
 def mainClassName
 mainClassName = "com.github.tcn.plexi.Main"
 dependencies {
-    compile group: 'junit', name: 'junit', version: '4.12'
-    compile 'com.google.code.gson:gson:2.8.6'
+    compile group: 'junit', name: 'junit', version: '4.13.2'
+    compile 'com.google.code.gson:gson:2.8.7'
     compile 'net.dv8tion:JDA:4.3.0_277'
-    compile 'com.squareup.okhttp3:okhttp:4.2.2'
-    compile 'com.typesafe:config:1.4.0'
+    compile 'com.squareup.okhttp3:okhttp:4.9.1'
+    compile 'com.typesafe:config:1.4.1'
     compile 'com.vdurmont:emoji-java:5.1.1'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     // Trove Collections
