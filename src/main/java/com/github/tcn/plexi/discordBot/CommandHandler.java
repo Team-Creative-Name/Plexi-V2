@@ -3,15 +3,20 @@ package com.github.tcn.plexi.discordBot;
 import com.github.tcn.plexi.Settings;
 import com.github.tcn.plexi.discordBot.commands.HelpCommand;
 import com.github.tcn.plexi.discordBot.commands.PingCommand;
+import com.github.tcn.plexi.discordBot.commands.SearchCommand;
+import com.github.tcn.plexi.discordBot.commands.SlowCommand;
 import com.github.tcn.plexi.utils.Misc;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -21,20 +26,36 @@ public class CommandHandler extends ListenerAdapter {
 
     private final Set<CommandTemplate> commandSet = ConcurrentHashMap.newKeySet();
     private final ExecutorService commandPool = Executors.newCachedThreadPool(Misc.newThreadFactory("Command-Runner", false));
-
+    private final ButtonManager buttonManager = new ButtonManager();
 
 
     public CommandHandler(){
         //register commands here
         registerCommand(new PingCommand());
         registerCommand(new HelpCommand());
+        registerCommand(new SearchCommand(buttonManager));
+        registerCommand(new SlowCommand());
 
         LoggerFactory.getLogger("Plexi: Commands").info("loaded " + commandSet.size() + " commands!");
     }
 
+
     @Override
     public void onButtonClick(ButtonClickEvent event){
         //TODO: Implement a button handler or something
+
+        //the trash button should ALWAYS remove the buttons. Handle that and escape method if found
+        if(event.getButton().getId().equals("endButton")){
+            event.deferEdit().setActionRows().queue();
+            return;
+        }
+
+
+        LoggerFactory.getLogger("Plexi: Commands").info("button: " + event.getButton().getLabel() + " was pushed!");
+        //event.reply("button: " + event.getButton().getLabel() + " was pushed!").queue();
+
+        buttonManager.onEvent(event);
+
     }
 
     @Override

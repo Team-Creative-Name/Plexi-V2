@@ -3,6 +3,7 @@ package com.github.tcn.plexi.discordBot;
 import com.github.tcn.plexi.utils.FixedSizeCache;
 import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageUpdateAction;
 import net.dv8tion.jda.internal.requests.restaction.operator.FlatMapRestAction;
@@ -34,12 +36,16 @@ public abstract class CommandTemplate {
         return new String[0];
     }
 
+
+    protected void registerSlashCommand(){
+        DiscordBot.getInstance().getJDAInstance().upsertCommand(getCommandName(), getHelp()).queue();
+    }
     protected void registerSlashCommand(String commandName, String help){
         DiscordBot.getInstance().getJDAInstance().upsertCommand(commandName, help).queue();
     }
 
-    protected void registerDefaultSlashCommand(){
-        DiscordBot.getInstance().getJDAInstance().upsertCommand(getCommandName(), getHelp()).queue();
+    protected void registerSlashCommand(CommandData command){
+        DiscordBot.getInstance().getJDAInstance().upsertCommand(command).queue();
     }
 
 
@@ -76,6 +82,7 @@ public abstract class CommandTemplate {
         event.reply(message).setEphemeral(ephemeral).queue();
     }
 
+    /*
     protected void reply(SlashCommandEvent event, String message, boolean ephemeral, FlatMapRestAction action){
         event.reply(message).setEphemeral(ephemeral).flatMap(v->action).queue();
     }
@@ -87,15 +94,24 @@ public abstract class CommandTemplate {
     protected void reply(SlashCommandEvent event, Message message, FlatMapRestAction action){
         event.reply(message).setEphemeral(false).flatMap(v -> action).queue();
     }
+     */
+
+
+
     protected void reply(SlashCommandEvent event, String message, WebhookMessageUpdateAction<Message> editOriginalFormat) {
         event.reply(message).setEphemeral(false).flatMap(v -> editOriginalFormat).queue();
     }
+
+
+
     protected void reply(SlashCommandEvent event, MessageEmbed embed, boolean ephemeral){
         event.reply(" ").addEmbeds(embed).setEphemeral(ephemeral).queue();
     }
 
 
-
+    protected void reply(SlashCommandEvent event, MessageEmbed embed) {
+        event.reply(" ").addEmbeds(embed).queue();
+    }
 
 
     protected Consumer<Message> linkReply(GuildMessageReceivedEvent event, Consumer<Message> successConsumer) {

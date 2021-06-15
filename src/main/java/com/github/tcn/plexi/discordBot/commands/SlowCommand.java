@@ -1,42 +1,44 @@
 package com.github.tcn.plexi.discordBot.commands;
 
 import com.github.tcn.plexi.discordBot.CommandTemplate;
-import com.github.tcn.plexi.discordBot.EmbedManager;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 
-public class HelpCommand extends CommandTemplate {
+//A temporary command used to demo the deferred reply event
+public class SlowCommand extends CommandTemplate {
 
-    public HelpCommand(){
+    public SlowCommand(){
         registerSlashCommand();
     }
 
     @Override
     public void executeTextCommand(User author, TextChannel channel, Message message, String content, GuildMessageReceivedEvent event) {
-        reply(event, generateHelpEmbed().build());
+        reply(event, "Sorry, "+author.getName()+", this command only works with slash commands");
     }
 
     @Override
     public void executeSlashCommand(SlashCommandEvent event) {
-        reply(event, generateHelpEmbed().build(),false);
-    }
-
-    private EmbedBuilder generateHelpEmbed(){
-        EmbedManager manager = new EmbedManager();
-        return manager.getHelpEmbed();
+        ReplyAction test = event.deferReply();
+        test.queue();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        event.getHook().editOriginal("2+2=5").queue();
     }
 
     @Override
     public String getHelp() {
-        return "Returns a list of commands and what they do";
+        return "Asks Plexi a hard math question that takes a bit to do";
     }
 
     @Override
     public String getCommandName() {
-        return "help";
+        return "think-a-lot";
     }
 }

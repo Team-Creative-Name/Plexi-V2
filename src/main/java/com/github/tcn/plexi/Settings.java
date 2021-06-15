@@ -304,4 +304,12 @@ public class Settings {
     public List<String> getSplashList(){
         return SPLASH_LIST;
     }
+
+    public String getOverseerrUrl(){
+        return OVERSEERR_URL;
+    }
+
+    public String getOverseerrKey(){
+        return OVERSEERR_KEY;
+    }
 }
