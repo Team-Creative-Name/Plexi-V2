@@ -1,5 +1,6 @@
 package com.github.tcn.plexi.discordBot.paginators;
 
+import com.github.tcn.plexi.discordBot.ButtonManager;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -15,16 +16,18 @@ public abstract class Paginator {
     protected final long USER_ID; //The ID of the user that we bind to
     protected final int NUMBER_OF_PAGES; //the number of pages that this paginator contains
     protected final boolean WRAP; //should we wrap at the end of the paginator?
-    protected final boolean IS_SLASH_COMMAND;
+    protected final boolean IS_SLASH_COMMAND; //are we using a slash command instead of a message?
+    protected final ButtonManager BUTTON_MANAGER;
 
     protected int currentPage; //the result number that should be currently displayed
 
-    public Paginator(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap){
+    public Paginator(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap, ButtonManager buttonManager){
         SLASH_EVENT = event;
         MESSAGE = message;
         USER_ID = userId;
         NUMBER_OF_PAGES = numberOfPages;
         WRAP = wrap;
+        BUTTON_MANAGER = buttonManager;
 
         //for simplicity, lets keep a boolean value that tells us if we are using a slash command
         if(MESSAGE == null && SLASH_EVENT != null){
@@ -106,17 +109,13 @@ public abstract class Paginator {
     }
 
     //these methods give us the buttons with the message ID that we will need
-    private Button getPreviousButton(){
-        return Button.primary(getID() + ":previous", "◀️ Go Left");
-    }
 
-    private Button getSelectButton(){
-        return Button.success(getID() + ":select", "Select This");
-    }
+    protected abstract Button getPreviousButton();
 
-    private Button getRightButton(){
-        return Button.primary(getID() + ":next", "Go Right ▶️️");
-    }
+    protected abstract Button getSelectButton();
+
+    protected abstract Button getRightButton();
+
 
 
     protected void decPageNum(){
@@ -133,6 +132,7 @@ public abstract class Paginator {
         protected SlashCommandEvent EVENT; //The event that we respond to. Only exists if this paginator is in response to a slash command
         protected long USER_ID; //The ID of the user that we bind to
         protected boolean WRAP; //should we wrap at the end of the paginator?
+        protected ButtonManager BUTTON_MANAGER; //the EventHandler for button events
 
         public abstract V build();
 
@@ -143,6 +143,10 @@ public abstract class Paginator {
             if(USER_ID == 0L){
                 throw new IllegalArgumentException("User ID must be set!");
             }
+            if(BUTTON_MANAGER == null){
+                throw new IllegalArgumentException("The buttonManager must be set!");
+            }
+
 
             return runAdditionalChecks();
         }
@@ -165,6 +169,11 @@ public abstract class Paginator {
 
         public final T wrapPages(boolean wrap){
             this.WRAP = wrap;
+            return (T) this;
+        }
+
+        public final T setButtonManager(ButtonManager BUTTON_MANAGER){
+            this.BUTTON_MANAGER = BUTTON_MANAGER;
             return (T) this;
         }
 

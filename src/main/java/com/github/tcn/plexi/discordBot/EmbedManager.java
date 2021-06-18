@@ -69,10 +69,13 @@ public class EmbedManager {
     public EmbedBuilder generateMovieInfoEmbed(MovieInfo info){
         EmbedBuilder eb = new EmbedBuilder()
                 .setColor(new Color(0x00AE86))
-                .setTitle(info.getTitle(),getTmdbMovieUrl(info.getId()))
+                //.setTitle(info.getTitle(),getTmdbMovieUrl(info.getId()))
+                .setTitle("E")
                 .setDescription(info.getOverview())
                 .setThumbnail("https://www.themoviedb.org/t/p/original" + info.getPosterPath())
                 .setFooter(getRandomSplash(), Settings.getInstance().getHostedIconURL());
+
+        System.out.println("EMBED!!!!");
 
         return eb;
 

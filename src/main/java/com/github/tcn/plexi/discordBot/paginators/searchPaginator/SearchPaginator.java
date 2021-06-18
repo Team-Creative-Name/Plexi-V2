@@ -1,21 +1,37 @@
-package com.github.tcn.plexi.discordBot.paginators;
+package com.github.tcn.plexi.discordBot.paginators.searchPaginator;
 
+import com.github.tcn.plexi.discordBot.ButtonManager;
 import com.github.tcn.plexi.discordBot.EmbedManager;
+import com.github.tcn.plexi.discordBot.paginators.Paginator;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
-import net.dv8tion.jda.api.entities.Emoji;
+import com.github.tcn.plexi.overseerr.templates.search.Result;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.ButtonInteraction;
 
-public class SearchPaginator extends Paginator{
+public class SearchPaginator extends Paginator {
     final MediaSearch SEARCH_RESULTS;
+    private SearchSubmenu.Builder submenubuilder = new SearchSubmenu.Builder();
 
-    public SearchPaginator(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap, MediaSearch searchResults){
-        super(message, event, userId, numberOfPages, wrap);
+
+
+    public SearchPaginator(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap, MediaSearch searchResults, ButtonManager buttonManager){
+        super(message, event, userId, numberOfPages, wrap, buttonManager);
+        BUTTON_MANAGER.addListener(getID(), this::onButtonClick );
         this.SEARCH_RESULTS = searchResults;
+
+        //we should set up the submenu
+        submenubuilder.setButtonManager(buttonManager);
+        if(IS_SLASH_COMMAND){
+            submenubuilder.SetSlashCommand(SLASH_EVENT);
+        }else{
+            submenubuilder.SetMessage(MESSAGE);
+        }
+        submenubuilder.setUserId(USER_ID);
+
     }
+
 
     @Override
     public void onButtonClick(ButtonInteraction interaction) {
@@ -31,10 +47,18 @@ public class SearchPaginator extends Paginator{
                     incPageNum();
                 } else if (buttonName[2].equals("select")){
                     //clear the current embed and the buttons
-                    MESSAGE.getEmbeds().clear();
-                    MESSAGE.getButtons().clear();
+                    //MESSAGE.getEmbeds().clear();
+                    //MESSAGE.getButtons().clear();
                     //enter the new paginator
                     //TODO: Enter the new paginator
+                    Result result = SEARCH_RESULTS.getResults().get(currentPage);
+                    System.out.println("We have a result");
+                    SearchSubmenu submenu = submenubuilder.setSearchResults(result).build();
+                    System.out.println("We have a submenu!");
+                    submenu.paginate(0);
+
+                    //we dont want to show the wrong thing so return and cancel the page update
+                    return;
                 }else{
                     //This is a button for a different message
                     return;
@@ -44,6 +68,9 @@ public class SearchPaginator extends Paginator{
             }
         }
     }
+
+
+
 
     @Override
     protected void showPage() {
@@ -64,6 +91,21 @@ public class SearchPaginator extends Paginator{
 
     }
 
+    @Override
+    protected Button getPreviousButton() {
+        return Button.primary(getID() + ":previous", "◀️ Go Left");
+    }
+
+    @Override
+    protected Button getSelectButton() {
+        return Button.success(getID() + ":select", "Select This");
+    }
+
+    @Override
+    protected Button getRightButton() {
+        return Button.primary(getID() + ":next", "Go Right ▶️️");
+    }
+
 
     public static class Builder extends Paginator.Builder<SearchPaginator.Builder, SearchPaginator>{
         private int numOfPages;
@@ -79,7 +121,7 @@ public class SearchPaginator extends Paginator{
 
             //calculate the number of pages
             numOfPages = searchResults.getResults().size();
-            return new SearchPaginator(this.MESSAGE, this.EVENT, this.USER_ID, this.numOfPages, this.WRAP, this.searchResults);
+            return new SearchPaginator(this.MESSAGE, this.EVENT, this.USER_ID, this.numOfPages, this.WRAP, this.searchResults, this.BUTTON_MANAGER);
         }
 
         @Override
@@ -95,6 +137,7 @@ public class SearchPaginator extends Paginator{
             this.searchResults = searchResults;
             return this;
         }
+
 
 
     }

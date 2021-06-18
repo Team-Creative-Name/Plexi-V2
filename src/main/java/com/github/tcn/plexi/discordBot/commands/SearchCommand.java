@@ -3,7 +3,8 @@ package com.github.tcn.plexi.discordBot.commands;
 import com.github.tcn.plexi.discordBot.ButtonManager;
 import com.github.tcn.plexi.discordBot.CommandTemplate;
 import com.github.tcn.plexi.discordBot.EmbedManager;
-import com.github.tcn.plexi.discordBot.paginators.SearchPaginator;
+import com.github.tcn.plexi.discordBot.paginators.searchPaginator.SearchPaginator;
+import com.github.tcn.plexi.discordBot.paginators.searchPaginator.SearchSubmenu;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import net.dv8tion.jda.api.entities.Message;
@@ -57,10 +58,8 @@ public class SearchCommand extends CommandTemplate {
                 .SetSlashCommand(event)
                 .setUserId(event.getUser().getIdLong())
                 .wrapPages(true)
+                .setButtonManager(buttons)
                 .build();
-
-        System.out.println("the ID for the paginator is: " + paginator.getID());
-        buttons.addListener(paginator.getID(), paginator::onButtonClick);
 
         paginator.paginate(1);
         
