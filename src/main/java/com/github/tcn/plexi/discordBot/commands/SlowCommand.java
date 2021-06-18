@@ -29,6 +29,7 @@ public class SlowCommand extends CommandTemplate {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         event.getHook().editOriginal("2+2=5").queue();
     }
 
