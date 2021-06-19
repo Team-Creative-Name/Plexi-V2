@@ -43,11 +43,7 @@ public class SearchPaginator extends Paginator {
                     Result result = SEARCH_RESULTS.getResults().get(currentPage);
 
                     //finish setting up the submenu
-                    if(IS_SLASH_COMMAND){
-                        submenuBuilder.SetSlashCommand(SLASH_EVENT);
-                    }else{
-                        submenuBuilder.SetMessage(this.sentMessage);
-                    }
+                    submenuBuilder.SetMessage(this.sentMessage);
                     submenuBuilder.setUserId(USER_ID);
                     SearchSubmenu submenu = submenuBuilder.setSearchResults(result).build();
 
@@ -56,7 +52,11 @@ public class SearchPaginator extends Paginator {
 
                     //we dont want to show the wrong thing so return and cancel the page update
                     return;
-                }else{
+                }else if(buttonName[0].equals("submenuAccept")){
+                    System.out.println("Submenu button!");
+                }
+
+                else{
                     //This is a button for a different message
                     return;
                 }

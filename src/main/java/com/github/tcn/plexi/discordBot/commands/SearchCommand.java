@@ -33,6 +33,7 @@ public class SearchCommand extends CommandTemplate {
         command.addOptions(mediaType);
 
         registerSlashCommand(command);
+        aliases.add("s");
     }
 
     @Override

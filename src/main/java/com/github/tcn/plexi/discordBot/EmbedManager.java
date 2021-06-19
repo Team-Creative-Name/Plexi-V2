@@ -69,8 +69,7 @@ public class EmbedManager {
     public EmbedBuilder generateMovieInfoEmbed(MovieInfo info){
         EmbedBuilder eb = new EmbedBuilder()
                 .setColor(new Color(0x00AE86))
-                //.setTitle(info.getTitle(),getTmdbMovieUrl(info.getId()))
-                .setTitle("E")
+                .setTitle(info.getTitle(),getTmdbMovieUrl(info.getId()))
                 .setDescription(info.getOverview())
                 .setThumbnail("https://www.themoviedb.org/t/p/original" + info.getPosterPath())
                 .setFooter(getRandomSplash(), Settings.getInstance().getHostedIconURL());
@@ -81,8 +80,10 @@ public class EmbedManager {
     public EmbedBuilder generateTvInfoEmbed(TvInfo info){
         EmbedBuilder eb = new EmbedBuilder()
                 .setColor(new Color(0x00AE86))
-                .setTitle(info.getName())
+                .setTitle(info.getName(), getTmdbTvUrl(info.getId()))
                 .setDescription(info.getOverview())
+                .addField("Network:", info.getNetworks().get(0).getName(), true)
+                .addField("Status: ", info.getStatus(), true)
                 .setThumbnail("https://www.themoviedb.org/t/p/original" + info.getPosterPath())
                 .setFooter(getRandomSplash(), Settings.getInstance().getHostedIconURL());
 
@@ -181,5 +182,7 @@ public class EmbedManager {
             return null;
         }
     }
+
+    //private String getMediaStatus(MediaInfo info)
 
 }

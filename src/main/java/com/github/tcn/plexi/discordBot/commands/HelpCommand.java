@@ -12,6 +12,7 @@ public class HelpCommand extends CommandTemplate {
 
     public HelpCommand(){
         registerSlashCommand();
+        aliases.add("h");
     }
 
     @Override

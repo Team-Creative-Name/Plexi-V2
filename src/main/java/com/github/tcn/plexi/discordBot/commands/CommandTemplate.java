@@ -10,16 +10,18 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageUpdateAction;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class CommandTemplate {
 
     private static final FixedSizeCache<Long, TLongSet> MESSAGE_LINK_MAP = new FixedSizeCache<>(20);
     private CommandData slashCommand = null;
+    List<String> aliases = new ArrayList<>();
 
     //abstract methods
 
@@ -30,8 +32,8 @@ public abstract class CommandTemplate {
 
 
 
-    public String[] getAliases(){
-        return new String[0];
+    public List<String> getAliases(){
+        return aliases;
     }
 
     protected void registerSlashCommand(){

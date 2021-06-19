@@ -1,5 +1,7 @@
 package com.github.tcn.plexi.discordBot.commands;
 
+import com.github.tcn.plexi.Settings;
+import com.github.tcn.plexi.discordBot.paginators.Paginator;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import com.github.tcn.plexi.overseerr.templates.movieInfo.MovieInfo;
 import com.github.tcn.plexi.overseerr.templates.request.RequestTemplate;
@@ -27,13 +29,42 @@ public class RequestCommand extends CommandTemplate{
                 .addChoice("movie", "movie");
 
         command.addOptions(mediaType)
-            .addOption(OptionType.STRING, "tmdb_id", "The TMDb ID number of the media you are requesting", true);
+            .addOption(OptionType.INTEGER, "tmdb_id", "The TMDb ID number of the media you are requesting", true);
 
         registerSlashCommand(command);
+
+        aliases.add("r");
     }
 
     @Override
     public void executeTextCommand(User author, TextChannel channel, Message message, String content, GuildMessageReceivedEvent event) {
+        //we need to split the string
+        String[] args = new String[2];
+        int mediaId;
+        boolean isMovie;
+        try{
+            String temp;
+            //get the media type (should be first argument)
+            temp = content.substring(0, content.indexOf(' '));
+
+            //lets check the media argument to make sure that its something we recognize
+            if(temp.toLowerCase().matches("((m(ovie)?|film|feature|flick)s?)|(cine(matic)?)")){
+                isMovie = true;
+            }else if(temp.toLowerCase().matches("tv|television|telly|tele|t|s|show")){
+                isMovie = false;
+            }else{
+                throw new IllegalArgumentException("Invalid media type!");
+            }
+
+            temp = content.substring(content.indexOf(' ') +1);
+            //lets also make sure that the id is just the Id and nothing else
+            mediaId = Integer.parseInt(temp);
+
+        }catch (Exception e){
+            message.reply("Malformed Command, request command should be in the format `" + Settings.getInstance().getPrefix() +"request tv|movie mediaID`").queue();
+            return;
+        }
+        message.reply(requestMedia(isMovie, String.valueOf(mediaId))).queue();
 
     }
 

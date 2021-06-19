@@ -25,15 +25,21 @@ public class FixedSizeCache<K, V> {
                 .findFirst().orElse(null);
     }
 
+    //This method has been modified to allow overwriting a key for multilayered menus
     public void add(K key, V value) {
-        if(contains(key))
-            return;
         if(keys[currIndex] != null) {
             map.remove(keys[currIndex]);
         }
         map.put(key, value);
         keys[currIndex] = key;
         currIndex = (currIndex + 1) % keys.length;
+    }
+
+    //submenus will require us to remove the reference to the old buttons in order to handle new ones
+    public void remove(K key){
+        if(!contains(key)){
+            return;
+        }
     }
 
     public boolean contains(K key) {

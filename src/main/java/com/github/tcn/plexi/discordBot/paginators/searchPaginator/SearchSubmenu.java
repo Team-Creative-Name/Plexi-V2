@@ -29,6 +29,8 @@ public class SearchSubmenu extends Paginator {
     private TvInfo tvInfo= null;
     private MovieInfo movieInfo = null;
 
+    protected boolean canRequest;
+
 
     public SearchSubmenu(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap, Result searchResult, ButtonManager buttonManager) {
         super(message, event, userId, numberOfPages, wrap, buttonManager);
@@ -40,8 +42,10 @@ public class SearchSubmenu extends Paginator {
         OverseerApiCaller caller = new OverseerApiCaller();
         if(isMovie){
             movieInfo = caller.getMovieInfo(searchResult.getId());
+            canRequest = movieInfo.allowRequests();
         }else{
             tvInfo = caller.getTvInfo(searchResult.getId());
+            canRequest = tvInfo.allowRequests();
         }
 
         this.infoEmbed = generateEmbed();
@@ -57,7 +61,7 @@ public class SearchSubmenu extends Paginator {
 
             if(!buttonName[0].equals(getID())){
                 if(buttonName[2].equals("submenuAccept")){
-                    System.out.println(requestMedia());
+                    sentMessage.reply(requestMedia()).mentionRepliedUser(false).queue();
                 }
             }
         }
@@ -102,7 +106,10 @@ public class SearchSubmenu extends Paginator {
 
     @Override
     protected Button getSelectButton() {
-        return Button.success(getID() + ":submenuAccept", "Request");
+        if(canRequest){
+            return Button.success(getID() + ":submenuAccept", "Request");
+        }
+        return Button.success(getID() + ":submenuAccept", "Request").asDisabled();
     }
 
     @Override
@@ -111,28 +118,41 @@ public class SearchSubmenu extends Paginator {
     }
 
     private String requestMedia(){
-
-        RequestTemplate.RequestBuilder request = new RequestTemplate.RequestBuilder()
-                .setMediaType(isMovie)
-                .setMediaId(searchResult.getId());
-
-        if(!isMovie){
-            List<Integer> seasonNumbers = new ArrayList<>();
-            for(Season season : tvInfo.getSeasons()){
-                seasonNumbers.add(season.getSeasonNumber());
-            }
-            request.setSeasons(seasonNumbers);
-        }
-
-
-        String requestJson = request.build();
         OverseerApiCaller caller = new OverseerApiCaller();
+        String mediaTitle;
+        RequestTemplate.RequestBuilder request = new RequestTemplate.RequestBuilder()
+                .setMediaType(isMovie);
 
+        if(isMovie){
+            if(!canRequest){
+                //inform the user that we cant do that
+                return "Cannot request " + movieInfo.getTitle() + ". Movie is either already requested or available on Plex";
+            }
+            //set the movie title
+            mediaTitle = movieInfo.getTitle();
+            //set the movie ID number
+            request.setMediaId(movieInfo.getId());
+        }else{//if not movie, must be tv show
+            if(!canRequest){
+                //inform the user that we cant do that
+                return "Cannot request " + tvInfo.getName() + ". Show is either already fully requested or fully available on Plex";
+            }
+            //set the show title
+            mediaTitle = tvInfo.getName();
+            //set missing seasons
+            request.setSeasons(tvInfo.getUnrequestedSeasons());
+            //get the ID number
+            request.setMediaId(tvInfo.getId());
+        }
+        //build request
+        String requestJson = request.build();
         boolean success = caller.requestMedia(requestJson);
         if(success){
-            return "Successfully added to the request list!";
+            canRequest = false;
+            return mediaTitle + " was successfully added to the request list!";
         }
         return "Error requesting media!";
+
     }
 
 
