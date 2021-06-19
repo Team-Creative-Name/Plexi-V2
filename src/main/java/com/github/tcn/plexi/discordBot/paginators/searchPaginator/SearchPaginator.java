@@ -5,6 +5,7 @@ import com.github.tcn.plexi.discordBot.EmbedManager;
 import com.github.tcn.plexi.discordBot.paginators.Paginator;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.search.Result;
+import com.github.tcn.plexi.utils.Misc;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -123,7 +124,8 @@ public class SearchPaginator extends Paginator {
             if(!runChecks()){
                 throw new IllegalArgumentException("Cannot build, invalid arguments!");
             }
-
+            //strip out the people from the search result
+            Misc.stripActors(searchResults);
             //calculate the number of pages
             numOfPages = searchResults.getResults().size();
             return new SearchPaginator(this.MESSAGE, this.EVENT, this.USER_ID, this.numOfPages, this.WRAP, this.searchResults, this.BUTTON_MANAGER);

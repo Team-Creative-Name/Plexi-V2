@@ -467,5 +467,15 @@ public class TvInfo {
         return unrequestedSeasons;
     }
 
+    public String getRequestStatus(){
+        if(isFullyRequested){
+           return  "Fully Requested";
+        }else if(!getUnrequestedSeasons().isEmpty()){
+            return "Partially Requested";
+        }else{
+            return "Not Requested";
+        }
+    }
+
 
 }

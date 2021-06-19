@@ -16,7 +16,7 @@ public class MovieInfo {
     private Boolean adult;
     @SerializedName("budget")
     @Expose
-    private Integer budget;
+    private Double budget;
     @SerializedName("relatedVideos")
     @Expose
     private List<RelatedVideo> relatedVideos = null;
@@ -37,7 +37,7 @@ public class MovieInfo {
     private String releaseDate;
     @SerializedName("revenue")
     @Expose
-    private Integer revenue;
+    private Double revenue;
     @SerializedName("status")
     @Expose
     private String status;
@@ -94,11 +94,11 @@ public class MovieInfo {
         this.adult = adult;
     }
 
-    public Integer getBudget() {
+    public Double getBudget() {
         return budget;
     }
 
-    public void setBudget(Integer budget) {
+    public void setBudget(Double budget) {
         this.budget = budget;
     }
 
@@ -150,11 +150,11 @@ public class MovieInfo {
         this.releaseDate = releaseDate;
     }
 
-    public Integer getRevenue() {
+    public Double getRevenue() {
         return revenue;
     }
 
-    public void setRevenue(Integer revenue) {
+    public void setRevenue(Double revenue) {
         this.revenue = revenue;
     }
 

@@ -1,8 +1,12 @@
 package com.github.tcn.plexi.utils;
 
+import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
+import com.github.tcn.plexi.overseerr.templates.search.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadFactory;
 
 
@@ -31,6 +35,13 @@ public class Misc {
     public static ThreadFactory newThreadFactory(String threadName, boolean isDaemon){
         return newThreadFactory(threadName, LoggerFactory.getLogger("Plexi: Threading"),isDaemon );
     }
+
+    public static MediaSearch stripActors(MediaSearch toStrip){
+        toStrip.getResults().removeIf(result -> result.getMediaType().equals("person"));
+        return toStrip;
+    }
+
+
 
 
 
