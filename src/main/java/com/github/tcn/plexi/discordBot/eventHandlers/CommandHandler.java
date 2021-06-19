@@ -1,12 +1,8 @@
 package com.github.tcn.plexi.discordBot.eventHandlers;
 
 import com.github.tcn.plexi.Settings;
-import com.github.tcn.plexi.discordBot.commands.CommandTemplate;
+import com.github.tcn.plexi.discordBot.commands.*;
 import com.github.tcn.plexi.discordBot.DiscordBot;
-import com.github.tcn.plexi.discordBot.commands.HelpCommand;
-import com.github.tcn.plexi.discordBot.commands.PingCommand;
-import com.github.tcn.plexi.discordBot.commands.SearchCommand;
-import com.github.tcn.plexi.discordBot.commands.SlowCommand;
 import com.github.tcn.plexi.utils.Misc;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -34,6 +30,7 @@ public class CommandHandler extends ListenerAdapter {
         registerCommand(new SearchCommand(buttonManager));
         registerCommand(new SlowCommand());
         registerCommand(new PingCommand());
+        registerCommand(new RequestCommand());
 
         //Log Command Loading
         LoggerFactory.getLogger("Plexi: Commands").info("loaded " + commandSet.size() + " commands!");
@@ -54,7 +51,6 @@ public class CommandHandler extends ListenerAdapter {
 
     @Override
     public void onButtonClick(ButtonClickEvent event){
-        //TODO: Implement a button handler or something
 
         //the trash button should ALWAYS remove the buttons. Handle that and escape method if found
         if(event.getButton().getId().equals("endButton")){
@@ -95,17 +91,6 @@ public class CommandHandler extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event){
-
-        System.out.println("an event happened:");
-        System.out.println(event.getName());
-        System.out.println(event.getId());
-        System.out.println(event.getCommandId());
-        System.out.println("END OF EVENT REPORT");
-
-
-
-
-
         //these events are significantly easier for us to handle. We know that they are meant for us
         //all we need to do is find the right command
         for(CommandTemplate command : commandSet){

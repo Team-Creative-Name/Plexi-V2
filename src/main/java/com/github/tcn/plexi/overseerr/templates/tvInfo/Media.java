@@ -2,11 +2,12 @@
 package com.github.tcn.plexi.overseerr.templates.tvInfo;
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class MediaInfo {
+public class Media {
 
     @SerializedName("downloadStatus")
     @Expose
@@ -74,15 +75,12 @@ public class MediaInfo {
     @SerializedName("seasons")
     @Expose
     private List<Object> seasons = null;
-    @SerializedName("requests")
-    @Expose
-    private List<Request> requests = null;
 
     /**
      * No args constructor for use in serialization
      * 
      */
-    public MediaInfo() {
+    public Media() {
     }
 
     /**
@@ -95,7 +93,6 @@ public class MediaInfo {
      * @param mediaType
      * @param externalServiceSlug4k
      * @param ratingKey
-     * @param requests
      * @param serviceId4k
      * @param downloadStatus4k
      * @param status4k
@@ -111,7 +108,7 @@ public class MediaInfo {
      * @param status
      * @param updatedAt
      */
-    public MediaInfo(List<Object> downloadStatus, List<Object> downloadStatus4k, Integer id, String mediaType, Integer tmdbId, Integer tvdbId, Object imdbId, Integer status, Integer status4k, String createdAt, String updatedAt, String lastSeasonChange, Object mediaAddedAt, Object serviceId, Object serviceId4k, Object externalServiceId, Object externalServiceId4k, Object externalServiceSlug, Object externalServiceSlug4k, Object ratingKey, Object ratingKey4k, List<Object> seasons, List<Request> requests) {
+    public Media(List<Object> downloadStatus, List<Object> downloadStatus4k, Integer id, String mediaType, Integer tmdbId, Integer tvdbId, Object imdbId, Integer status, Integer status4k, String createdAt, String updatedAt, String lastSeasonChange, Object mediaAddedAt, Object serviceId, Object serviceId4k, Object externalServiceId, Object externalServiceId4k, Object externalServiceSlug, Object externalServiceSlug4k, Object ratingKey, Object ratingKey4k, List<Object> seasons) {
         super();
         this.downloadStatus = downloadStatus;
         this.downloadStatus4k = downloadStatus4k;
@@ -135,7 +132,6 @@ public class MediaInfo {
         this.ratingKey = ratingKey;
         this.ratingKey4k = ratingKey4k;
         this.seasons = seasons;
-        this.requests = requests;
     }
 
     public List<Object> getDownloadStatus() {
@@ -312,14 +308,6 @@ public class MediaInfo {
 
     public void setSeasons(List<Object> seasons) {
         this.seasons = seasons;
-    }
-
-    public List<Request> getRequests() {
-        return requests;
-    }
-
-    public void setRequests(List<Request> requests) {
-        this.requests = requests;
     }
 
 }

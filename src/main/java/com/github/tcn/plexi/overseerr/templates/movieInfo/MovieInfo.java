@@ -262,4 +262,16 @@ public class MovieInfo {
         this.mediaInfo = mediaInfo;
     }
 
+    public boolean isAvailable(){
+        return (mediaInfo != null) && getMediaInfo().getStatus() == 5;
+    }
+
+    public boolean allowRequests(){
+        boolean isReq = (mediaInfo != null ) && getMediaInfo().isRequested();
+        boolean isAv = isAvailable();
+
+
+        return !isReq && !isAv;
+    }
+
 }

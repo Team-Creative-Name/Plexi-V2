@@ -5,20 +5,21 @@ package com.github.tcn.plexi.overseerr.templates.tvInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
 public class NextEpisodeToAir {
 
     @SerializedName("id")
     @Expose
     private Integer id;
-    @SerializedName("name")
-    @Expose
-    private String name;
     @SerializedName("airDate")
     @Expose
     private String airDate;
     @SerializedName("episodeNumber")
     @Expose
     private Integer episodeNumber;
+    @SerializedName("name")
+    @Expose
+    private String name;
     @SerializedName("overview")
     @Expose
     private String overview;
@@ -28,18 +29,44 @@ public class NextEpisodeToAir {
     @SerializedName("seasonNumber")
     @Expose
     private Integer seasonNumber;
-    @SerializedName("showId")
-    @Expose
-    private Integer showId;
-    @SerializedName("stillPath")
-    @Expose
-    private String stillPath;
     @SerializedName("voteAverage")
     @Expose
     private Integer voteAverage;
-    @SerializedName("voteCount")
+    @SerializedName("stillPath")
     @Expose
-    private Integer voteCount;
+    private Object stillPath;
+
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
+    public NextEpisodeToAir() {
+    }
+
+    /**
+     * 
+     * @param overview
+     * @param productionCode
+     * @param voteAverage
+     * @param airDate
+     * @param name
+     * @param stillPath
+     * @param id
+     * @param seasonNumber
+     * @param episodeNumber
+     */
+    public NextEpisodeToAir(Integer id, String airDate, Integer episodeNumber, String name, String overview, String productionCode, Integer seasonNumber, Integer voteAverage, Object stillPath) {
+        super();
+        this.id = id;
+        this.airDate = airDate;
+        this.episodeNumber = episodeNumber;
+        this.name = name;
+        this.overview = overview;
+        this.productionCode = productionCode;
+        this.seasonNumber = seasonNumber;
+        this.voteAverage = voteAverage;
+        this.stillPath = stillPath;
+    }
 
     public Integer getId() {
         return id;
@@ -47,14 +74,6 @@ public class NextEpisodeToAir {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAirDate() {
@@ -71,6 +90,14 @@ public class NextEpisodeToAir {
 
     public void setEpisodeNumber(Integer episodeNumber) {
         this.episodeNumber = episodeNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getOverview() {
@@ -97,22 +124,6 @@ public class NextEpisodeToAir {
         this.seasonNumber = seasonNumber;
     }
 
-    public Integer getShowId() {
-        return showId;
-    }
-
-    public void setShowId(Integer showId) {
-        this.showId = showId;
-    }
-
-    public String getStillPath() {
-        return stillPath;
-    }
-
-    public void setStillPath(String stillPath) {
-        this.stillPath = stillPath;
-    }
-
     public Integer getVoteAverage() {
         return voteAverage;
     }
@@ -121,12 +132,12 @@ public class NextEpisodeToAir {
         this.voteAverage = voteAverage;
     }
 
-    public Integer getVoteCount() {
-        return voteCount;
+    public Object getStillPath() {
+        return stillPath;
     }
 
-    public void setVoteCount(Integer voteCount) {
-        this.voteCount = voteCount;
+    public void setStillPath(Object stillPath) {
+        this.stillPath = stillPath;
     }
 
 }

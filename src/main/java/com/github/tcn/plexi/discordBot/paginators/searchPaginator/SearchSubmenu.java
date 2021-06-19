@@ -5,7 +5,9 @@ import com.github.tcn.plexi.discordBot.EmbedManager;
 import com.github.tcn.plexi.discordBot.paginators.Paginator;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import com.github.tcn.plexi.overseerr.templates.movieInfo.MovieInfo;
+import com.github.tcn.plexi.overseerr.templates.request.RequestTemplate;
 import com.github.tcn.plexi.overseerr.templates.search.Result;
+import com.github.tcn.plexi.overseerr.templates.tvInfo.Season;
 import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -14,6 +16,9 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.ButtonInteraction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchSubmenu extends Paginator {
     private final Boolean isMovie;
@@ -52,7 +57,7 @@ public class SearchSubmenu extends Paginator {
 
             if(!buttonName[0].equals(getID())){
                 if(buttonName[2].equals("submenuAccept")){
-                    requestMedia();
+                    System.out.println(requestMedia());
                 }
             }
         }
@@ -105,15 +110,29 @@ public class SearchSubmenu extends Paginator {
         return null; //no right button
     }
 
-    private void requestMedia(){
-        //TODO: IMPLEMENT
-        //determine media type
-        if(isMovie){//request media type
+    private String requestMedia(){
 
+        RequestTemplate.RequestBuilder request = new RequestTemplate.RequestBuilder()
+                .setMediaType(isMovie)
+                .setMediaId(searchResult.getId());
+
+        if(!isMovie){
+            List<Integer> seasonNumbers = new ArrayList<>();
+            for(Season season : tvInfo.getSeasons()){
+                seasonNumbers.add(season.getSeasonNumber());
+            }
+            request.setSeasons(seasonNumbers);
         }
 
 
-        //inform user of success
+        String requestJson = request.build();
+        OverseerApiCaller caller = new OverseerApiCaller();
+
+        boolean success = caller.requestMedia(requestJson);
+        if(success){
+            return "Successfully added to the request list!";
+        }
+        return "Error requesting media!";
     }
 
 

@@ -273,4 +273,13 @@ public class MediaInfo {
         this.plexUrl = plexUrl;
     }
 
+    public boolean isRequested(){
+        if ((requests != null) && !requests.isEmpty()){
+            return true;
+        }
+            System.out.println("no requests");
+            return false;
+
+    }
+
 }

@@ -1,7 +1,6 @@
 
 package com.github.tcn.plexi.overseerr.templates.tvInfo;
 
-import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,37 +8,54 @@ import com.google.gson.annotations.SerializedName;
 
 public class Season {
 
-    @SerializedName("id")
-    @Expose
-    private Integer id;
     @SerializedName("airDate")
     @Expose
     private String airDate;
     @SerializedName("episodeCount")
     @Expose
     private Integer episodeCount;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("overview")
     @Expose
     private String overview;
-    @SerializedName("posterPath")
-    @Expose
-    private String posterPath;
     @SerializedName("seasonNumber")
     @Expose
     private Integer seasonNumber;
-    @SerializedName("episodes")
+    @SerializedName("posterPath")
     @Expose
-    private List<Episode> episodes = null;
+    private Object posterPath;
 
-    public Integer getId() {
-        return id;
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
+    public Season() {
     }
 
-    public void setId(Integer id) {
+    /**
+     * 
+     * @param overview
+     * @param episodeCount
+     * @param airDate
+     * @param name
+     * @param id
+     * @param seasonNumber
+     * @param posterPath
+     */
+    public Season(String airDate, Integer episodeCount, Integer id, String name, String overview, Integer seasonNumber, Object posterPath) {
+        super();
+        this.airDate = airDate;
+        this.episodeCount = episodeCount;
         this.id = id;
+        this.name = name;
+        this.overview = overview;
+        this.seasonNumber = seasonNumber;
+        this.posterPath = posterPath;
     }
 
     public String getAirDate() {
@@ -58,6 +74,14 @@ public class Season {
         this.episodeCount = episodeCount;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -74,14 +98,6 @@ public class Season {
         this.overview = overview;
     }
 
-    public String getPosterPath() {
-        return posterPath;
-    }
-
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
-    }
-
     public Integer getSeasonNumber() {
         return seasonNumber;
     }
@@ -90,12 +106,12 @@ public class Season {
         this.seasonNumber = seasonNumber;
     }
 
-    public List<Episode> getEpisodes() {
-        return episodes;
+    public Object getPosterPath() {
+        return posterPath;
     }
 
-    public void setEpisodes(List<Episode> episodes) {
-        this.episodes = episodes;
+    public void setPosterPath(Object posterPath) {
+        this.posterPath = posterPath;
     }
 
 }

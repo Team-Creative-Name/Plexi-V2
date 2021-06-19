@@ -6,9 +6,7 @@ import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -99,6 +97,27 @@ public class OverseerApiCaller {
         }
 
         return responseTime;
+    }
+
+    public boolean requestMedia(String requestJSON){
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/request")
+                .addHeader("x-api-key", Settings.getInstance().getOverseerrKey())
+                .addHeader("accept", "application/json")
+                .post(RequestBody.create(requestJSON, MediaType.parse("application/json")))
+                .build();
+
+        try (Response response = client.newCall(request).execute()){
+            if(!response.isSuccessful()){
+                throw new IOException("Unexpected response from overseerr: " + response);
+            }
+            return response.isSuccessful();
+
+        }catch (IOException e){
+            LoggerFactory.getLogger("Plexi: Overseerr-API").error("Unable to request media!");
+        }
+        return false;
     }
 
 
