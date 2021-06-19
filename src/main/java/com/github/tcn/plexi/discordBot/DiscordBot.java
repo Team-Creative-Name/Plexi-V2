@@ -1,6 +1,7 @@
 package com.github.tcn.plexi.discordBot;
 
 import com.github.tcn.plexi.Settings;
+import com.github.tcn.plexi.discordBot.eventHandlers.CommandHandler;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -65,12 +66,8 @@ public class DiscordBot {
         this.handler = new CommandHandler();
         botInstance.addEventListener(handler);
 
-
-
-
-
-         //finally, update all of the commands
-        botInstance.updateCommands().queue();
+        //finally, update all of the commands
+        //botInstance.updateCommands().queue();
 
     }
 

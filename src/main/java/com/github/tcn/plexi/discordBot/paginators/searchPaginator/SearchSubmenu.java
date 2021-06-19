@@ -1,14 +1,14 @@
 package com.github.tcn.plexi.discordBot.paginators.searchPaginator;
 
-import com.github.tcn.plexi.discordBot.ButtonManager;
+import com.github.tcn.plexi.discordBot.eventHandlers.ButtonManager;
 import com.github.tcn.plexi.discordBot.EmbedManager;
 import com.github.tcn.plexi.discordBot.paginators.Paginator;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import com.github.tcn.plexi.overseerr.templates.movieInfo.MovieInfo;
-import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.search.Result;
 import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -77,12 +77,17 @@ public class SearchSubmenu extends Paginator {
             SLASH_EVENT.getHook()
                     .editOriginal("Getting more info for: " + searchResult.getName())
                     .setEmbeds(infoEmbed)
+                    .setActionRows(getPaginatorButtons())
                     .queue();
-            return;
+        }else{//since there is no other message, just make a new one
+            Message toSend = new MessageBuilder()
+                    .setEmbed(infoEmbed).append("Getting more info for: ").append(searchResult.getName())
+                    .setActionRows(getPaginatorButtons())
+                    .build();
+            //MESSAGE.reply(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
+            MESSAGE.editMessage(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
         }
-        MESSAGE.editMessage("Getting more info for: " + searchResult.getName()).queue();
-        MESSAGE.getEmbeds().clear();
-        MESSAGE.getEmbeds().add(infoEmbed);
+
     }
 
     @Override
@@ -103,8 +108,10 @@ public class SearchSubmenu extends Paginator {
     private void requestMedia(){
         //TODO: IMPLEMENT
         //determine media type
+        if(isMovie){//request media type
 
-        //request media type
+        }
+
 
         //inform user of success
     }

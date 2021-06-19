@@ -1,10 +1,11 @@
 package com.github.tcn.plexi.discordBot.paginators.searchPaginator;
 
-import com.github.tcn.plexi.discordBot.ButtonManager;
+import com.github.tcn.plexi.discordBot.eventHandlers.ButtonManager;
 import com.github.tcn.plexi.discordBot.EmbedManager;
 import com.github.tcn.plexi.discordBot.paginators.Paginator;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.search.Result;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
@@ -12,7 +13,7 @@ import net.dv8tion.jda.api.interactions.components.ButtonInteraction;
 
 public class SearchPaginator extends Paginator {
     final MediaSearch SEARCH_RESULTS;
-    private SearchSubmenu.Builder submenubuilder = new SearchSubmenu.Builder();
+    private final SearchSubmenu.Builder submenuBuilder = new SearchSubmenu.Builder();
 
 
 
@@ -20,16 +21,8 @@ public class SearchPaginator extends Paginator {
         super(message, event, userId, numberOfPages, wrap, buttonManager);
         BUTTON_MANAGER.addListener(getID(), this::onButtonClick );
         this.SEARCH_RESULTS = searchResults;
-
         //we should set up the submenu
-        submenubuilder.setButtonManager(buttonManager);
-        if(IS_SLASH_COMMAND){
-            submenubuilder.SetSlashCommand(SLASH_EVENT);
-        }else{
-            submenubuilder.SetMessage(MESSAGE);
-        }
-        submenubuilder.setUserId(USER_ID);
-
+        submenuBuilder.setButtonManager(buttonManager);
     }
 
 
@@ -46,15 +39,19 @@ public class SearchPaginator extends Paginator {
                 } else if (buttonName[2].equals("next")){
                     incPageNum();
                 } else if (buttonName[2].equals("select")){
-                    //clear the current embed and the buttons
-                    //MESSAGE.getEmbeds().clear();
-                    //MESSAGE.getButtons().clear();
-                    //enter the new paginator
-                    //TODO: Enter the new paginator
+                    //get a reference to the search result
                     Result result = SEARCH_RESULTS.getResults().get(currentPage);
-                    System.out.println("We have a result");
-                    SearchSubmenu submenu = submenubuilder.setSearchResults(result).build();
-                    System.out.println("We have a submenu!");
+
+                    //finish setting up the submenu
+                    if(IS_SLASH_COMMAND){
+                        submenuBuilder.SetSlashCommand(SLASH_EVENT);
+                    }else{
+                        submenuBuilder.SetMessage(this.sentMessage);
+                    }
+                    submenuBuilder.setUserId(USER_ID);
+                    SearchSubmenu submenu = submenuBuilder.setSearchResults(result).build();
+
+                    //show the submenu
                     submenu.paginate(0);
 
                     //we dont want to show the wrong thing so return and cancel the page update
@@ -76,19 +73,27 @@ public class SearchPaginator extends Paginator {
     protected void showPage() {
         EmbedManager manager = new EmbedManager();
         System.out.println("showing page number " + currentPage);
-        if(IS_SLASH_COMMAND){
+        if(IS_SLASH_COMMAND && sentMessage == null){
             SLASH_EVENT.getHook()
                     .editOriginal("Search Results")
                     .setEmbeds(manager.generateMediaSearchEmbed(SEARCH_RESULTS, currentPage).build())
-                    .queue();
+                    .setActionRows(getPaginatorButtons())
+                    .queue(message -> sentMessage = message);
+
         }else{
-            MESSAGE.editMessage("Search Results").queue();
-            MESSAGE.getEmbeds().clear();
-            MESSAGE.getEmbeds().add(manager.generateMediaSearchEmbed(SEARCH_RESULTS, currentPage).build());
-
+            //check to see if we have already responded once
+            System.out.println("trying this");
+            if(sentMessage == null){
+                Message toSend = new MessageBuilder()
+                        .setEmbed(manager.generateMediaSearchEmbed(SEARCH_RESULTS, currentPage).build())
+                        .append("Search Results")
+                        .setActionRows(getPaginatorButtons())
+                        .build();
+                MESSAGE.reply(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
+            }else{
+                sentMessage.editMessage(manager.generateMediaSearchEmbed(SEARCH_RESULTS,currentPage).build()).queue();
+            }
         }
-
-
     }
 
     @Override

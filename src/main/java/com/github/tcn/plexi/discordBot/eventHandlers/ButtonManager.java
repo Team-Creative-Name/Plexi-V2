@@ -1,4 +1,4 @@
-package com.github.tcn.plexi.discordBot;
+package com.github.tcn.plexi.discordBot.eventHandlers;
 
 import com.github.tcn.plexi.utils.FixedSizeCache;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -20,11 +20,9 @@ public class ButtonManager implements EventListener {
     }
 
     private void onButton(ButtonClickEvent event){
-        String toCheck = event.getComponentId();
-
         Consumer<? super ButtonInteraction> callback = listeners.find(prefix -> event.getComponentId().startsWith(prefix));
         if(callback == null){
-            event.reply("This menu times out!").setEphemeral(true).queue();
+            event.reply("This menu timed out!").setEphemeral(true).queue();
             return;
         }
 

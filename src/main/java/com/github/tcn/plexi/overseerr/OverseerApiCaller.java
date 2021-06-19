@@ -12,7 +12,6 @@ import okhttp3.Response;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 
 public class OverseerApiCaller {
 
@@ -36,7 +35,6 @@ public class OverseerApiCaller {
             e.printStackTrace();
         }
         return null;
-
     }
 
     public TvInfo getTvInfo(int tmdbId){

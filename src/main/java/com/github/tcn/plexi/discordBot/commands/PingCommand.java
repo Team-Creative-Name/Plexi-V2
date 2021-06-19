@@ -1,6 +1,5 @@
 package com.github.tcn.plexi.discordBot.commands;
 
-import com.github.tcn.plexi.discordBot.CommandTemplate;
 import com.github.tcn.plexi.discordBot.EmbedManager;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import net.dv8tion.jda.api.JDA;
@@ -20,7 +19,6 @@ public class PingCommand extends CommandTemplate {
 
     @Override
     public void executeTextCommand(User author, TextChannel channel, Message message, String content, GuildMessageReceivedEvent event) {
-        //reply(event, "Ping: ...", m -> { m.editMessage("Ping: " + message.getTimeCreated().until(m.getTimeCreated(), ChronoUnit.MILLIS) + "ms").queue(); });
         EmbedManager eb = new EmbedManager();
         OverseerApiCaller apiCaller = new OverseerApiCaller();
         JDA jda = event.getJDA();

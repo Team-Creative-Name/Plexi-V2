@@ -1,10 +1,7 @@
 package com.github.tcn.plexi.discordBot.commands;
 
-import com.github.tcn.plexi.discordBot.ButtonManager;
-import com.github.tcn.plexi.discordBot.CommandTemplate;
-import com.github.tcn.plexi.discordBot.EmbedManager;
+import com.github.tcn.plexi.discordBot.eventHandlers.ButtonManager;
 import com.github.tcn.plexi.discordBot.paginators.searchPaginator.SearchPaginator;
-import com.github.tcn.plexi.discordBot.paginators.searchPaginator.SearchSubmenu;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import net.dv8tion.jda.api.entities.Message;
@@ -34,12 +31,25 @@ public class SearchCommand extends CommandTemplate {
         mediaType.addChoice("television", "tv");
         mediaType.addChoice("movie", "movie");
         command.addOptions(mediaType);
+
         registerSlashCommand(command);
     }
 
     @Override
     public void executeTextCommand(User author, TextChannel channel, Message message, String content, GuildMessageReceivedEvent event) {
 
+        //get the search results
+        MediaSearch results = new OverseerApiCaller().Search(content);
+
+        SearchPaginator paginator = new SearchPaginator.Builder()
+                .setSearchResults(results)
+                .SetMessage(message)
+                .setUserId(author.getIdLong())
+                .wrapPages(true)
+                .setButtonManager(buttons)
+                .build();
+
+        paginator.paginate(1);
     }
 
     @Override
@@ -49,7 +59,6 @@ public class SearchCommand extends CommandTemplate {
         event.deferReply().setEphemeral(false).queue();
 
         //now lets go ahead and grab the search results
-        EmbedManager embedManager = new EmbedManager();
         MediaSearch results = new OverseerApiCaller().Search(event.getOptions().get(0).getAsString());
 
 
@@ -62,35 +71,8 @@ public class SearchCommand extends CommandTemplate {
                 .build();
 
         paginator.paginate(1);
-        
-        /*
-        
-
-        //create the submenu obj and register its buttons
-        SearchSubmenu submenu = new SearchSubmenu(null, (Message) null);
-        buttons.addListener(submenu.getId(), submenu::onButtonClick);
-
-        //create the paginator
-        OldSearchPaginator paginator = new OldSearchPaginator(results, event, submenu);
-        buttons.addListener(paginator.getId(), paginator::onButtonClick);
-
-
-
-        //and now edit the message to show the search results we wanted and add the action row
-        event.getHook().editOriginal("Search results for '"+event.getOptions().get(0).getAsString())
-                .setEmbeds(embedManager.generateMediaSearchEmbed(results, 0).build())
-                .setActionRows(paginator.getPaginatorButtons())
-                .queue(linkReply(event, null));
-         */
-        
-        
-        
-
 
     }
-
-
-
 
     @Override
     public String getHelp() {

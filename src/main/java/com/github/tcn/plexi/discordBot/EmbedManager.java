@@ -1,6 +1,7 @@
 package com.github.tcn.plexi.discordBot;
 
 import com.github.tcn.plexi.Settings;
+import com.github.tcn.plexi.discordBot.commands.CommandTemplate;
 import com.github.tcn.plexi.overseerr.templates.movieInfo.MovieInfo;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.search.Result;
@@ -37,7 +38,6 @@ public class EmbedManager {
             }
 
         return eb;
-
     }
 
     //used to generate the main embed for a media search object
@@ -75,10 +75,7 @@ public class EmbedManager {
                 .setThumbnail("https://www.themoviedb.org/t/p/original" + info.getPosterPath())
                 .setFooter(getRandomSplash(), Settings.getInstance().getHostedIconURL());
 
-        System.out.println("EMBED!!!!");
-
         return eb;
-
     }
 
     public EmbedBuilder generateTvInfoEmbed(TvInfo info){

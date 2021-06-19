@@ -238,12 +238,9 @@ public class Settings {
     //This is very rudimentary validation that checks to ensure that values are not empty and arent default. The Ombi API is checked to see if it can connect.
     //TODO: Make this method a bit less clunky
     private boolean validateSettings() {
-        boolean isValid = true;
+        boolean isValid = !TOKEN.equals("") && !TOKEN.equals("BOT_TOKEN_HERE");
 
         //check to ensure token != null
-        if (TOKEN.equals("") || TOKEN.equals("BOT_TOKEN_HERE")) {
-            isValid = false;
-        }
         //check to ensure prefix != null;
         if (PREFIX.equals("")) {
             isValid = false;

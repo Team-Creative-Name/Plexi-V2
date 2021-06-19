@@ -1,6 +1,5 @@
 package com.github.tcn.plexi.discordBot.commands;
 
-import com.github.tcn.plexi.discordBot.CommandTemplate;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -17,7 +16,7 @@ public class SlowCommand extends CommandTemplate {
 
     @Override
     public void executeTextCommand(User author, TextChannel channel, Message message, String content, GuildMessageReceivedEvent event) {
-        reply(event, "Sorry, "+author.getName()+", this command only works with slash commands");
+        reply(event, "Sorry, " + author.getName() + ", this command only works with slash commands");
     }
 
     @Override

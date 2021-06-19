@@ -1,6 +1,5 @@
 package com.github.tcn.plexi.discordBot.commands;
 
-import com.github.tcn.plexi.discordBot.CommandTemplate;
 import com.github.tcn.plexi.discordBot.EmbedManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;

@@ -1,12 +1,16 @@
 package com.github.tcn.plexi.discordBot.paginators;
 
-import com.github.tcn.plexi.discordBot.ButtonManager;
+import com.github.tcn.plexi.discordBot.eventHandlers.ButtonManager;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.ButtonInteraction;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public abstract class Paginator {
@@ -20,6 +24,7 @@ public abstract class Paginator {
     protected final ButtonManager BUTTON_MANAGER;
 
     protected int currentPage; //the result number that should be currently displayed
+    protected Message sentMessage; //track the message that we sent in response to a command
 
     public Paginator(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap, ButtonManager buttonManager){
         SLASH_EVENT = event;
@@ -43,11 +48,6 @@ public abstract class Paginator {
 
     protected abstract void showPage();
 
-    protected void enterSubmenu(){
-        throw new UnsupportedOperationException("This paginator does not have a submenu");
-    }
-
-
     public void paginate(int pageNum){
         //validate the number and put it within the range if outside
         if(pageNum <1){
@@ -56,16 +56,7 @@ public abstract class Paginator {
             currentPage = NUMBER_OF_PAGES;
         }
         showPage();
-        addButtons();
     }
-
-    private void addButtons(){
-        if(IS_SLASH_COMMAND){
-            SLASH_EVENT.getHook().editOriginal("Search Results").setActionRows(getPaginatorButtons()).queue();
-        }
-        //TODO: add buttons to message event
-    }
-
 
     //methods that the subclass will need
     public String getID(){
@@ -84,14 +75,14 @@ public abstract class Paginator {
 
     protected void incPageNum(){
         //are we at the end of the list
-        if(currentPage == NUMBER_OF_PAGES && WRAP){
-            currentPage = 1;
+        if(currentPage == NUMBER_OF_PAGES - 1 && WRAP){
+            currentPage = 0;
         }else{
             currentPage++;
         }
     }
 
-    public ActionRow getPaginatorButtons() {
+    protected ActionRow getPaginatorButtons() {
         //depending on how many items are in the paginator, we will show different items
         if(NUMBER_OF_PAGES == 1){
             return ActionRow.of(
@@ -120,13 +111,13 @@ public abstract class Paginator {
 
     protected void decPageNum(){
         //are we at the beginning of the list
-        if(currentPage == 1 && WRAP){
-            currentPage = NUMBER_OF_PAGES;
+        if(currentPage == 0 && WRAP){
+            currentPage = NUMBER_OF_PAGES - 1;
         }else{
             currentPage--;
         }
     }
-
+    @SuppressWarnings("unchecked")
     protected abstract static class Builder<T extends Builder<T,V>, V extends Paginator>{
         protected Message MESSAGE; //The message that we respond to. Only exists if this paginator is in response to a text command
         protected SlashCommandEvent EVENT; //The event that we respond to. Only exists if this paginator is in response to a slash command
@@ -150,6 +141,8 @@ public abstract class Paginator {
 
             return runAdditionalChecks();
         }
+
+
         protected abstract boolean runAdditionalChecks();
 
         public final T SetMessage(Message message){
@@ -176,8 +169,6 @@ public abstract class Paginator {
             this.BUTTON_MANAGER = BUTTON_MANAGER;
             return (T) this;
         }
-
-
 
 
     }

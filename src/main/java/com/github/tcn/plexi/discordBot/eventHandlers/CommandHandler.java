@@ -1,23 +1,21 @@
-package com.github.tcn.plexi.discordBot;
+package com.github.tcn.plexi.discordBot.eventHandlers;
 
 import com.github.tcn.plexi.Settings;
+import com.github.tcn.plexi.discordBot.commands.CommandTemplate;
+import com.github.tcn.plexi.discordBot.DiscordBot;
 import com.github.tcn.plexi.discordBot.commands.HelpCommand;
 import com.github.tcn.plexi.discordBot.commands.PingCommand;
 import com.github.tcn.plexi.discordBot.commands.SearchCommand;
 import com.github.tcn.plexi.discordBot.commands.SlowCommand;
 import com.github.tcn.plexi.utils.Misc;
-import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.jetbrains.annotations.NotNull;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,8 +33,22 @@ public class CommandHandler extends ListenerAdapter {
         registerCommand(new HelpCommand());
         registerCommand(new SearchCommand(buttonManager));
         registerCommand(new SlowCommand());
+        registerCommand(new PingCommand());
 
+        //Log Command Loading
         LoggerFactory.getLogger("Plexi: Commands").info("loaded " + commandSet.size() + " commands!");
+
+        //now we need to register the slash commands
+        List<CommandData> test = new ArrayList<>();
+        for(CommandTemplate command : commandSet){
+            if(command.getSlashCommand() != null){
+                test.add(command.getSlashCommand());
+            }
+        }
+        DiscordBot.getInstance().getJDAInstance().updateCommands().addCommands(test).queue();
+
+        //Log Slash Command Loading
+        LoggerFactory.getLogger("Plexi: Commands").info("loaded " + test.size() + " Slash Commands!");
     }
 
 
@@ -50,12 +62,9 @@ public class CommandHandler extends ListenerAdapter {
             return;
         }
 
-
         LoggerFactory.getLogger("Plexi: Commands").info("button: " + event.getButton().getLabel() + " was pushed!");
-        //event.reply("button: " + event.getButton().getLabel() + " was pushed!").queue();
 
         buttonManager.onEvent(event);
-
     }
 
     @Override
@@ -86,6 +95,17 @@ public class CommandHandler extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event){
+
+        System.out.println("an event happened:");
+        System.out.println(event.getName());
+        System.out.println(event.getId());
+        System.out.println(event.getCommandId());
+        System.out.println("END OF EVENT REPORT");
+
+
+
+
+
         //these events are significantly easier for us to handle. We know that they are meant for us
         //all we need to do is find the right command
         for(CommandTemplate command : commandSet){
