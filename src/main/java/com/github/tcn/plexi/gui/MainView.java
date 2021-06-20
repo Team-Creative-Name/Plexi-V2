@@ -3,6 +3,7 @@ package com.github.tcn.plexi.gui;
 
 import com.github.tcn.plexi.discordBot.DiscordBot;
 import com.github.tcn.plexi.Settings;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -103,6 +104,7 @@ public class MainView extends JFrame {
                 //shut down Jframe and exit program
                 super.windowClosing(e);
                 dispose();
+                LoggerFactory.getLogger("Plexi: GUI").info("GUI Closed. Exiting");
                 System.exit(0);
             }
         });

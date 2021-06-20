@@ -26,11 +26,11 @@ ownerID = "0"
 // Bot prefix
 prefix = "."
 
-//Ombi URL
-ombiURL = "URL_HERE"
+//Overseerr URL
+overseerrURL = "URL_HERE"
 
-//Ombi Key
-ombiKey = "KEY_HERE"
+//Overseerr Key
+overseerrKey = "KEY_HERE"
 
 //Allow users other than the bot owner to view media requests (default is true)
 usersViewRequests = "true"

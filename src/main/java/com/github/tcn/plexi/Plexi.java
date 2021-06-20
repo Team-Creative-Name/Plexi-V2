@@ -25,9 +25,6 @@ public class Plexi {
                 "    |__/   Version " + Settings.getInstance().getVersionNumber();
 
 
-
-
-
         SwingUtilities.invokeLater(() -> {
             new MainView().setVisible(true);
 
