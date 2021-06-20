@@ -231,5 +231,4 @@ public class EmbedManager {
         return "https://www.themoviedb.org/movie/" + tmdbId;
     }
 
-
 }

@@ -11,8 +11,6 @@ import java.util.function.Consumer;
 public class ButtonManager implements EventListener {
     private final FixedSizeCache<String, Consumer<? super ButtonInteraction>> listeners = new FixedSizeCache<>(100);
 
-
-
     public void onEvent(GenericEvent event)
     {
         if (event instanceof ButtonClickEvent)
@@ -25,7 +23,6 @@ public class ButtonManager implements EventListener {
             event.reply("This menu timed out!").setEphemeral(true).queue();
             return;
         }
-
         event.deferEdit().queue();
         callback.accept(event);
     }

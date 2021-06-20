@@ -7,7 +7,6 @@ import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import com.github.tcn.plexi.overseerr.templates.movieInfo.MovieInfo;
 import com.github.tcn.plexi.overseerr.templates.request.RequestTemplate;
 import com.github.tcn.plexi.overseerr.templates.search.Result;
-import com.github.tcn.plexi.overseerr.templates.tvInfo.Season;
 import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -16,9 +15,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.ButtonInteraction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SearchSubmenu extends Paginator {
     private final Boolean isMovie;
@@ -49,8 +45,6 @@ public class SearchSubmenu extends Paginator {
         }
 
         this.infoEmbed = generateEmbed();
-
-
     }
 
     @Override
@@ -71,13 +65,11 @@ public class SearchSubmenu extends Paginator {
         EmbedManager eb = new EmbedManager();
         if(isMovie){
             EmbedBuilder embed = eb.generateMovieInfoEmbed(movieInfo);
-            System.out.println("Should have media");
             return  embed.build();
         }else{
             return eb.generateTvInfoEmbed(tvInfo).build();
         }
     }
-
 
 
     @Override
@@ -93,7 +85,6 @@ public class SearchSubmenu extends Paginator {
                     .setEmbed(infoEmbed).append("Getting more info for: ").append(searchResult.getName())
                     .setActionRows(getPaginatorButtons())
                     .build();
-            //MESSAGE.reply(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
             MESSAGE.editMessage(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
         }
 

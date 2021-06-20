@@ -66,9 +66,6 @@ public class DiscordBot {
         this.handler = new CommandHandler();
         botInstance.addEventListener(handler);
 
-        //finally, update all of the commands
-        //botInstance.updateCommands().queue();
-
     }
 
     public void stopBot() {

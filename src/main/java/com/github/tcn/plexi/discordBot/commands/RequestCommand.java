@@ -1,11 +1,9 @@
 package com.github.tcn.plexi.discordBot.commands;
 
 import com.github.tcn.plexi.Settings;
-import com.github.tcn.plexi.discordBot.paginators.Paginator;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import com.github.tcn.plexi.overseerr.templates.movieInfo.MovieInfo;
 import com.github.tcn.plexi.overseerr.templates.request.RequestTemplate;
-import com.github.tcn.plexi.overseerr.templates.tvInfo.Season;
 import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -15,9 +13,6 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RequestCommand extends CommandTemplate{
 
@@ -72,9 +67,7 @@ public class RequestCommand extends CommandTemplate{
     public void executeSlashCommand(SlashCommandEvent event) {
         event.deferReply().setEphemeral(false).queue();
         boolean isMovie = event.getOptions().get(0).getAsString().equals("movie");
-
         event.getHook().editOriginal(requestMedia(isMovie, event.getOptions().get(1).getAsString())).queue();
-        System.out.println("aaa");
     }
 
     private String requestMedia(boolean isMovie, String idNum){
@@ -89,12 +82,10 @@ public class RequestCommand extends CommandTemplate{
             MovieInfo info = caller.getMovieInfo(Integer.parseInt(idNum));
             if(!info.allowRequests()){
                 //inform the user that we cant do that
-                System.out.println("can we request?");
                 return "Cannot request " + info.getTitle() + ". Movie is either already requested or available on Plex";
             }
             //set the movie title
             mediaTitle = info.getTitle();
-            System.out.println("We have a title");
         }else{//if not movie, must be tv show
             //create tvInfo object so we can check to see if we should request
             TvInfo info = caller.getTvInfo(Integer.parseInt(idNum));

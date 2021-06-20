@@ -7,11 +7,6 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.ButtonInteraction;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public abstract class Paginator {
 
@@ -170,8 +165,6 @@ public abstract class Paginator {
             return (T) this;
         }
 
-
     }
-
 
 }

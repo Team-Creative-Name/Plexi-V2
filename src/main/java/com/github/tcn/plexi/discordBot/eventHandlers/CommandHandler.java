@@ -28,7 +28,6 @@ public class CommandHandler extends ListenerAdapter {
         registerCommand(new PingCommand());
         registerCommand(new HelpCommand());
         registerCommand(new SearchCommand(buttonManager));
-        registerCommand(new SlowCommand());
         registerCommand(new PingCommand());
         registerCommand(new RequestCommand());
 
@@ -57,8 +56,6 @@ public class CommandHandler extends ListenerAdapter {
             event.deferEdit().setActionRows().queue();
             return;
         }
-
-        LoggerFactory.getLogger("Plexi: Commands").info("button: " + event.getButton().getLabel() + " was pushed!");
 
         buttonManager.onEvent(event);
     }

@@ -73,7 +73,6 @@ public class SearchPaginator extends Paginator {
     @Override
     protected void showPage() {
         EmbedManager manager = new EmbedManager();
-        System.out.println("showing page number " + currentPage);
         if(IS_SLASH_COMMAND && sentMessage == null){
             SLASH_EVENT.getHook()
                     .editOriginal("Search Results")
@@ -83,7 +82,6 @@ public class SearchPaginator extends Paginator {
 
         }else{
             //check to see if we have already responded once
-            System.out.println("trying this");
             if(sentMessage == null){
                 Message toSend = new MessageBuilder()
                         .setEmbed(manager.generateMediaSearchEmbed(SEARCH_RESULTS, currentPage).build())
@@ -144,8 +142,6 @@ public class SearchPaginator extends Paginator {
             this.searchResults = searchResults;
             return this;
         }
-
-
 
     }
 }

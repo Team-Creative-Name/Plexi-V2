@@ -1,6 +1,9 @@
 package com.github.tcn.plexi;
 
 import com.github.tcn.plexi.discordBot.DiscordBot;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,8 +121,8 @@ public class Settings {
             OWNER_ID = properties.getProperty("ownerID").replaceAll("^\"|\"$", "");
             plexiLogger.info("Owner ID: " + OWNER_ID);
             PREFIX = properties.getProperty("prefix").replaceAll("^\"|\"$", "");
-            OVERSEERR_URL = properties.getProperty("ombiURL").replaceAll("^\"|\"$", "");
-            OVERSEERR_KEY = properties.getProperty("ombiKey").replaceAll("^\"|\"$", "");
+            OVERSEERR_URL = properties.getProperty("overseerrURL").replaceAll("^\"|\"$", "");
+            OVERSEERR_KEY = properties.getProperty("overseerrKey").replaceAll("^\"|\"$", "");
 
             //this one is a bit special because we need to cast it to a boolean - this value defaults to false if an invalid value is provided
             USERS_VIEW_REQUESTS = Boolean.valueOf(properties.getProperty("usersViewRequests").replaceAll("^\"|\"$", "").toLowerCase());
@@ -235,7 +238,7 @@ public class Settings {
      * @return {@code false} if any of the loaded settings are invalid, {@code true} otherwise.
      */
     //we need a way to validate as many of the settings variables as possible
-    //This is very rudimentary validation that checks to ensure that values are not empty and arent default. The Ombi API is checked to see if it can connect.
+    //This is very rudimentary validation that checks to ensure that values are not empty and arent default. The Overseerr API is checked to see if it can connect.
     //TODO: Make this method a bit less clunky
     private boolean validateSettings() {
         boolean isValid = !TOKEN.equals("") && !TOKEN.equals("BOT_TOKEN_HERE");
@@ -245,11 +248,11 @@ public class Settings {
         if (PREFIX.equals("")) {
             isValid = false;
         }
-        //check to ensure ombiURL != null;
+        //check to ensure overseerURL != null;
         if (OVERSEERR_URL.equals("") || OVERSEERR_URL.equals("URL_HERE")) {
             isValid = false;
         }
-        //check to ensure ombiKey != null;
+        //check to ensure OverseerrKey != null;
         if (OVERSEERR_KEY.equals("") || OVERSEERR_KEY.equals("KEY_HERE")) {
             isValid = false;
         }
@@ -262,10 +265,36 @@ public class Settings {
             isValid = false;
         }
 
-        //ping the ombi API to see if we have valid settings
+        //ping the overseerr API to see if we have valid settings
         //if this throws an exception, we have invalid values
         //NOTE: There is no reason to check this if isValid is false
+        isValid = checkOverseerrConnectivity();
+
         return isValid;
+    }
+
+    private boolean checkOverseerrConnectivity(){
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(OVERSEERR_URL + "/api/v1/status")
+                .addHeader("accept", "application/json")
+                .build();
+
+        try(Response response = client.newCall(request).execute()){
+            if(response.isSuccessful()){
+                LoggerFactory.getLogger("Plexi: Settings").info("Successfully connected to Overseerr");
+                return true;
+            }
+        }catch (Exception e){
+            LoggerFactory.getLogger("Plexi: Settings").info("Failed to connect to Overseerr");
+            JOptionPane.showMessageDialog(null, "Unable to connect to Overseerr - Please check your settings", "Plexi - Connectivity Issue", JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
+        LoggerFactory.getLogger("Plexi: Settings").info("Failed to connect to Overseerr");
+        JOptionPane.showMessageDialog(null, "Unable to connect to Overseerr - Please check your settings", "Plexi - Connectivity Issue", JOptionPane.INFORMATION_MESSAGE);
+        return false;
     }
 
 
