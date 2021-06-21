@@ -76,13 +76,13 @@ public class SearchSubmenu extends Paginator {
     protected void showPage() {
         if(IS_SLASH_COMMAND){
             SLASH_EVENT.getHook()
-                    .editOriginal("Getting more info for: " + searchResult.getName())
+                    .editOriginal("Getting more info for: " + searchResult.getActualTitle())
                     .setEmbeds(infoEmbed)
                     .setActionRows(getPaginatorButtons())
                     .queue();
         }else{//since there is no other message, just make a new one
             Message toSend = new MessageBuilder()
-                    .setEmbed(infoEmbed).append("Getting more info for: ").append(searchResult.getName())
+                    .setEmbed(infoEmbed).append("Getting more info for: ").append(searchResult.getActualTitle())
                     .setActionRows(getPaginatorButtons())
                     .build();
             MESSAGE.editMessage(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);

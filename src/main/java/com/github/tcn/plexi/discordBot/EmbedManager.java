@@ -20,8 +20,6 @@ import java.util.Set;
 public class EmbedManager {
 
     public EmbedBuilder getHelpEmbed(){
-        System.out.println("Start");
-
             String prefix = Settings.getInstance().getPrefix();
             Set<CommandTemplate> commandSet = DiscordBot.getInstance().getCommandHandler().getCommandSet();
 

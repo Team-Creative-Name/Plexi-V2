@@ -237,4 +237,27 @@ public class Result {
     public void setProfilePath(Object profilePath) {
         this.profilePath = profilePath;
     }
+
+    //the API has different title fields depending on the media type and I dont want to have to write code to figure out
+    // what it is each time I try to get the name. This runs through every field until it finds a string that isnt null
+    public String getActualTitle(){
+
+        if("movie".equals(mediaType)){
+            //movies should be named with the 'title' or 'original title' field. Try title first
+            if(title != null){
+                return title;
+            }else if(originalTitle != null){
+                return originalTitle;
+            }
+        }else if("tv".equals(mediaType)){
+            //tv shows should be named with the name or original name
+            if(name != null){
+                return name;
+            }else if(originalName != null){
+                return originalTitle;
+            }
+        }
+        //if none of those worked, just return unknown
+        return "Unknown Title";
+    }
 }
