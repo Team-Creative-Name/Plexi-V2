@@ -29,7 +29,6 @@ public class ButtonManager implements EventListener {
 
     public void addListener(String prefix, Consumer<? super ButtonInteraction> callback){
         listeners.add(prefix, callback);
-        System.out.println("test");
     }
 
 }

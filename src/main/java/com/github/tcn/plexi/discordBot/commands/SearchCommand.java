@@ -42,15 +42,22 @@ public class SearchCommand extends CommandTemplate {
         //get the search results
         MediaSearch results = new OverseerApiCaller().Search(content);
 
-        SearchPaginator paginator = new SearchPaginator.Builder()
-                .setSearchResults(results)
-                .SetMessage(message)
-                .setUserId(author.getIdLong())
-                .wrapPages(true)
-                .setButtonManager(buttons)
-                .build();
 
-        paginator.paginate(1);
+        //ensure that there are any results
+        if((results != null) && results.getTotalResults() != 0){
+            SearchPaginator paginator = new SearchPaginator.Builder()
+                    .setSearchResults(results)
+                    .SetMessage(message)
+                    .setUserId(author.getIdLong())
+                    .wrapPages(true)
+                    .setButtonManager(buttons)
+                    .build();
+
+            paginator.paginate(1);
+        }else{
+            event.getMessage().reply("No results found for the query: \""+ content+"\"").mentionRepliedUser(false).queue();
+        }
+
     }
 
     @Override
@@ -62,16 +69,23 @@ public class SearchCommand extends CommandTemplate {
         //now lets go ahead and grab the search results
         MediaSearch results = new OverseerApiCaller().Search(event.getOptions().get(0).getAsString());
 
+        //ensure that there are any results
+        if((results != null) && results.getTotalResults() != 0){
+            SearchPaginator paginator = new SearchPaginator.Builder()
+                    .setSearchResults(results)
+                    .SetSlashCommand(event)
+                    .setUserId(event.getUser().getIdLong())
+                    .wrapPages(true)
+                    .setButtonManager(buttons)
+                    .build();
 
-        SearchPaginator paginator = new SearchPaginator.Builder()
-                .setSearchResults(results)
-                .SetSlashCommand(event)
-                .setUserId(event.getUser().getIdLong())
-                .wrapPages(true)
-                .setButtonManager(buttons)
-                .build();
+            paginator.paginate(1);
+        }else{
+            event.getHook().editOriginal("No results found for the query: \""+event.getOptions().get(0).getAsString()+"\"").queue();
+        }
 
-        paginator.paginate(1);
+
+
 
     }
 
