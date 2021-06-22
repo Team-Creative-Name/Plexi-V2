@@ -69,7 +69,6 @@ public class InfoCommand extends CommandTemplate{
         //reply to discord
         event.deferReply().queue();
 
-        String wow = event.getOptions().get(0).toString().toLowerCase();
         try{
             //check the media type
             if(event.getOptions().get(0).getAsString().toLowerCase().matches("tv|television|telly|tele|t")){

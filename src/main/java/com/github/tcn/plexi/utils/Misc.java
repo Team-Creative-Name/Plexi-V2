@@ -41,6 +41,11 @@ public class Misc {
         return toStrip;
     }
 
+    public static MediaSearch filterByType(MediaSearch search, String filter){
+        search.getResults().removeIf(result -> !result.getMediaType().equals(filter));
+        return search;
+    }
+
 
 
 
