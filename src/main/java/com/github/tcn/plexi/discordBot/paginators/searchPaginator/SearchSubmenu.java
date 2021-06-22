@@ -55,7 +55,12 @@ public class SearchSubmenu extends Paginator {
 
             if(!buttonName[0].equals(getID())){
                 if(buttonName[2].equals("submenuAccept")){
-                    sentMessage.reply(requestMedia()).mentionRepliedUser(false).queue();
+                    //if the message we are responding to is the last message in the channel, just post a new message. It should look a lot cleaner
+                    if(sentMessage.getId().equals(sentMessage.getChannel().getLatestMessageId())){
+                        sentMessage.getChannel().sendMessage(requestMedia()).queue();
+                    }else{
+                        sentMessage.reply(requestMedia()).mentionRepliedUser(false).queue();
+                    }
                 }
             }
         }
@@ -81,8 +86,7 @@ public class SearchSubmenu extends Paginator {
                     .setActionRows(getPaginatorButtons())
                     .queue();
         }else{//since there is no other message, just make a new one
-            Message toSend = new MessageBuilder()
-                    .setEmbed(infoEmbed).append("Getting more info for: ").append(searchResult.getActualTitle())
+            Message toSend = new MessageBuilder().setEmbeds(infoEmbed).append("Getting more info for: ").append(searchResult.getActualTitle())
                     .setActionRows(getPaginatorButtons())
                     .build();
             MESSAGE.editMessage(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
