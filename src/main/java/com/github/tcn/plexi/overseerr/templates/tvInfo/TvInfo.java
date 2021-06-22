@@ -178,8 +178,23 @@ public class TvInfo {
         System.out.println("Done");
     }
 
-    public List<Integer> getEpisodeRunTime() {
+    //This method can cause problems. It is replaced by getAvgEpisodeRuntime
+    private List<Integer> getEpisodeRuntime() {
         return episodeRunTime;
+    }
+
+    public int getAvgEpisodeRuntime(){
+        if(episodeRunTime == null || episodeRunTime.size() == 0){
+            //This will only happen if there are no episodes, so it would be 0
+            return 0;
+        }
+        int avgRuntime = 0;
+        for(Integer runtimes : episodeRunTime){
+            avgRuntime += runtimes;
+        }
+
+        return Math.floorDiv(avgRuntime, episodeRunTime.size());
+
     }
 
     public void setEpisodeRunTime(List<Integer> episodeRunTime) {
@@ -252,6 +267,14 @@ public class TvInfo {
 
     public List<Network> getNetworks() {
         return networks;
+    }
+
+    public String getFirstNetwork(){
+        if(networks == null || networks.size() == 0){
+            return "Unknown";
+        }else{
+            return networks.get(0).getName();
+        }
     }
 
     public void setNetworks(List<Network> networks) {
@@ -476,6 +499,5 @@ public class TvInfo {
             return "Not Requested";
         }
     }
-
 
 }
