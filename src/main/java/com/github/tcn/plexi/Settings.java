@@ -32,7 +32,7 @@ public class Settings {
     //reference to this object - the only one
     private static Settings SETTINGS_INSTANCE = null;
     //the version number
-    private final String VERSION_NUMBER = "v2.0-beta";
+    private final String VERSION_NUMBER = "v2.0-beta.2";
     //path to discord hosted icon @512x
     private final String HOSTED_ICON_URL = "https://cdn.discordapp.com/attachments/675899155083952148/736485323663474728/Plexi_icon_512x.png";
     //path to spashes file
