@@ -111,7 +111,6 @@ public class EmbedManager {
         }else{
             eb.addField("Availability: ", stringVerifier(String.valueOf(info.getMediaInfo().getStatus()), 9), true);
             eb.addField("Requested: ", stringVerifier(info.getRequestStatus(), 5), true);
-
         }
 
         //make sure the poster exists
@@ -121,13 +120,13 @@ public class EmbedManager {
             eb.setThumbnail("https://cdn.discordapp.com/attachments/592540131097837578/656822685912793088/poster.png");
         }
 
-        eb.addField("Network: ", stringVerifier(info.getNetworks().get(0).getName(), 4), true)
+        eb.addField("Network: ", stringVerifier(info.getFirstNetwork(), 4), true)
                 .addField("Number of Episodes: ", stringVerifier(String.valueOf(info.getNumberOfEpisodes()), 5), true)
                 .addField("Status: ", stringVerifier(info.getStatus(), 5), true)
                 .addField("Release Date: ",stringVerifier(info.getFirstAirDate(),8), true)
-                .addField("Average Runtime: ", stringVerifier(String.valueOf(info.getEpisodeRunTime().get(0)), 5), true)
+                .addField("Average Runtime: ", stringVerifier(info.getAvgEpisodeRuntime() + " minutes", 5), true)
                 .addField("TMDb ID: ", stringVerifier(String.valueOf(info.getId()), 3), true)
-                .addField("Latest Episode Air Date: ", stringVerifier(info.getLastEpisodeToAir().getAirDate(),8), true)
+                .addField("Latest Episode Air Date: ", stringVerifier(info.getLastAirDate(),8), true)
                 .setFooter(getRandomSplash(), Settings.getInstance().getHostedIconURL());
 
         return eb;
