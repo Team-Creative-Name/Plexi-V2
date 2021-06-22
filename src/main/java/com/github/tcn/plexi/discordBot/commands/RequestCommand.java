@@ -33,8 +33,6 @@ public class RequestCommand extends CommandTemplate{
 
     @Override
     public void executeTextCommand(User author, TextChannel channel, Message message, String content, GuildMessageReceivedEvent event) {
-        //we need to split the string
-        String[] args = new String[2];
         int mediaId;
         boolean isMovie;
         try{

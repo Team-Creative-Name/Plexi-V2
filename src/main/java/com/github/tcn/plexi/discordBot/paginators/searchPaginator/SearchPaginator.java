@@ -40,16 +40,7 @@ public class SearchPaginator extends Paginator {
                 } else if (buttonName[2].equals("next")){
                     incPageNum();
                 } else if (buttonName[2].equals("select")){
-                    //get a reference to the search result
-                    Result result = SEARCH_RESULTS.getResults().get(currentPage);
-
-                    //finish setting up the submenu
-                    submenuBuilder.SetMessage(this.sentMessage);
-                    submenuBuilder.setUserId(USER_ID);
-                    SearchSubmenu submenu = submenuBuilder.setSearchResults(result).build();
-
-                    //show the submenu
-                    submenu.paginate(0);
+                    enterSubmenu();
 
                     //we dont want to show the wrong thing so return and cancel the page update
                     return;
@@ -67,11 +58,34 @@ public class SearchPaginator extends Paginator {
         }
     }
 
+    protected void enterSubmenu(){
+        //get a reference to the search result
+        Result result = SEARCH_RESULTS.getResults().get(currentPage);
+
+        //finish setting up the submenu
+        if(IS_SLASH_COMMAND && sentMessage == null){
+            submenuBuilder.SetSlashCommand(SLASH_EVENT);
+        }else{
+            submenuBuilder.SetMessage(this.sentMessage);
+        }
+        submenuBuilder.setUserId(USER_ID);
+        SearchSubmenu submenu = submenuBuilder.setSearchResults(result).build();
+
+        //show the submenu
+        submenu.paginate(0);
+    }
+
 
 
 
     @Override
     protected void showPage() {
+        //if there is only one page, just go straight to the submenu
+        if(NUMBER_OF_PAGES == 1){
+            enterSubmenu();
+            return;
+        }
+
         EmbedManager manager = new EmbedManager();
         if(IS_SLASH_COMMAND && sentMessage == null){
             SLASH_EVENT.getHook()
@@ -84,13 +98,13 @@ public class SearchPaginator extends Paginator {
             //check to see if we have already responded once
             if(sentMessage == null){
                 Message toSend = new MessageBuilder()
-                        .setEmbed(manager.generateMediaSearchEmbed(SEARCH_RESULTS, currentPage).build())
+                        .setEmbeds(manager.generateMediaSearchEmbed(SEARCH_RESULTS, currentPage).build())
                         .append("Search Results")
                         .setActionRows(getPaginatorButtons())
                         .build();
                 MESSAGE.reply(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
             }else{
-                sentMessage.editMessage(manager.generateMediaSearchEmbed(SEARCH_RESULTS,currentPage).build()).queue();
+                sentMessage.editMessageEmbeds(manager.generateMediaSearchEmbed(SEARCH_RESULTS, currentPage).build()).queue();
             }
         }
     }

@@ -61,6 +61,7 @@ public class SearchSubmenu extends Paginator {
                     }else{
                         sentMessage.reply(requestMedia()).mentionRepliedUser(false).queue();
                     }
+                    sentMessage.editMessage(sentMessage.getContentRaw()).setActionRows().queue();
                 }
             }
         }
@@ -84,7 +85,7 @@ public class SearchSubmenu extends Paginator {
                     .editOriginal("Getting more info for: " + searchResult.getActualTitle())
                     .setEmbeds(infoEmbed)
                     .setActionRows(getPaginatorButtons())
-                    .queue();
+                    .queue(message -> sentMessage = message);
         }else{//since there is no other message, just make a new one
             Message toSend = new MessageBuilder().setEmbeds(infoEmbed).append("Getting more info for: ").append(searchResult.getActualTitle())
                     .setActionRows(getPaginatorButtons())
