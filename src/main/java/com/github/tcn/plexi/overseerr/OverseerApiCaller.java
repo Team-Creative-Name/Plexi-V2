@@ -2,6 +2,7 @@ package com.github.tcn.plexi.overseerr;
 
 import com.github.tcn.plexi.Settings;
 import com.github.tcn.plexi.overseerr.templates.movieInfo.MovieInfo;
+import com.github.tcn.plexi.overseerr.templates.request.allRequests.MediaRequests;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
 import com.google.gson.Gson;
@@ -75,6 +76,10 @@ public class OverseerApiCaller {
             LoggerFactory.getLogger("Plexi: Overseerr-API").error("Unable to get more info about movie: " + tmdbId);
         }
         return null;
+    }
+
+    public MediaRequests getMediaRequests(){
+        
     }
 
     public long getPingTime(){
