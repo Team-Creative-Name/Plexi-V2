@@ -50,7 +50,7 @@ public class MainView extends JFrame {
         setIconImages(icons);
 
         //set system output
-        System.setErr(guiOut);
+        //System.setErr(guiOut); //Disabled for now to bypass issue on certain platforms 
         System.setOut(guiOut);
 
 
