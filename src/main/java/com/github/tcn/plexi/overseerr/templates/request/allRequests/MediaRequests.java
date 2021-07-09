@@ -1,131 +1,53 @@
 
 package com.github.tcn.plexi.overseerr.templates.request.allRequests;
 
+import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
 public class MediaRequests {
 
-    @SerializedName("id")
+    @SerializedName("pageInfo")
     @Expose
-    private Integer id;
-    @SerializedName("status")
+    private PageInfo pageInfo;
+    @SerializedName("results")
     @Expose
-    private Integer status;
-    @SerializedName("media")
-    @Expose
-    private Media media;
-    @SerializedName("createdAt")
-    @Expose
-    private String createdAt;
-    @SerializedName("updatedAt")
-    @Expose
-    private String updatedAt;
-    @SerializedName("requestedBy")
-    @Expose
-    private RequestedBy requestedBy;
-    @SerializedName("modifiedBy")
-    @Expose
-    private ModifiedBy modifiedBy;
-    @SerializedName("is4k")
-    @Expose
-    private Boolean is4k;
-    @SerializedName("serverId")
-    @Expose
-    private Integer serverId;
-    @SerializedName("profileId")
-    @Expose
-    private Integer profileId;
-    @SerializedName("rootFolder")
-    @Expose
-    private String rootFolder;
+    private List<Request> requests = null;
 
-    public Integer getId() {
-        return id;
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
+    public MediaRequests() {
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    /**
+     * 
+     * @param pageInfo
+     * @param requests
+     */
+    public MediaRequests(PageInfo pageInfo, List<Request> requests) {
+        super();
+        this.pageInfo = pageInfo;
+        this.requests = requests;
     }
 
-    public Integer getStatus() {
-        return status;
+    public PageInfo getPageInfo() {
+        return pageInfo;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setPageInfo(PageInfo pageInfo) {
+        this.pageInfo = pageInfo;
     }
 
-    public Media getMedia() {
-        return media;
+    public List<Request> getResults() {
+        return requests;
     }
 
-    public void setMedia(Media media) {
-        this.media = media;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public RequestedBy getRequestedBy() {
-        return requestedBy;
-    }
-
-    public void setRequestedBy(RequestedBy requestedBy) {
-        this.requestedBy = requestedBy;
-    }
-
-    public ModifiedBy getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(ModifiedBy modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
-    public Boolean getIs4k() {
-        return is4k;
-    }
-
-    public void setIs4k(Boolean is4k) {
-        this.is4k = is4k;
-    }
-
-    public Integer getServerId() {
-        return serverId;
-    }
-
-    public void setServerId(Integer serverId) {
-        this.serverId = serverId;
-    }
-
-    public Integer getProfileId() {
-        return profileId;
-    }
-
-    public void setProfileId(Integer profileId) {
-        this.profileId = profileId;
-    }
-
-    public String getRootFolder() {
-        return rootFolder;
-    }
-
-    public void setRootFolder(String rootFolder) {
-        this.rootFolder = rootFolder;
+    public void setResults(List<Request> requests) {
+        this.requests = requests;
     }
 
 }
