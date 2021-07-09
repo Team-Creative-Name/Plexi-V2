@@ -45,8 +45,13 @@ public class PingCommand extends CommandTemplate {
 
 
     @Override
-    public String getHelp() {
+    public String getSlashHelp() {
         return "Gets Plexi's ping time to the various enabled apis";
+    }
+
+    @Override
+    public String getChatHelp() {
+        return getSlashHelp();
     }
 
     @Override

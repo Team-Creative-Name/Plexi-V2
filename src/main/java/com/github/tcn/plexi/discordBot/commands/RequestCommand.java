@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 public class RequestCommand extends CommandTemplate{
 
     public RequestCommand(){
-        CommandData command = new CommandData(getCommandName(), getHelp());
+        CommandData command = new CommandData(getCommandName(), getSlashHelp());
 
         OptionData mediaType = new OptionData(OptionType.STRING, "media_type", "The type of media you are requesting", true);
         mediaType.addChoice("television", "tv")
@@ -106,8 +106,13 @@ public class RequestCommand extends CommandTemplate{
     }
 
     @Override
-    public String getHelp() {
+    public String getSlashHelp() {
         return "Requests media given the TMDb id and media type";
+    }
+
+    @Override
+    public String getChatHelp() {
+        return "Requests media given the TMDb id and media type\nUSAGE: " + Settings.getInstance().getPrefix() + "request {tv|movie} {TMDb_ID}";
     }
 
     @Override

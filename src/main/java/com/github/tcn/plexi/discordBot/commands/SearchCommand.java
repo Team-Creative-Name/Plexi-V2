@@ -1,5 +1,6 @@
 package com.github.tcn.plexi.discordBot.commands;
 
+import com.github.tcn.plexi.Settings;
 import com.github.tcn.plexi.discordBot.eventHandlers.ButtonManager;
 import com.github.tcn.plexi.discordBot.paginators.searchPaginator.SearchPaginator;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
@@ -24,7 +25,7 @@ public class SearchCommand extends CommandTemplate {
 
 
         //This is a custom slash command and we need to register it
-        CommandData command = new CommandData(getCommandName(),getHelp());
+        CommandData command = new CommandData(getCommandName(), getSlashHelp());
         command.addOption(OptionType.STRING,"query", "The name of what you are searching for", true);
 
         //now add some options I guess
@@ -108,8 +109,13 @@ public class SearchCommand extends CommandTemplate {
     }
 
     @Override
-    public String getHelp() {
+    public String getSlashHelp() {
         return "Searches Overseerr for the requested media";
+    }
+
+    @Override
+    public String getChatHelp() {
+        return "Searches Overseerr for the requested media\nUSAGE: " + Settings.getInstance().getPrefix() + "[tv|movie] {query}";
     }
 
     @Override

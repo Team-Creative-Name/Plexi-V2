@@ -17,22 +17,27 @@ public class HelpCommand extends CommandTemplate {
 
     @Override
     public void executeTextCommand(User author, TextChannel channel, Message message, String content, GuildMessageReceivedEvent event) {
-        reply(event, generateHelpEmbed().build());
+        reply(event, generateHelpEmbed(true).build());
     }
 
     @Override
     public void executeSlashCommand(SlashCommandEvent event) {
-        reply(event, generateHelpEmbed().build(),false);
+        reply(event, generateHelpEmbed(false).build(),false);
     }
 
-    private EmbedBuilder generateHelpEmbed(){
+    private EmbedBuilder generateHelpEmbed(boolean isChatCommand){
         EmbedManager manager = new EmbedManager();
-        return manager.getHelpEmbed();
+        return manager.getHelpEmbed(isChatCommand);
     }
 
     @Override
-    public String getHelp() {
+    public String getSlashHelp() {
         return "Returns a list of commands and what they do";
+    }
+
+    @Override
+    public String getChatHelp() {
+        return getSlashHelp();
     }
 
     @Override
