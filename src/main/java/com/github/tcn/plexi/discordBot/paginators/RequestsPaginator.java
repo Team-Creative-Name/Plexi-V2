@@ -13,10 +13,17 @@ public class RequestsPaginator extends Paginator{
 
     final MediaRequests REQUESTS;
 
-
     public RequestsPaginator(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap, ButtonManager buttonManager, MediaRequests requests) {
         super(message, event, userId, numberOfPages, wrap, buttonManager);
         this.REQUESTS = requests;
+        BUTTON_MANAGER.addListener(getID(), this::onButtonClick);
+
+        //add buttons
+        if(numberOfPages != 1){
+            addButton(Button.primary(getID() + ":previous", "◀️ Go Left"));
+            addStopButton();
+            addButton(Button.primary(getID() + ":next", "Go Right ▶️️"));
+        }
     }
 
     @Override
@@ -70,7 +77,6 @@ public class RequestsPaginator extends Paginator{
     public static class Builder extends Paginator.Builder<RequestsPaginator.Builder, RequestsPaginator>{
         private int numOfPages;
         private MediaRequests requests;
-
 
 
         @Override

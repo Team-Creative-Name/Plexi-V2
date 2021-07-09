@@ -149,16 +149,20 @@ public class EmbedManager {
     public EmbedBuilder createRequestEmbed(MediaRequests requests, int requestNum){
         Request request = requests.getResults().get(requestNum);
         EmbedBuilder eb = new EmbedBuilder()
-                .setColor(new Color(0x00Ae86))
-                .setTitle("WORK IN PROGESS");
+                .setColor(new Color(0x00Ae86));
 
+        if("movie".equals(request.getType())){
+            eb.setTitle("TMDb ID: " + request.getMedia().getTmdbId(), getTmdbMovieUrl(request.getMedia().getTmdbId()));
+        }else{
+            eb.setTitle("TMDb ID: " + request.getMedia().getTmdbId(), getTmdbTvUrl(request.getMedia().getTmdbId()));
+        }
 
-
-
-
-
-
-
+        eb.addField("Requested By:", request.getRequestedBy().getDisplayName(), true)
+            .addField("Media Type: ", request.getType(), true)
+            .addField("Request Status: ", stringVerifier(request.getMedia().getStatus().toString(), 9), true)
+            .addField("First Requested: ", stringVerifier(request.getCreatedAt(), 8), true)
+            .addField("Last Updated: ", stringVerifier(request.getUpdatedAt(), 8), true)
+            .setFooter("Request " + (requestNum + 1) + " of " + requests.getResults().size(), Settings.getInstance().getHostedIconURL());
 
         return eb;
     }

@@ -90,7 +90,6 @@ public class OverseerApiCaller {
             number = "20"; //this is the default for overseerr's api
         }
 
-
         OkHttpClient client = new OkHttpClient();
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         Request request = new Request.Builder()
@@ -104,7 +103,6 @@ public class OverseerApiCaller {
                 throw new IOException("Unexpected response from overseerr: " + response);
             }
             String response1 = response.body().string();
-            System.out.println("AAAAAAA2");
             return gson.fromJson(response1, MediaRequests.class);
 
         }catch (IOException e){
