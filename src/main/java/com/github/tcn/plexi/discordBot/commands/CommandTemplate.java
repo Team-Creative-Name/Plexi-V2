@@ -27,7 +27,8 @@ public abstract class CommandTemplate {
 
     public abstract void executeTextCommand(User author, TextChannel channel, Message message, String content, GuildMessageReceivedEvent event);
     public abstract void executeSlashCommand(SlashCommandEvent event);
-    public abstract String getHelp();
+    public abstract String getSlashHelp();
+    public abstract String getChatHelp();
     public abstract String getCommandName();
 
 
@@ -37,7 +38,7 @@ public abstract class CommandTemplate {
     }
 
     protected void registerSlashCommand(){
-        this.slashCommand = new CommandData(getCommandName(), getHelp());
+        this.slashCommand = new CommandData(getCommandName(), getSlashHelp());
     }
     protected void registerSlashCommand(String commandName, String help){
         this.slashCommand = new CommandData(commandName, help);

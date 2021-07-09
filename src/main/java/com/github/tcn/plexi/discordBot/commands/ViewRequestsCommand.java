@@ -1,12 +1,11 @@
 package com.github.tcn.plexi.discordBot.commands;
 
-import com.github.tcn.plexi.discordBot.EmbedManager;
+import com.github.tcn.plexi.Settings;
 import com.github.tcn.plexi.discordBot.eventHandlers.ButtonManager;
 import com.github.tcn.plexi.discordBot.paginators.RequestsPaginator;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import com.github.tcn.plexi.overseerr.templates.request.allRequests.MediaRequests;
 import com.github.tcn.plexi.utils.Misc;
-import com.sun.tools.javac.util.StringUtils;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -25,7 +24,7 @@ public class ViewRequestsCommand extends CommandTemplate{
         BUTTON_MANAGER = buttons;
 
         //this is going to be our most complex slash command yet.
-        CommandData command = new CommandData(getCommandName(), getHelp());
+        CommandData command = new CommandData(getCommandName(), getSlashHelp());
 
         //all options are optional
         command.addOptions(new OptionData(OptionType.STRING, "media-type", "The type of media to filter by - Defaults to all", false)
@@ -157,8 +156,13 @@ public class ViewRequestsCommand extends CommandTemplate{
     }
 
     @Override
-    public String getHelp() {
+    public String getSlashHelp() {
         return "returns all requests matching the given parameters";
+    }
+
+    @Override
+    public String getChatHelp() {
+        return "Returns all requests in specified increments\nUSAGE: " + Settings.getInstance().getPrefix() + "[Max_Number_To_Display]";
     }
 
     @Override

@@ -15,13 +15,12 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import org.graalvm.compiler.lir.amd64.AMD64BinaryConsumer;
 
 public class InfoCommand extends CommandTemplate{
 
     public InfoCommand(){
         //add slash command with options
-        CommandData command = new CommandData(getCommandName(), getHelp());
+        CommandData command = new CommandData(getCommandName(), getSlashHelp());
 
         OptionData option = new OptionData(OptionType.STRING, "media-type", "The type of media you are requesting", true);
         option.addChoice("television", "tv")
@@ -116,8 +115,13 @@ public class InfoCommand extends CommandTemplate{
 
 
     @Override
-    public String getHelp() {
-        return "Gets information about a certain bit of media given the type and TMDb ID number ";
+    public String getSlashHelp() {
+        return "Gets information about a certain bit of media given the type and TMDb ID number";
+    }
+
+    @Override
+    public String getChatHelp() {
+        return "Gets information about a certain bit of media given the type and TMDb ID number\nUSAGE: " + Settings.getInstance().getPrefix() + "info {tv|movie} {TMDb_ID}";
     }
 
     @Override
