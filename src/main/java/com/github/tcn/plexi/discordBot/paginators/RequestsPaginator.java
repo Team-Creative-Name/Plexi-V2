@@ -49,7 +49,7 @@ public class RequestsPaginator extends Paginator{
             SLASH_EVENT.getHook()
                     .editOriginal("Requests:")
                     .setEmbeds(manager.createRequestEmbed(REQUESTS, currentPage).build())
-                    .setActionRows(getPaginatorButtons())
+                    .setActionRows(getPaginatorButtonsAsActionRow())
                     .queue(message -> sentMessage = message);
 
         }else{
@@ -58,28 +58,13 @@ public class RequestsPaginator extends Paginator{
                 Message toSend = new MessageBuilder()
                         .setEmbeds(manager.createRequestEmbed(REQUESTS, currentPage).build())
                         .append("Requests:")
-                        .setActionRows(getPaginatorButtons())
+                        .setActionRows(getPaginatorButtonsAsActionRow())
                         .build();
                 MESSAGE.reply(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
             }else{
                 sentMessage.editMessageEmbeds(manager.createRequestEmbed(REQUESTS, currentPage).build()).queue();
             }
         }
-    }
-
-    @Override
-    protected Button getPreviousButton() {
-        return Button.primary(getID() + ":previous", "◀️ Go Left");
-    }
-
-    @Override
-    protected Button getSelectButton() {
-        return null;
-    }
-
-    @Override
-    protected Button getRightButton() {
-        return Button.primary(getID() + ":next", "Go Right ▶️️");
     }
 
     public static class Builder extends Paginator.Builder<RequestsPaginator.Builder, RequestsPaginator>{

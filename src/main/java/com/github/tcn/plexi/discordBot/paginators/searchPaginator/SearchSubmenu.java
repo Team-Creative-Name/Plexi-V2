@@ -45,6 +45,15 @@ public class SearchSubmenu extends Paginator {
         }
 
         this.infoEmbed = generateEmbed();
+
+        //add paginator buttons
+        addStopButton();
+        if(canRequest){
+            addButton(Button.success(getID() + ":submenuAccept", "Request"));
+        }else{
+            addButton(Button.success(getID() + ":submenuAccept", "Request").asDisabled());
+        }
+
     }
 
     @Override
@@ -84,33 +93,15 @@ public class SearchSubmenu extends Paginator {
             SLASH_EVENT.getHook()
                     .editOriginal("Getting more info for: " + searchResult.getActualTitle())
                     .setEmbeds(infoEmbed)
-                    .setActionRows(getPaginatorButtons())
+                    .setActionRows(getPaginatorButtonsAsActionRow())
                     .queue(message -> sentMessage = message);
         }else{//since there is no other message, just make a new one
             Message toSend = new MessageBuilder().setEmbeds(infoEmbed).append("Getting more info for: ").append(searchResult.getActualTitle())
-                    .setActionRows(getPaginatorButtons())
+                    .setActionRows(getPaginatorButtonsAsActionRow())
                     .build();
             MESSAGE.editMessage(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
         }
 
-    }
-
-    @Override
-    protected Button getPreviousButton() {
-        return null; //no left button
-    }
-
-    @Override
-    protected Button getSelectButton() {
-        if(canRequest){
-            return Button.success(getID() + ":submenuAccept", "Request");
-        }
-        return Button.success(getID() + ":submenuAccept", "Request").asDisabled();
-    }
-
-    @Override
-    protected Button getRightButton() {
-        return null; //no right button
     }
 
     private String requestMedia(){
@@ -150,7 +141,6 @@ public class SearchSubmenu extends Paginator {
         return "Error requesting media!";
 
     }
-
 
     public static class Builder extends Paginator.Builder<SearchSubmenu.Builder, SearchSubmenu>{
 
