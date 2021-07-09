@@ -1,5 +1,6 @@
 package com.github.tcn.plexi.utils;
 
+import com.github.tcn.plexi.overseerr.templates.request.allRequests.MediaRequests;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.search.Result;
 import org.slf4j.Logger;
@@ -44,6 +45,11 @@ public class Misc {
     public static MediaSearch filterByType(MediaSearch search, String filter){
         search.getResults().removeIf(result -> !result.getMediaType().equals(filter));
         return search;
+    }
+
+    public static MediaRequests filterByType(MediaRequests requests, String filter){
+        requests.getResults().removeIf(request -> !request.getType().equals(filter));
+        return requests;
     }
 
 

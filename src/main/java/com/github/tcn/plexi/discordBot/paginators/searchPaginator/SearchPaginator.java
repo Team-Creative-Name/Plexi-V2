@@ -24,6 +24,18 @@ public class SearchPaginator extends Paginator {
         this.SEARCH_RESULTS = searchResults;
         //we should set up the submenu
         submenuBuilder.setButtonManager(buttonManager);
+
+        //register the required buttons - changes with number of pages
+        if(numberOfPages == 1){
+            addStopButton();
+            addButton(Button.success(getID() + ":select", "Select This"));
+        }else{
+            addButton(Button.primary(getID() + ":previous", "◀️ Go Left"));
+            addStopButton();
+            addButton(Button.success(getID() + ":select", "Select This"));
+            addButton(Button.primary(getID() + ":next", "Go Right ▶️️"));
+        }
+
     }
 
 
@@ -91,7 +103,7 @@ public class SearchPaginator extends Paginator {
             SLASH_EVENT.getHook()
                     .editOriginal("Search Results")
                     .setEmbeds(manager.generateMediaSearchEmbed(SEARCH_RESULTS, currentPage).build())
-                    .setActionRows(getPaginatorButtons())
+                    .setActionRows(getPaginatorButtonsAsActionRow())
                     .queue(message -> sentMessage = message);
 
         }else{
@@ -100,7 +112,7 @@ public class SearchPaginator extends Paginator {
                 Message toSend = new MessageBuilder()
                         .setEmbeds(manager.generateMediaSearchEmbed(SEARCH_RESULTS, currentPage).build())
                         .append("Search Results")
-                        .setActionRows(getPaginatorButtons())
+                        .setActionRows(getPaginatorButtonsAsActionRow())
                         .build();
                 MESSAGE.reply(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
             }else{
@@ -108,22 +120,6 @@ public class SearchPaginator extends Paginator {
             }
         }
     }
-
-    @Override
-    protected Button getPreviousButton() {
-        return Button.primary(getID() + ":previous", "◀️ Go Left");
-    }
-
-    @Override
-    protected Button getSelectButton() {
-        return Button.success(getID() + ":select", "Select This");
-    }
-
-    @Override
-    protected Button getRightButton() {
-        return Button.primary(getID() + ":next", "Go Right ▶️️");
-    }
-
 
     public static class Builder extends Paginator.Builder<SearchPaginator.Builder, SearchPaginator>{
         private int numOfPages;

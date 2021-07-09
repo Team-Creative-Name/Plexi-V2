@@ -31,6 +31,7 @@ public class CommandHandler extends ListenerAdapter {
         registerCommand(new PingCommand());
         registerCommand(new RequestCommand());
         registerCommand(new InfoCommand());
+        registerCommand(new ViewRequestsCommand(buttonManager));
 
         //Log Command Loading
         LoggerFactory.getLogger("Plexi: Commands").info("loaded " + commandSet.size() + " commands!");

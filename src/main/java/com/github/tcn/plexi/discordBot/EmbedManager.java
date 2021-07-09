@@ -3,6 +3,8 @@ package com.github.tcn.plexi.discordBot;
 import com.github.tcn.plexi.Settings;
 import com.github.tcn.plexi.discordBot.commands.CommandTemplate;
 import com.github.tcn.plexi.overseerr.templates.movieInfo.MovieInfo;
+import com.github.tcn.plexi.overseerr.templates.request.allRequests.MediaRequests;
+import com.github.tcn.plexi.overseerr.templates.request.allRequests.Request;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.search.Result;
 import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
@@ -132,8 +134,6 @@ public class EmbedManager {
         return eb;
     }
 
-
-
     public EmbedBuilder createPingEmbed(long gatewayPing, long discordPing, long overseerrPing) {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(new Color(0x00Ae86));
@@ -142,6 +142,27 @@ public class EmbedManager {
         eb.addField("Gateway", stringVerifier(gatewayPing + "ms", 5), true);
         eb.addField("Discord", stringVerifier(String.valueOf(discordPing), 5) + "ms", true);
         eb.addField("Overseerr", stringVerifier(String.valueOf(overseerrPing), 5) + "ms", true);
+
+        return eb;
+    }
+
+    public EmbedBuilder createRequestEmbed(MediaRequests requests, int requestNum){
+        Request request = requests.getResults().get(requestNum);
+        EmbedBuilder eb = new EmbedBuilder()
+                .setColor(new Color(0x00Ae86));
+
+        if("movie".equals(request.getType())){
+            eb.setTitle("TMDb ID: " + request.getMedia().getTmdbId(), getTmdbMovieUrl(request.getMedia().getTmdbId()));
+        }else{
+            eb.setTitle("TMDb ID: " + request.getMedia().getTmdbId(), getTmdbTvUrl(request.getMedia().getTmdbId()));
+        }
+
+        eb.addField("Requested By:", request.getRequestedBy().getDisplayName(), true)
+            .addField("Media Type: ", request.getType(), true)
+            .addField("Request Status: ", stringVerifier(request.getMedia().getStatus().toString(), 9), true)
+            .addField("First Requested: ", stringVerifier(request.getCreatedAt(), 8), true)
+            .addField("Last Updated: ", stringVerifier(request.getUpdatedAt(), 8), true)
+            .setFooter("Request " + (requestNum + 1) + " of " + requests.getResults().size(), Settings.getInstance().getHostedIconURL());
 
         return eb;
     }

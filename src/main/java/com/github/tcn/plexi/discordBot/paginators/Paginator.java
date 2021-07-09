@@ -7,6 +7,10 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.ButtonInteraction;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Paginator {
 
@@ -20,6 +24,7 @@ public abstract class Paginator {
 
     protected int currentPage; //the result number that should be currently displayed
     protected Message sentMessage; //track the message that we sent in response to a command
+    protected List<Button> buttonList = new ArrayList<>(); //Keeps track of any buttons that we need to add;
 
     public Paginator(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap, ButtonManager buttonManager){
         SLASH_EVENT = event;
@@ -77,33 +82,6 @@ public abstract class Paginator {
         }
     }
 
-    protected ActionRow getPaginatorButtons() {
-        //depending on how many items are in the paginator, we will show different items
-        if(NUMBER_OF_PAGES == 1){
-            return ActionRow.of(
-                    Button.danger("endButton", Emoji.fromUnicode("\uD83D\uDDD1️")),
-                    getSelectButton()
-            );
-        }
-
-        return ActionRow.of(
-                getPreviousButton(),
-                Button.danger("endButton", Emoji.fromUnicode("\uD83D\uDDD1️")),
-                getSelectButton(),
-                getRightButton()
-        );
-    }
-
-    //these methods give us the buttons with the message ID that we will need
-
-    protected abstract Button getPreviousButton();
-
-    protected abstract Button getSelectButton();
-
-    protected abstract Button getRightButton();
-
-
-
     protected void decPageNum(){
         //are we at the beginning of the list
         if(currentPage == 0 && WRAP){
@@ -112,6 +90,23 @@ public abstract class Paginator {
             currentPage--;
         }
     }
+
+    protected void addButton(Button toAdd){
+        if(buttonList.size() < 5){
+            buttonList.add(toAdd);
+        }else{
+            LoggerFactory.getLogger("Plexi: Paginator").error("Cannot have more than five buttons on a message! Button \"" + toAdd.getLabel() + "\" will not be added.");
+        }
+    }
+
+    protected void addStopButton(){
+        addButton(Button.danger("endButton", Emoji.fromUnicode("\uD83D\uDDD1️")));
+    }
+
+    protected ActionRow getPaginatorButtonsAsActionRow(){
+        return ActionRow.of(buttonList);
+    }
+
     @SuppressWarnings("unchecked")
     protected abstract static class Builder<T extends Builder<T,V>, V extends Paginator>{
         protected Message MESSAGE; //The message that we respond to. Only exists if this paginator is in response to a text command

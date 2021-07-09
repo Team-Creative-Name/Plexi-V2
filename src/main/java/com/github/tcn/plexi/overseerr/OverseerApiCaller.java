@@ -2,6 +2,7 @@ package com.github.tcn.plexi.overseerr;
 
 import com.github.tcn.plexi.Settings;
 import com.github.tcn.plexi.overseerr.templates.movieInfo.MovieInfo;
+import com.github.tcn.plexi.overseerr.templates.request.allRequests.MediaRequests;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
 import com.google.gson.Gson;
@@ -73,6 +74,39 @@ public class OverseerApiCaller {
 
         }catch (IOException e){
             LoggerFactory.getLogger("Plexi: Overseerr-API").error("Unable to get more info about movie: " + tmdbId);
+        }
+        return null;
+    }
+
+    public MediaRequests getMediaRequests(String status, String sort, String number){
+        //lets get all of our values to something that we can actually use
+        if(status == null){
+            status = "processing";
+        }
+        if(sort == null){
+            sort = "added";
+        }
+        if(number == null){
+            number = "20"; //this is the default for overseerr's api
+        }
+
+        OkHttpClient client = new OkHttpClient();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        Request request = new Request.Builder()
+                .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/request?take=" + number + "&skip=0&filter=" + status + "&sort=" + sort + "&requestedBy=1")
+                .addHeader("x-api-key", Settings.getInstance().getOverseerrKey())
+                .addHeader("accept", "application/json")
+                .build();
+
+        try (Response response = client.newCall(request).execute()){
+            if(!response.isSuccessful()){
+                throw new IOException("Unexpected response from overseerr: " + response);
+            }
+            String response1 = response.body().string();
+            return gson.fromJson(response1, MediaRequests.class);
+
+        }catch (IOException e){
+            LoggerFactory.getLogger("Plexi: Overseerr-API").error("Unable to get requests");
         }
         return null;
     }
