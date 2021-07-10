@@ -4,6 +4,7 @@ package com.github.tcn.plexi.overseerr.templates.movieInfo;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.slf4j.LoggerFactory;
 
 
 public class MediaInfo {
@@ -277,8 +278,9 @@ public class MediaInfo {
         if ((requests != null) && !requests.isEmpty()){
             return true;
         }
-            System.out.println("no requests");
-            return false;
+
+        LoggerFactory.getLogger("Plexi: MovieInfo").debug("There are no requests for this movie");
+        return false;
 
     }
 

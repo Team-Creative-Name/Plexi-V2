@@ -99,7 +99,8 @@ public class SearchSubmenu extends Paginator {
             Message toSend = new MessageBuilder().setEmbeds(infoEmbed).append("Getting more info for: ").append(searchResult.getActualTitle())
                     .setActionRows(getPaginatorButtonsAsActionRow())
                     .build();
-            MESSAGE.editMessage(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
+            MESSAGE.reply(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
+
         }
 
     }
