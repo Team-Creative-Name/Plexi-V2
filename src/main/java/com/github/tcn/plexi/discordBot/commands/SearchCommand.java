@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.slf4j.LoggerFactory;
 
 public class SearchCommand extends CommandTemplate {
 
@@ -45,15 +46,15 @@ public class SearchCommand extends CommandTemplate {
         //lets determine if the user specified a media type
         String[] args = content.split(" ", 2);
         if(args[0].toLowerCase().matches("tv|television|telly|tele|t") && args.length == 2){
-            System.out.println("Searching for: " + args[1]);
+            LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + args[1] + "\" in movies");
             results = new OverseerApiCaller().Search(args[1]);
             Misc.filterByType(results, "tv");
         }else if(args[0].toLowerCase().matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m") && args.length == 2){
-            System.out.println("Searching for: " + args[1]);
+            LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + args[1] + "\" in tv");
             results = new OverseerApiCaller().Search(args[1]);
             Misc.filterByType(results, "movie");
         }else{
-            System.out.println("Searching for:" +content);
+            LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + content + "\" in any media type");
             results = new OverseerApiCaller().Search(content);
         }
 
@@ -86,6 +87,9 @@ public class SearchCommand extends CommandTemplate {
         //filter the search results if requested
         if(event.getOptions().size() == 2){
             Misc.filterByType(results, event.getOptions().get(1).getAsString());
+            LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + event.getOptions().get(0).getAsString() + "\" in " + event.getOptions().get(1).getAsString());
+        }else{
+            LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + event.getOptions().get(0).getAsString() + "\" in any media type");
         }
 
         //ensure that there are any results

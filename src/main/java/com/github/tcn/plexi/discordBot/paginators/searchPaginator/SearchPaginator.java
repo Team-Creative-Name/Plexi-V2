@@ -78,7 +78,7 @@ public class SearchPaginator extends Paginator {
         if(IS_SLASH_COMMAND && sentMessage == null){
             submenuBuilder.SetSlashCommand(SLASH_EVENT);
         }else{
-            submenuBuilder.SetMessage(this.sentMessage);
+            submenuBuilder.SetMessage(MESSAGE);
         }
         submenuBuilder.setUserId(USER_ID);
         SearchSubmenu submenu = submenuBuilder.setSearchResults(result).build();
