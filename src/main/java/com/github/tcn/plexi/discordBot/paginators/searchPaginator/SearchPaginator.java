@@ -77,6 +77,8 @@ public class SearchPaginator extends Paginator {
         //finish setting up the submenu
         if(IS_SLASH_COMMAND && sentMessage == null){
             submenuBuilder.SetSlashCommand(SLASH_EVENT);
+        }else if(sentMessage != null){
+            submenuBuilder.SetMessage(sentMessage);
         }else{
             submenuBuilder.SetMessage(MESSAGE);
         }
