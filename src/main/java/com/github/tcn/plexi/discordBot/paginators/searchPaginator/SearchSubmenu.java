@@ -95,14 +95,17 @@ public class SearchSubmenu extends Paginator {
                     .setEmbeds(infoEmbed)
                     .setActionRows(getPaginatorButtonsAsActionRow())
                     .queue(message -> sentMessage = message);
+        }else if(MESSAGE.getAuthor().getId().matches(MESSAGE.getJDA().getSelfUser().getId())){ //check to see if we sent the message that we're replying to
+            Message toSend = new MessageBuilder().setEmbeds(infoEmbed).append("Getting more info for: ").append(searchResult.getActualTitle())
+                    .setActionRows(getPaginatorButtonsAsActionRow())
+                    .build();
+            MESSAGE.editMessage(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
         }else{//since there is no other message, just make a new one
             Message toSend = new MessageBuilder().setEmbeds(infoEmbed).append("Getting more info for: ").append(searchResult.getActualTitle())
                     .setActionRows(getPaginatorButtonsAsActionRow())
                     .build();
             MESSAGE.reply(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
-
         }
-
     }
 
     private String requestMedia(){
