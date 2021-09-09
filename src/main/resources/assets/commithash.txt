@@ -1,3 +1,3 @@
 Version: v2.0-beta.2
-CHash: 143cc03
+CHash: 9be7070
 Branch: Versioning

@@ -32,8 +32,15 @@ dependencies {
     implementation group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
 }
 
+task versionText(){
+    new File("${projectDir}/src/main/resources/assets/", "commithash.txt").text =
+            """Version: $version\nCHash: ${grgit.head().abbreviatedId}\nBranch: ${grgit.branch.getCurrent().getName()}"""
+}
+
+
 
 jar {
+    jar.dependsOn(versionText)
     manifest {
         attributes 'Main-Class': mainClassName
     }
@@ -64,11 +71,5 @@ launch4j {
     icon = "${projectDir}/src/main/resources/assets/Plexi.ico"
 }
 
-task versionText(){
-    doLast{
-        new File("${projectDir}/src/main/resources/assets/", "commithash.txt").text =
-                """Version: $version\nCHash: ${grgit.head().abbreviatedId}\nBranch: ${grgit.branch.getCurrent().getName()}"""
-    }
-}
 
 
