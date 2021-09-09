@@ -13,6 +13,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainView extends JFrame {
 
@@ -29,7 +30,11 @@ public class MainView extends JFrame {
 
     public MainView() {
         //set title of window
-        setTitle("Plexi " + settings.getVersionNumber());
+        if(!settings.getBranchName().matches("main")){
+            setTitle("Plexi " + settings.getVersionNumber() + "  [" + settings.getBranchName() + ":" +settings.getParentHash() +"]");
+        }else{
+            setTitle("Plexi " + settings.getVersionNumber());
+        }
 
         //create textarea - console output (not editable)
         textArea = new JTextArea(50, 10);

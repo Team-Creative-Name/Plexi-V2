@@ -1,4 +1,4 @@
-import org.ajoberstar.grgit.Grgit
+
 
 plugins {
     id 'java'
@@ -67,7 +67,7 @@ launch4j {
 task versionText(){
     doLast{
         new File("${projectDir}/src/main/resources/assets/", "commithash.txt").text =
-                """Version: $version\nCHash: ${grgit.head().abbreviatedId}"""
+                """Version: $version\nCHash: ${grgit.head().abbreviatedId}\nBranch: ${grgit.branch.getCurrent().getName()}"""
     }
 }
 

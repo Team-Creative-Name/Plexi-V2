@@ -27,33 +27,40 @@ import java.util.Properties;
  */
 public class Settings {
 
-    //Variables
+    //Plexi Icon - Hosted by discord which means no loading external media. For discord use ONLY
+    private final String HOSTED_ICON_URL = "https://cdn.discordapp.com/attachments/675899155083952148/736485323663474728/Plexi_icon_512x.png";
+
 
     //reference to this object - the only one
-    private static Settings SETTINGS_INSTANCE = null;
-    //the version number
-    private final String VERSION_NUMBER = "v2.0-beta.2";
-    //path to discord hosted icon @512x
-    private final String HOSTED_ICON_URL = "https://cdn.discordapp.com/attachments/675899155083952148/736485323663474728/Plexi_icon_512x.png";
-    //path to spashes file
-    private URL SPLASH_FILE_PATH = null;
-    private List<String> SPLASH_LIST = null;
-    //stuff loaded from the config file
-    private String TOKEN = null;
-    private String PREFIX = null;
-    private String OVERSEERR_URL = null;
-    private String OVERSEERR_KEY = null;
-    private String OWNER_ID = null;
-    private Boolean USERS_VIEW_REQUESTS = null;
-    private URL INTERNAL_CONFIG_PATH;
-    private Path USER_CONFIG_PATH;
-    //Variables useful for class operations
-    private Path JAR_PATH;
-    //reference to plexi object
-    DiscordBot discordBot = DiscordBot.getInstance();
+    private static Settings settingsInstance = null;
 
-    //The Main logger for Plexi
-    Logger plexiLogger;
+
+    //discord bot settings. All loaded from config file. All have a get method attached
+    private String token = null; //discord token.
+    private String prefix = null; //discord command prefix.
+    private String overseerrUrl = null; //URL to the overseerr api plexi should use for media
+    private String overseerrKey = null; //Key to the overseerr api
+    private String ownerId = null; //ID of the discord user who is running the bot
+    private Boolean usersViewRequests = null; //Lets users view overseerr requests if set to true.
+
+
+    //Versioning information - pulled from /resources/assets/comithash.txt (hopefully)
+    private String versionNumber = "UNKNOWN"; //current version of Plexi
+    private String parentHash = "UNKNOWN"; //Hash of the parent commit on github
+    private String branchName = "UNKNOWN"; //Name of the branch this version of plexi is on
+
+    private List<String> splashList = null; //A list of all of the splashes located inside /resources/assets/splashes.plexi
+
+
+    //Helper variables. None of these are accessed outside of this class
+    private URL internalConfigPath; //reference to the location of the template config file in /resources/assets
+    private URL commitHashFilePath = null;
+    private URL splashFilePath = null; //The Path of the splashes.plexi file in /resources/assets
+    private Path jarPath; //The path of the Plexi jarfile on the user's filesystem.
+    private Path userConfigPath; //The path of the config file on the user's filesystem
+    private Logger plexiLogger = null; //reference to the main plexi logger
+    DiscordBot discordBot = DiscordBot.getInstance(); //reference to the discord bot
+
 
     /**
      * No other classes are allowed to instantiate this class
@@ -73,11 +80,11 @@ public class Settings {
     //this is the only way for an outside class to obtain a reference to this object
     public static Settings getInstance() {
         //if the object does not exist, create it
-        if (SETTINGS_INSTANCE == null) {
-            SETTINGS_INSTANCE = new Settings();
+        if (settingsInstance == null) {
+            settingsInstance = new Settings();
         }
         //return the object reference
-        return SETTINGS_INSTANCE;
+        return settingsInstance;
     }
 
     /**
@@ -89,43 +96,43 @@ public class Settings {
     private void initVariables() {
         try {
             //first attempt to get the resource path and jar path
-            JAR_PATH = new File(Settings.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).toPath();
-            INTERNAL_CONFIG_PATH = this.getClass().getResource("/assets/config.txt");
+            jarPath = new File(Settings.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).toPath();
+            internalConfigPath = this.getClass().getResource("/assets/config.txt");
 
             //now attempt to read from the configuration file and set values accordingly
             //if using Mac OS && are using the application bundle, we need to change the config and log paths
-            if (System.getProperty("os.name").toLowerCase().contains("mac") && JAR_PATH.getParent().getParent().getParent().toString().contains(".app")) {
+            if (System.getProperty("os.name").toLowerCase().contains("mac") && jarPath.getParent().getParent().getParent().toString().contains(".app")) {
                 //this should only fire if the jar is wrapped inside of a .app bundle
                 //set the logger to the same folder that the .app is located in
-                System.setProperty("LOG_PATH", JAR_PATH.getParent().getParent().getParent().getParent().toString());
+                System.setProperty("LOG_PATH", jarPath.getParent().getParent().getParent().getParent().toString());
                 //now attempt to load the config file
-                USER_CONFIG_PATH = JAR_PATH.getParent().getParent().getParent().getParent().resolve("config.txt");
+                userConfigPath = jarPath.getParent().getParent().getParent().getParent().resolve("config.txt");
             } else {
                 //If not running within an application bundle, the user should have direct access to the jar. Set Everything to its path.
-                USER_CONFIG_PATH = JAR_PATH.getParent().resolve("config.txt");
+                userConfigPath = jarPath.getParent().resolve("config.txt");
                 //set the log path as well
-                System.setProperty("LOG_PATH", JAR_PATH.getParent().toString());
+                System.setProperty("LOG_PATH", jarPath.getParent().toString());
             }
 
             //now that we know where the logger needs to be, go ahead and create it
             plexiLogger = LoggerFactory.getLogger("Plexi");
 
-            FileInputStream config = new FileInputStream(USER_CONFIG_PATH.toString());
+            FileInputStream config = new FileInputStream(userConfigPath.toString());
             Properties properties = new Properties();
 
             properties.load(config);
 
             //Load settings
-            TOKEN = properties.getProperty("token").replaceAll("^\"|\"$", "");
-            plexiLogger.info("Bot Token: " + TOKEN);
-            OWNER_ID = properties.getProperty("ownerID").replaceAll("^\"|\"$", "");
-            plexiLogger.info("Owner ID: " + OWNER_ID);
-            PREFIX = properties.getProperty("prefix").replaceAll("^\"|\"$", "");
-            OVERSEERR_URL = properties.getProperty("overseerrURL").replaceAll("^\"|\"$", "");
-            OVERSEERR_KEY = properties.getProperty("overseerrKey").replaceAll("^\"|\"$", "");
+            token = properties.getProperty("token").replaceAll("^\"|\"$", "");
+            plexiLogger.info("Bot Token: " + token);
+            ownerId = properties.getProperty("ownerID").replaceAll("^\"|\"$", "");
+            plexiLogger.info("Owner ID: " + ownerId);
+            prefix = properties.getProperty("prefix").replaceAll("^\"|\"$", "");
+            overseerrUrl = properties.getProperty("overseerrURL").replaceAll("^\"|\"$", "");
+            overseerrKey = properties.getProperty("overseerrKey").replaceAll("^\"|\"$", "");
 
             //this one is a bit special because we need to cast it to a boolean - this value defaults to false if an invalid value is provided
-            USERS_VIEW_REQUESTS = Boolean.valueOf(properties.getProperty("usersViewRequests").replaceAll("^\"|\"$", "").toLowerCase());
+            usersViewRequests = Boolean.valueOf(properties.getProperty("usersViewRequests").replaceAll("^\"|\"$", "").toLowerCase());
 
             if (!validateSettings()) {
                 JOptionPane.showMessageDialog(null, "The config file contains invalid settings, please check it and try again.", "Plexi - Configuration Issue", JOptionPane.INFORMATION_MESSAGE);
@@ -136,8 +143,8 @@ public class Settings {
         } catch (FileNotFoundException e) {
             plexiLogger.error("Unable to locate existing configuration file!");
             generateConfigFile();
-            plexiLogger.info("A new configuration file has been generated at: " + USER_CONFIG_PATH.toString());
-            JOptionPane.showMessageDialog(null, "The config file was unable to be found. A new one has been generated at: " + USER_CONFIG_PATH.toString(), "Plexi - Configuration Issue", JOptionPane.INFORMATION_MESSAGE);
+            plexiLogger.info("A new configuration file has been generated at: " + userConfigPath.toString());
+            JOptionPane.showMessageDialog(null, "The config file was unable to be found. A new one has been generated at: " + userConfigPath.toString(), "Plexi - Configuration Issue", JOptionPane.INFORMATION_MESSAGE);
             discordBot.stopBot();
             plexiLogger.info("Please fill out the configuration file and restart Plexi");
             System.exit(0);
@@ -165,24 +172,25 @@ public class Settings {
 
         //now we want to attempt to load the splash file
         try{
-            SPLASH_FILE_PATH = this.getClass().getResource("/assets/splashes.plexi");
+            splashFilePath = this.getClass().getResource("/assets/splashes.plexi");
 
             //open an inputsteam and loop through the steam until it ends
-            InputStream splashStream = SPLASH_FILE_PATH.openStream();
+            InputStream splashStream = splashFilePath.openStream();
             int current;
             StringBuilder currentQuote = new StringBuilder();
-            SPLASH_LIST = new ArrayList<>();
+            splashList = new ArrayList<>();
 
             while((current = splashStream.read()) != -1){
                 if(current == 10){
-                    SPLASH_LIST.add(currentQuote.toString());
+                    splashList.add(currentQuote.toString());
                     currentQuote = new StringBuilder();
                 }else{
                     currentQuote.append((char) current);
                 }
             }
             //We will still have one quote left in the currentQuote var, so add that to the list
-            SPLASH_LIST.add(currentQuote.toString());
+            splashList.add(currentQuote.toString());
+            splashStream.close();
 
         } catch (FileNotFoundException e) {
             plexiLogger.error("Unable to locate splashes file, they will be disabled until found. Try re-downloading the release.");
@@ -192,12 +200,35 @@ public class Settings {
 
         }
 
-        if(SPLASH_LIST != null && SPLASH_LIST.size() >0 && SPLASH_FILE_PATH != null){
-            plexiLogger.info("Successfully loaded " + SPLASH_LIST.size() + " splashes");
+        //finally we want to load the commithash file
+        //now we want to attempt to load the splash file
+        try{
+            commitHashFilePath = this.getClass().getResource("/assets/commithash.txt");
+            InputStream versionInput = commitHashFilePath.openStream();
+            Properties versioningInfo = new Properties();
+            versioningInfo.load(versionInput);
+
+            //load version & parent hash so we can store it in obj
+            versionNumber = versioningInfo.getProperty("Version");
+            parentHash = versioningInfo.getProperty("CHash");
+            branchName = versioningInfo.getProperty("Branch");
+
+            versionInput.close();
+
+        } catch (FileNotFoundException e) {
+            plexiLogger.error("Unable to locate version file. Please try re-downloading the release.");
+            plexiLogger.trace(Arrays.toString(e.getStackTrace()));
+        } catch (Exception e) {
+            plexiLogger.error("Unknown issue when attempting to load version file. Try re-downloading the release.\n" + e.getMessage() + "\n" + e);
+        }
+
+
+        if(splashList != null && splashList.size() >0 && splashFilePath != null){
+            plexiLogger.info("Successfully loaded " + splashList.size() + " splashes");
         }else{
             //we dont want to leave the splash list as null or it will cause issue, lets set it to a list that has one empty string.
-            SPLASH_LIST = new ArrayList<>();
-            SPLASH_LIST.add("");
+            splashList = new ArrayList<>();
+            splashList.add("");
         }
 
     }
@@ -210,13 +241,13 @@ public class Settings {
     private void generateConfigFile() {
         try {
             //open an inputStream for the internal config file
-            InputStream resourceConfigStream = INTERNAL_CONFIG_PATH.openStream();
+            InputStream resourceConfigStream = internalConfigPath.openStream();
             //make sure that it was initialized properly
             if (resourceConfigStream == null) {
                 plexiLogger.error("Unable to find config path!");
             }
             //now attempt to copy the file to the destination
-            Files.copy(resourceConfigStream, USER_CONFIG_PATH, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(resourceConfigStream, userConfigPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             plexiLogger.error("Unable to create config file!");
             plexiLogger.trace(Arrays.toString(e.getStackTrace()));
@@ -241,27 +272,27 @@ public class Settings {
     //This is very rudimentary validation that checks to ensure that values are not empty and arent default. The Overseerr API is checked to see if it can connect.
     //TODO: Make this method a bit less clunky
     private boolean validateSettings() {
-        boolean isValid = !TOKEN.equals("") && !TOKEN.equals("BOT_TOKEN_HERE");
+        boolean isValid = !token.equals("") && !token.equals("BOT_TOKEN_HERE");
 
         //check to ensure token != null
         //check to ensure prefix != null;
-        if (PREFIX.equals("")) {
+        if (prefix.equals("")) {
             isValid = false;
         }
         //check to ensure overseerURL != null;
-        if (OVERSEERR_URL.equals("") || OVERSEERR_URL.equals("URL_HERE")) {
+        if (overseerrUrl.equals("") || overseerrUrl.equals("URL_HERE")) {
             isValid = false;
         }
         //check to ensure OverseerrKey != null;
-        if (OVERSEERR_KEY.equals("") || OVERSEERR_KEY.equals("KEY_HERE")) {
+        if (overseerrKey.equals("") || overseerrKey.equals("KEY_HERE")) {
             isValid = false;
         }
         //check to ensure ownerID != null;
-        if (OWNER_ID.equals("") || OWNER_ID.equals("0")) {
+        if (ownerId.equals("") || ownerId.equals("0")) {
             isValid = false;
         }
         //ensure that USERS_VIEW_REQUESTS is not null
-        if(USERS_VIEW_REQUESTS == null){
+        if(usersViewRequests == null){
             isValid = false;
         }
 
@@ -278,7 +309,7 @@ public class Settings {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url(OVERSEERR_URL + "/api/v1/status")
+                .url(overseerrUrl + "/api/v1/status")
                 .addHeader("accept", "application/json")
                 .build();
 
@@ -300,23 +331,31 @@ public class Settings {
 
     //getters and setters for globals
     public String getDiscordToken() {
-        return TOKEN;
+        return token;
     }
 
     public String getPrefix() {
-        return PREFIX;
+        return prefix;
     }
 
     public String getOwnerID() {
-        return OWNER_ID;
+        return ownerId;
     }
 
     public String getVersionNumber() {
-        return VERSION_NUMBER;
+        return versionNumber;
+    }
+
+    public String getBranchName(){
+        return branchName;
+    }
+
+    public String getParentHash(){
+        return parentHash;
     }
 
     public Boolean getUsersViewRequests(){
-        return USERS_VIEW_REQUESTS;
+        return usersViewRequests;
     }
 
     public Logger getLogger(){
@@ -328,14 +367,14 @@ public class Settings {
     }
 
     public List<String> getSplashList(){
-        return SPLASH_LIST;
+        return splashList;
     }
 
     public String getOverseerrUrl(){
-        return OVERSEERR_URL;
+        return overseerrUrl;
     }
 
     public String getOverseerrKey(){
-        return OVERSEERR_KEY;
+        return overseerrKey;
     }
 }
