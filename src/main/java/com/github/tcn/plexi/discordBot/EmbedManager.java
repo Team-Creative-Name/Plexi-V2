@@ -22,28 +22,29 @@ import java.util.Set;
 public class EmbedManager {
 
     public EmbedBuilder getHelpEmbed(boolean isChatCommand){
-            String prefix = Settings.getInstance().getPrefix();
-            Set<CommandTemplate> commandSet = DiscordBot.getInstance().getCommandHandler().getCommandSet();
+        String prefix = Settings.getInstance().getPrefix();
+        Settings settings = Settings.getInstance();
+        Set<CommandTemplate> commandSet = DiscordBot.getInstance().getCommandHandler().getCommandSet();
 
-            EmbedBuilder eb = new EmbedBuilder()
-                    .setColor(new Color(0x00AE86))
-                    .setTitle("Help - Plexi Commands")
-                    .setDescription("For additional help with Plexi, please contact " + DiscordBot.getInstance().getJDAInstance().getUserById(Settings.getInstance().getOwnerID()) +
-                            "\n And check out [Plexi on Github](https://github.com/Team-Creative-Name/plexi-V2)" +
-                            "\n\n Options enclosed in {} are mandatory, [] are optional\n")
-                    .setFooter(getRandomSplash(), Settings.getInstance().getHostedIconURL());
+        EmbedBuilder eb = new EmbedBuilder()
+                .setColor(new Color(0x00AE86))
+                .setTitle("Help - Plexi Commands:")
+                .setDescription("Plexi Version " + settings.getVersionNumber() + ", Branch: " + settings.getBranchName() + ", Parent Commit: " + settings.getParentHash() +
+                        "\n\nFor additional help with Plexi, please contact " + DiscordBot.getInstance().getJDAInstance().getUserById(Settings.getInstance().getOwnerID()) +
+                        "\n And check out [Plexi on Github](https://github.com/Team-Creative-Name/plexi-V2)" +
+                        "\n\n Options enclosed in {} are mandatory, [] are optional\n")
+                .setFooter(getRandomSplash(), Settings.getInstance().getHostedIconURL());
 
 
-            if(!isChatCommand){
-                for(CommandTemplate command : commandSet){
-                    eb.addField(prefix+command.getCommandName(), "`"+command.getSlashHelp()+"`",false);
-                }
-            }else{
-                for(CommandTemplate command : commandSet){
-                    eb.addField(prefix+command.getCommandName(), "`"+command.getChatHelp()+"`",false);
-                }
+        if(!isChatCommand){
+            for(CommandTemplate command : commandSet){
+                eb.addField(prefix+command.getCommandName(), "`"+command.getSlashHelp()+"`",false);
             }
-
+        }else{
+            for(CommandTemplate command : commandSet){
+                eb.addField(prefix+command.getCommandName(), "`"+command.getChatHelp()+"`",false);
+            }
+        }
 
         return eb;
     }
