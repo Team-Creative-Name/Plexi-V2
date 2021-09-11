@@ -105,3 +105,5 @@ fabric.properties
 .gradle/
 
 .idea/
+
+src/main/resources/assets/commithash.txt
