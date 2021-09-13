@@ -37,16 +37,16 @@ public class CommandHandler extends ListenerAdapter {
         LoggerFactory.getLogger("Plexi: Commands").info("loaded " + commandSet.size() + " commands!");
 
         //now we need to register the slash commands
-        List<CommandData> test = new ArrayList<>();
+        List<CommandData> commandList = new ArrayList<>();
         for(CommandTemplate command : commandSet){
             if(command.getSlashCommand() != null){
-                test.add(command.getSlashCommand());
+                commandList.add(command.getSlashCommand());
             }
         }
-        DiscordBot.getInstance().getJDAInstance().updateCommands().addCommands(test).queue();
+        DiscordBot.getInstance().getJDAInstance().updateCommands().addCommands(commandList).queue();
 
         //Log Slash Command Loading
-        LoggerFactory.getLogger("Plexi: Commands").info("loaded " + test.size() + " Slash Commands!");
+        LoggerFactory.getLogger("Plexi: Commands").info("loaded " + commandList.size() + " Slash Commands!");
     }
 
 
@@ -122,7 +122,10 @@ public class CommandHandler extends ListenerAdapter {
                 final String content = stripPrefix(alias, prefix, message);
                 template.executeTextCommand(event.getAuthor(), event.getChannel(), event.getMessage(),content, event);
             }catch (final Exception e){
-                LoggerFactory.getLogger("Plexi: CommandHandler").error("Unable to handle \"" +alias +"\" chat command! " + e.getLocalizedMessage() );
+                LoggerFactory.getLogger("Plexi: CommandHandler").error("Unable to handle \"" +alias +"\" chat command! " + e.getLocalizedMessage());
+
+                //Along with that message, we should inform the person running the bot of this issue and how to report it if neccessary
+                event.getMessage().reply("Sorry, I was unable to finish executing that command. Please try again later").queue();
             }
         });
     }
@@ -133,6 +136,11 @@ public class CommandHandler extends ListenerAdapter {
                 template.executeSlashCommand(event);
             }catch (Exception e){
                 LoggerFactory.getLogger("Plexi: CommandHandler").error("Unable to handle \"" + event.getName() +"\" slash command! " + e.getLocalizedMessage() );
+                if(!event.isAcknowledged()){
+                    event.reply("Sorry, I was unable to finish executing that command. Please try again later.").queue();
+                }else{
+                    event.getHook().editOriginal("Sorry, I was unable to finish executing that command. Please try again later.").setActionRows().setEmbeds().queue();
+                }
             }
         });
     }
