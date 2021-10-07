@@ -3,12 +3,14 @@ package com.github.tcn.plexi.discordBot.eventHandlers;
 import com.github.tcn.plexi.Settings;
 import com.github.tcn.plexi.discordBot.commands.*;
 import com.github.tcn.plexi.discordBot.DiscordBot;
-import com.github.tcn.plexi.utils.Misc;
+import com.github.tcn.plexi.utils.MiscUtils;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -19,7 +21,7 @@ import java.util.concurrent.Executors;
 public class CommandHandler extends ListenerAdapter {
 
     private final Set<CommandTemplate> commandSet = ConcurrentHashMap.newKeySet();
-    private final ExecutorService commandPool = Executors.newCachedThreadPool(Misc.newThreadFactory("Command-Runner", false));
+    private final ExecutorService commandPool = Executors.newCachedThreadPool(MiscUtils.newThreadFactory("Command-Runner", false));
     private final ButtonManager buttonManager = new ButtonManager();
 
 
@@ -126,6 +128,7 @@ public class CommandHandler extends ListenerAdapter {
 
                 //Along with that message, we should inform the person running the bot of this issue and how to report it if neccessary
                 event.getMessage().reply("Sorry, I was unable to finish executing that command. Please try again later").queue();
+                sendErrorReport(e, message, false);
             }
         });
     }
@@ -140,11 +143,12 @@ public class CommandHandler extends ListenerAdapter {
                     event.reply("Sorry, I was unable to finish executing that command. Please try again later.").queue();
                 }else{
                     event.getHook().editOriginal("Sorry, I was unable to finish executing that command. Please try again later.").setActionRows().setEmbeds().queue();
+
                 }
+                sendErrorReport(e, event.getName(), true);
             }
         });
     }
-
 
     private String stripPrefix(String commandName, String prefix, String toStrip){
         toStrip = toStrip.substring(commandName.length() + prefix.length());
@@ -158,5 +162,49 @@ public class CommandHandler extends ListenerAdapter {
         return Collections.unmodifiableSet(new HashSet<>(commandSet));
     }
 
+    private void sendErrorReport(Exception e, String commandName, boolean isSlashCommand){
+        //just return if the owner has turned this feature off via the config file
+        if(!Settings.getInstance().sendErrorReports()){
+            return;
+        }
+        Settings settings = Settings.getInstance();
+        StringBuilder reportString = new StringBuilder();
 
+        String versionNumber = settings.getVersionNumber() + " ["+ settings.getBranchName() + ":" + settings.getParentHash() +"]";
+
+        reportString.append("Sorry, Plexi ").append(versionNumber)
+                .append(" has run into an issue while executing a command. Please see below for more information.\n\n");
+
+        reportString.append("```\n");
+
+        if(isSlashCommand){
+           reportString.append("Command Type: Slash Command\n\n");
+        }else{
+            reportString.append("Command Type: Chat Command\n\n");
+        }
+
+        reportString.append("Command: ")
+                .append(commandName)
+                .append("\n\n");
+
+        reportString.append("Exception Name: ")
+                .append(e.getLocalizedMessage())
+                .append("\n\n");
+
+        reportString.append("Stack Trace:\n")
+                .append(MiscUtils.formatStackTraceAsString(e.getStackTrace()));
+
+        reportString.append("```");
+
+        reportString.append("\n\nPlease report this bug to our github repo: https://github.com/Team-Creative-Name/Plexi-V2/issues/new/choose");
+
+
+        DiscordBot.getInstance().getJDAInstance().getUserById(Settings.getInstance().getOwnerID()).openPrivateChannel().flatMap(
+                channel -> channel.sendMessage(reportString.toString())
+
+        ).queue();
+
+
+
+    }
 }

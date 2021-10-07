@@ -5,7 +5,7 @@ import com.github.tcn.plexi.discordBot.eventHandlers.ButtonManager;
 import com.github.tcn.plexi.discordBot.paginators.searchPaginator.SearchPaginator;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
-import com.github.tcn.plexi.utils.Misc;
+import com.github.tcn.plexi.utils.MiscUtils;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -41,18 +41,17 @@ public class SearchCommand extends CommandTemplate {
 
     @Override
     public void executeTextCommand(User author, TextChannel channel, Message message, String content, GuildMessageReceivedEvent event) {
-
         MediaSearch results;
         //lets determine if the user specified a media type
         String[] args = content.split(" ", 2);
         if(args[0].toLowerCase().matches("tv|television|telly|tele|t") && args.length == 2){
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + args[1] + "\" in movies");
             results = new OverseerApiCaller().Search(args[1]);
-            Misc.filterByType(results, "tv");
+            MiscUtils.filterByType(results, "tv");
         }else if(args[0].toLowerCase().matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m") && args.length == 2){
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + args[1] + "\" in tv");
             results = new OverseerApiCaller().Search(args[1]);
-            Misc.filterByType(results, "movie");
+            MiscUtils.filterByType(results, "movie");
         }else{
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + content + "\" in any media type");
             results = new OverseerApiCaller().Search(content);
@@ -77,7 +76,6 @@ public class SearchCommand extends CommandTemplate {
 
     @Override
     public void executeSlashCommand(SlashCommandEvent event) {
-
         //first lets acknowledge the command before discord gets all grumpy about it
         event.deferReply().setEphemeral(false).queue();
 
@@ -86,7 +84,7 @@ public class SearchCommand extends CommandTemplate {
 
         //filter the search results if requested
         if(event.getOptions().size() == 2){
-            Misc.filterByType(results, event.getOptions().get(1).getAsString());
+            MiscUtils.filterByType(results, event.getOptions().get(1).getAsString());
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + event.getOptions().get(0).getAsString() + "\" in " + event.getOptions().get(1).getAsString());
         }else{
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + event.getOptions().get(0).getAsString() + "\" in any media type");
@@ -106,9 +104,6 @@ public class SearchCommand extends CommandTemplate {
         }else{
             event.getHook().editOriginal("No results found for the query: \""+event.getOptions().get(0).getAsString()+"\"").queue();
         }
-
-
-
 
     }
 

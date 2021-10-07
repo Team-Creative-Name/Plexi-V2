@@ -13,10 +13,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 
 /**
@@ -41,7 +38,8 @@ public class Settings {
     private String overseerrUrl = null; //URL to the overseerr api plexi should use for media
     private String overseerrKey = null; //Key to the overseerr api
     private String ownerId = null; //ID of the discord user who is running the bot
-    private Boolean usersViewRequests = null; //Lets users view overseerr requests if set to true.
+    private Boolean usersViewRequests; //Lets users view overseerr requests if set to true.
+    private Boolean sendErrorReports; //If enabled, plexi will send the owner of the bot a message when it encounters a command error
 
 
     //Versioning information - pulled from /resources/assets/comithash.txt (hopefully)
@@ -130,9 +128,8 @@ public class Settings {
             prefix = properties.getProperty("prefix").replaceAll("^\"|\"$", "");
             overseerrUrl = properties.getProperty("overseerrURL").replaceAll("^\"|\"$", "");
             overseerrKey = properties.getProperty("overseerrKey").replaceAll("^\"|\"$", "");
-
-            //this one is a bit special because we need to cast it to a boolean - this value defaults to false if an invalid value is provided
             usersViewRequests = Boolean.valueOf(properties.getProperty("usersViewRequests").replaceAll("^\"|\"$", "").toLowerCase());
+            sendErrorReports = Boolean.valueOf(properties.getProperty("generateErrorReports").replaceAll("^\"|\"$", "").toLowerCase(Locale.ROOT));
 
             if (!validateSettings()) {
                 JOptionPane.showMessageDialog(null, "The config file contains invalid settings, please check it and try again.", "Plexi - Configuration Issue", JOptionPane.INFORMATION_MESSAGE);
@@ -295,6 +292,9 @@ public class Settings {
         if(usersViewRequests == null){
             isValid = false;
         }
+        if(sendErrorReports == null){
+            isValid = false;
+        }
 
         //ping the overseerr API to see if we have valid settings
         //if this throws an exception, we have invalid values
@@ -376,5 +376,9 @@ public class Settings {
 
     public String getOverseerrKey(){
         return overseerrKey;
+    }
+
+    public Boolean sendErrorReports(){
+        return sendErrorReports;
     }
 }
