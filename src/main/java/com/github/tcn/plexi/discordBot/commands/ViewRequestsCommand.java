@@ -5,7 +5,7 @@ import com.github.tcn.plexi.discordBot.eventHandlers.ButtonManager;
 import com.github.tcn.plexi.discordBot.paginators.RequestsPaginator;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import com.github.tcn.plexi.overseerr.templates.request.allRequests.MediaRequests;
-import com.github.tcn.plexi.utils.Misc;
+import com.github.tcn.plexi.utils.MiscUtils;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -138,9 +138,9 @@ public class ViewRequestsCommand extends CommandTemplate{
 
         //filter the media type if set to something other than all
         if(mediaType.matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m")){
-            Misc.filterByType(requests, "movie");
+            MiscUtils.filterByType(requests, "movie");
         }else if(mediaType.matches("tv|television|telly|tele|t")){
-            Misc.filterByType(requests, "tv");
+            MiscUtils.filterByType(requests, "tv");
         }
 
 

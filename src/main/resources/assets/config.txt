@@ -35,4 +35,8 @@ overseerrKey = "KEY_HERE"
 //Allow users other than the bot owner to view media requests (default is true)
 usersViewRequests = "true"
 
+//If true, Plexi will send the user with the above 'Owner ID' a detailed error message if a command fails to execute.
+//This information is NOT sent to anybody else and mainly serves as a debugging/bug finding tool to allow users to report to our github repo
+generateErrorReports = "true/false"
+
 //end of config

@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadFactory;
 
 
 //a class full of random static methods for things
-public class Misc {
+public class MiscUtils {
 
     public static ThreadFactory newThreadFactory(String threadName, Logger logger, boolean isDaemon){
         return (r) ->{
@@ -50,6 +50,14 @@ public class Misc {
     public static MediaRequests filterByType(MediaRequests requests, String filter){
         requests.getResults().removeIf(request -> !request.getType().equals(filter));
         return requests;
+    }
+
+    public static String formatStackTraceAsString(StackTraceElement[] stackTrace){
+        StringBuilder stackTraceString = new StringBuilder();
+        for(StackTraceElement stackElement: stackTrace){
+            stackTraceString.append(stackElement.toString()).append("\n");
+        }
+        return stackTraceString.toString();
     }
 
 
