@@ -44,17 +44,21 @@ public class SearchCommand extends CommandTemplate {
         MediaSearch results;
         //lets determine if the user specified a media type
         String[] args = content.split(" ", 2);
+        String mediaName;
         if(args[0].toLowerCase().matches("tv|television|telly|tele|t") && args.length == 2){
-            LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + args[1] + "\" in movies");
-            results = new OverseerApiCaller().Search(args[1]);
-            MiscUtils.filterByType(results, "tv");
-        }else if(args[0].toLowerCase().matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m") && args.length == 2){
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + args[1] + "\" in tv");
             results = new OverseerApiCaller().Search(args[1]);
+            MiscUtils.filterByType(results, "tv");
+            mediaName = args[1];
+        }else if(args[0].toLowerCase().matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m") && args.length == 2){
+            LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + args[1] + "\" in movies");
+            results = new OverseerApiCaller().Search(args[1]);
             MiscUtils.filterByType(results, "movie");
+            mediaName = args[1];
         }else{
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + content + "\" in any media type");
-            results = new OverseerApiCaller().Search(content);
+            results = new OverseerApiCaller().Search(MiscUtils.urlEncode(content));
+            mediaName = content;
         }
 
         //ensure that there are any results
@@ -69,7 +73,7 @@ public class SearchCommand extends CommandTemplate {
 
             paginator.paginate(1);
         }else{
-            event.getMessage().reply("No results found for the query: \""+ content+"\"").mentionRepliedUser(false).queue();
+            event.getMessage().reply("No results found for the query: \""+ mediaName+"\"").mentionRepliedUser(false).queue();
         }
 
     }

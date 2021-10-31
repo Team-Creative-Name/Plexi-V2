@@ -6,8 +6,8 @@ import com.github.tcn.plexi.overseerr.templates.search.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadFactory;
 
 
@@ -60,8 +60,8 @@ public class MiscUtils {
         return stackTraceString.toString();
     }
 
-
-
-
-
+    public static String urlEncode(String toEncode){
+        //This is a bit of a hack, but it seems to cover everything that I need. (I think...)
+        return URLEncoder.encode(toEncode, StandardCharsets.UTF_8).replace("+", "%20").replace("*", "%2A");
+    }
 }
