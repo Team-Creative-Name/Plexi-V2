@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.ButtonInteraction;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
 public class SearchSubmenu extends Paginator {
     private final Boolean isMovie;
@@ -91,17 +92,17 @@ public class SearchSubmenu extends Paginator {
     protected void showPage() {
         if(IS_SLASH_COMMAND){
             SLASH_EVENT.getHook()
-                    .editOriginal("Getting more info for: " + searchResult.getActualTitle())
+                    .editOriginal(MarkdownSanitizer.escape("Getting more info for: " + searchResult.getActualTitle()))
                     .setEmbeds(infoEmbed)
                     .setActionRows(getPaginatorButtonsAsActionRow())
                     .queue(message -> sentMessage = message);
         }else if(MESSAGE.getAuthor().getId().matches(MESSAGE.getJDA().getSelfUser().getId())){ //check to see if we sent the message that we're replying to
-            Message toSend = new MessageBuilder().setEmbeds(infoEmbed).append("Getting more info for: ").append(searchResult.getActualTitle())
+            Message toSend = new MessageBuilder().setEmbeds(infoEmbed).append(MarkdownSanitizer.escape("Getting more info for: " + searchResult.getActualTitle()))
                     .setActionRows(getPaginatorButtonsAsActionRow())
                     .build();
             MESSAGE.editMessage(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
         }else{//since there is no other message, just make a new one
-            Message toSend = new MessageBuilder().setEmbeds(infoEmbed).append("Getting more info for: ").append(searchResult.getActualTitle())
+            Message toSend = new MessageBuilder().setEmbeds(infoEmbed).append(MarkdownSanitizer.escape("Getting more info for: " + searchResult.getActualTitle()))
                     .setActionRows(getPaginatorButtonsAsActionRow())
                     .build();
             MESSAGE.reply(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
@@ -117,7 +118,7 @@ public class SearchSubmenu extends Paginator {
         if(isMovie){
             if(!canRequest){
                 //inform the user that we cant do that
-                return "Cannot request " + movieInfo.getTitle() + ". Movie is either already requested or available on Plex";
+                return MarkdownSanitizer.escape("Cannot request " + movieInfo.getTitle() + ". Movie is either already requested or available on Plex");
             }
             //set the movie title
             mediaTitle = movieInfo.getTitle();
@@ -126,7 +127,7 @@ public class SearchSubmenu extends Paginator {
         }else{//if not movie, must be tv show
             if(!canRequest){
                 //inform the user that we cant do that
-                return "Cannot request " + tvInfo.getName() + ". Show is either already fully requested or fully available on Plex";
+                return MarkdownSanitizer.escape("Cannot request " + tvInfo.getName() + ". Show is either already fully requested or fully available on Plex");
             }
             //set the show title
             mediaTitle = tvInfo.getName();
@@ -140,9 +141,9 @@ public class SearchSubmenu extends Paginator {
         boolean success = caller.requestMedia(requestJson);
         if(success){
             canRequest = false;
-            return mediaTitle + " was successfully added to the request list!";
+            return MarkdownSanitizer.escape(mediaTitle + " was successfully added to the request list!");
         }
-        return "Error requesting media!";
+        return MarkdownSanitizer.escape("Error requesting media!");
 
     }
 

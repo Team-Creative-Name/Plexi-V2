@@ -9,6 +9,7 @@ import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.search.Result;
 import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
 
 import java.awt.*;
@@ -83,7 +84,7 @@ public class EmbedManager {
     public EmbedBuilder generateMovieInfoEmbed(MovieInfo info){
         EmbedBuilder eb = new EmbedBuilder()
                 .setColor(new Color(0x00AE86))
-                .setTitle(info.getTitle(),getTmdbMovieUrl(info.getId()))
+                .setTitle(stringVerifier(info.getTitle(), 1) ,getTmdbMovieUrl(info.getId()))
                 .setDescription(stringVerifier(info.getOverview(), 2))
                 .setFooter(getRandomSplash(), Settings.getInstance().getHostedIconURL());
 
@@ -112,8 +113,8 @@ public class EmbedManager {
     public EmbedBuilder generateTvInfoEmbed(TvInfo info){
         EmbedBuilder eb = new EmbedBuilder()
                 .setColor(new Color(0x00AE86))
-                .setTitle(info.getName(), getTmdbTvUrl(info.getId()))
-                .setDescription(info.getOverview());
+                .setTitle(stringVerifier(info.getName(), 1) , getTmdbTvUrl(info.getId()))
+                .setDescription(stringVerifier(info.getOverview(),2));
 
         //some bits of media info only exist if we have the show or have requested it
         if(info.getMediaInfo() == null){
@@ -247,7 +248,8 @@ public class EmbedManager {
             }
             return "Unknown";
         }
-        return toCheck;
+        //at this point, the data should all be good. Escape any accidental markdown
+        return MarkdownSanitizer.escape(toCheck);
     }
 
     private String getTmdbTvUrl(int id) {

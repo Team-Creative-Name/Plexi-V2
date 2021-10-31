@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.slf4j.LoggerFactory;
 
 public class SearchCommand extends CommandTemplate {
@@ -73,7 +74,7 @@ public class SearchCommand extends CommandTemplate {
 
             paginator.paginate(1);
         }else{
-            event.getMessage().reply("No results found for the query: \""+ mediaName+"\"").mentionRepliedUser(false).queue();
+            event.getMessage().reply(MarkdownSanitizer.escape("No results found for the query: \""+ mediaName+"\"")).mentionRepliedUser(false).queue();
         }
 
     }
@@ -106,7 +107,7 @@ public class SearchCommand extends CommandTemplate {
 
             paginator.paginate(1);
         }else{
-            event.getHook().editOriginal("No results found for the query: \""+event.getOptions().get(0).getAsString()+"\"").queue();
+            event.getHook().editOriginal(MarkdownSanitizer.escape("No results found for the query: \""+event.getOptions().get(0).getAsString()+"\"")).queue();
         }
 
     }

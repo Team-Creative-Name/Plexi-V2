@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
 public class RequestCommand extends CommandTemplate{
 
@@ -80,7 +81,7 @@ public class RequestCommand extends CommandTemplate{
             MovieInfo info = caller.getMovieInfo(Integer.parseInt(idNum));
             if(!info.allowRequests()){
                 //inform the user that we cant do that
-                return "Cannot request " + info.getTitle() + ". Movie is either already requested or available on Plex";
+                return MarkdownSanitizer.escape("Cannot request " + info.getTitle() + ". Movie is either already requested or available on Plex");
             }
             //set the movie title
             mediaTitle = info.getTitle();
@@ -89,7 +90,7 @@ public class RequestCommand extends CommandTemplate{
             TvInfo info = caller.getTvInfo(Integer.parseInt(idNum));
             if(!info.allowRequests()){
                 //inform the user that we cant do that
-                return "Cannot request " + info.getName() + ". Show is either already fully requested or fully available on Plex";
+                return MarkdownSanitizer.escape("Cannot request " + info.getName() + ". Show is either already fully requested or fully available on Plex");
             }
             //set the show title
             mediaTitle = info.getName();
@@ -100,7 +101,7 @@ public class RequestCommand extends CommandTemplate{
         String requestJson = request.build();
         boolean success = caller.requestMedia(requestJson);
         if(success){
-            return mediaTitle + " was successfully added to the request list!";
+            return MarkdownSanitizer.escape(mediaTitle + " was successfully added to the request list!");
         }
         return "Error requesting media!";
     }
