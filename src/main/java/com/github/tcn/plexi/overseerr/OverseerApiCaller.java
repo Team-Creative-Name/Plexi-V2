@@ -5,6 +5,7 @@ import com.github.tcn.plexi.overseerr.templates.movieInfo.MovieInfo;
 import com.github.tcn.plexi.overseerr.templates.request.allRequests.MediaRequests;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
+import com.github.tcn.plexi.utils.MiscUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.*;
@@ -18,7 +19,7 @@ public class OverseerApiCaller {
         OkHttpClient client = new OkHttpClient();
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         Request request = new Request.Builder()
-                .url(Settings.getInstance().getOverseerrUrl() +"/api/v1/search?query=" + removeSpaces(query))
+                .url(Settings.getInstance().getOverseerrUrl() +"/api/v1/search?query=" + MiscUtils.urlEncode(query))
                 .addHeader("x-api-key", Settings.getInstance().getOverseerrKey())
                 .addHeader("accept", "application/json")
                 .build();
@@ -93,7 +94,7 @@ public class OverseerApiCaller {
         OkHttpClient client = new OkHttpClient();
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         Request request = new Request.Builder()
-                .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/request?take=" + number + "&skip=0&filter=" + status + "&sort=" + sort + "&requestedBy=1")
+                .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/request?take=" + MiscUtils.urlEncode(number) + "&skip=0&filter=" + MiscUtils.urlEncode(status) + "&sort=" + MiscUtils.urlEncode(sort)+ "&requestedBy=1")
                 .addHeader("x-api-key", Settings.getInstance().getOverseerrKey())
                 .addHeader("accept", "application/json")
                 .build();
@@ -152,16 +153,5 @@ public class OverseerApiCaller {
             LoggerFactory.getLogger("Plexi: Overseerr-API").error("Unable to request media!");
         }
         return false;
-    }
-
-
-    private String removeSpaces(String query) {
-        String formattedString = query;
-
-        formattedString = formattedString.toLowerCase().replaceAll(" ", "%20");
-        formattedString = formattedString.replaceAll("\"", " ");
-        formattedString = formattedString.replaceAll("/", " ");
-        //format searchQuery
-        return formattedString;
     }
 }

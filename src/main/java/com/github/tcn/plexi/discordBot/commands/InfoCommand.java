@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
 public class InfoCommand extends CommandTemplate{
 
@@ -49,11 +50,11 @@ public class InfoCommand extends CommandTemplate{
             //check the media type
             if(args[0].toLowerCase().matches("tv|television|telly|tele|t")){
                 MessageEmbed embed = getInfoEmbed(false, args[1]).build();
-                message.reply("Info for: " + embed.getTitle()).setEmbeds(embed).queue();
+                message.reply(MarkdownSanitizer.escape("Info for: " + embed.getTitle())).setEmbeds(embed).queue();
 
             }else if(args[0].toLowerCase().matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m")){
                 MessageEmbed embed = getInfoEmbed(true, args[1]).build();
-                message.reply("Info for: " + embed.getTitle()).setEmbeds(embed).queue();
+                message.reply(MarkdownSanitizer.escape("Info for: " + embed.getTitle())).setEmbeds(embed).queue();
             }else{
                 message.reply("Malformed command! - Please specify `movie` or `tv`").queue();
             }
@@ -68,19 +69,15 @@ public class InfoCommand extends CommandTemplate{
         //reply to discord
         event.deferReply().queue();
 
-        try{
-            //check the media type
-            if(event.getOptions().get(0).getAsString().toLowerCase().matches("tv|television|telly|tele|t")){
-                MessageEmbed embed = getInfoEmbed(false, event.getOptions().get(1).getAsString()).build();
-                event.getHook().editOriginal("Info for: " + embed.getTitle()).setEmbeds(embed).queue();
-            }else if(event.getOptions().get(0).getAsString().toLowerCase().matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m")){
-                MessageEmbed embed = getInfoEmbed(true, event.getOptions().get(1).getAsString()).build();
-                event.getHook().editOriginal("Info for: " + embed.getTitle()).setEmbeds(embed).queue();
-            }else{
-                event.getHook().editOriginal("Malformed command! - Please specify `movie` or `tv`").queue();
-            }
-        }catch (IllegalArgumentException e){
-            event.getHook().editOriginal(e.getMessage()).queue();
+        //check the media type
+        if(event.getOptions().get(0).getAsString().toLowerCase().matches("tv|television|telly|tele|t")){
+            MessageEmbed embed = getInfoEmbed(false, event.getOptions().get(1).getAsString()).build();
+            event.getHook().editOriginal(MarkdownSanitizer.escape("Info for: " + embed.getTitle())).setEmbeds(embed).queue();
+        }else if(event.getOptions().get(0).getAsString().toLowerCase().matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m")){
+            MessageEmbed embed = getInfoEmbed(true, event.getOptions().get(1).getAsString()).build();
+            event.getHook().editOriginal( MarkdownSanitizer.escape("Info for: " + embed.getTitle())).setEmbeds(embed).queue();
+        }else{
+            event.getHook().editOriginal("Malformed command! - Please specify `movie` or `tv`").queue();
         }
     }
 
