@@ -12,9 +12,6 @@ public class MediaSearch {
     @SerializedName("totalPages")
     @Expose
     private int totalPages;
-    @SerializedName("totalResults")
-    @Expose
-    private int totalResults;
     @SerializedName("results")
     @Expose
     private List<Result> results = null;
@@ -23,31 +20,12 @@ public class MediaSearch {
         return page;
     }
 
-    public void setPage(int page) {
-        this.page = page;
-    }
-
     public int getTotalPages() {
         return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
-
-    public int getTotalResults() {
-        return totalResults;
-    }
-
-    public void setTotalResults(int totalResults) {
-        this.totalResults = totalResults;
     }
 
     public List<Result> getResults() {
         return results;
     }
 
-    public void setResults(List<Result> results) {
-        this.results = results;
-    }
 }

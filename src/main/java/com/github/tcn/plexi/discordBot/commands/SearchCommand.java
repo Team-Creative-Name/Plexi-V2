@@ -59,11 +59,12 @@ public class SearchCommand extends CommandTemplate {
         }else{
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + content + "\" in any media type");
             results = new OverseerApiCaller().Search(MiscUtils.urlEncode(content));
+            MiscUtils.stripActors(results);
             mediaName = content;
         }
 
         //ensure that there are any results
-        if((results != null) && results.getTotalResults() != 0){
+        if((results != null) && results.getResults().size() != 0){
             SearchPaginator paginator = new SearchPaginator.Builder()
                     .setSearchResults(results)
                     .SetMessage(message)
@@ -92,11 +93,13 @@ public class SearchCommand extends CommandTemplate {
             MiscUtils.filterByType(results, event.getOptions().get(1).getAsString());
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + event.getOptions().get(0).getAsString() + "\" in " + event.getOptions().get(1).getAsString());
         }else{
+            MiscUtils.stripActors(results);
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + event.getOptions().get(0).getAsString() + "\" in any media type");
         }
 
         //ensure that there are any results
-        if((results != null) && results.getTotalResults() != 0){
+        int test = results.getResults().size();
+        if((results != null) && results.getResults().size() != 0){
             SearchPaginator paginator = new SearchPaginator.Builder()
                     .setSearchResults(results)
                     .SetSlashCommand(event)
