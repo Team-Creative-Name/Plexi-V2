@@ -1,7 +1,7 @@
 package com.github.tcn.plexi.discordBot.paginators.searchPaginator;
 
-import com.github.tcn.plexi.discordBot.eventHandlers.ButtonManager;
 import com.github.tcn.plexi.discordBot.EmbedManager;
+import com.github.tcn.plexi.discordBot.eventHandlers.ButtonManager;
 import com.github.tcn.plexi.discordBot.paginators.Paginator;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import com.github.tcn.plexi.overseerr.templates.movieInfo.MovieInfo;
@@ -21,12 +21,9 @@ public class SearchSubmenu extends Paginator {
     private final Boolean isMovie;
     private final Result searchResult;
     private final MessageEmbed infoEmbed;
-
-
-    private TvInfo tvInfo= null;
-    private MovieInfo movieInfo = null;
-
     protected boolean canRequest;
+    private TvInfo tvInfo = null;
+    private MovieInfo movieInfo = null;
 
 
     public SearchSubmenu(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap, Result searchResult, ButtonManager buttonManager) {
@@ -37,10 +34,10 @@ public class SearchSubmenu extends Paginator {
 
         //now lets get the info object depending on what media type this is
         OverseerApiCaller caller = new OverseerApiCaller();
-        if(isMovie){
+        if (isMovie) {
             movieInfo = caller.getMovieInfo(searchResult.getId());
             canRequest = movieInfo.allowRequests();
-        }else{
+        } else {
             tvInfo = caller.getTvInfo(searchResult.getId());
             canRequest = tvInfo.allowRequests();
         }
@@ -49,9 +46,9 @@ public class SearchSubmenu extends Paginator {
 
         //add paginator buttons
         addStopButton();
-        if(canRequest){
+        if (canRequest) {
             addButton(Button.success(getID() + ":submenuAccept", "Request"));
-        }else{
+        } else {
             addButton(Button.success(getID() + ":submenuAccept", "Request").asDisabled());
         }
 
@@ -60,15 +57,15 @@ public class SearchSubmenu extends Paginator {
     @Override
     public void onButtonClick(ButtonInteraction interaction) {
         //make sure we are still interacting with the user
-        if(interaction.getUser().getIdLong() == USER_ID){
+        if (interaction.getUser().getIdLong() == USER_ID) {
             String[] buttonName = interaction.getComponentId().split(":");
 
-            if(!buttonName[0].equals(getID())){
-                if(buttonName[2].equals("submenuAccept")){
+            if (!buttonName[0].equals(getID())) {
+                if (buttonName[2].equals("submenuAccept")) {
                     //if the message we are responding to is the last message in the channel, just post a new message. It should look a lot cleaner
-                    if(sentMessage.getId().equals(sentMessage.getChannel().getLatestMessageId())){
+                    if (sentMessage.getId().equals(sentMessage.getChannel().getLatestMessageId())) {
                         sentMessage.getChannel().sendMessage(requestMedia()).queue();
-                    }else{
+                    } else {
                         sentMessage.reply(requestMedia()).mentionRepliedUser(false).queue();
                     }
                     sentMessage.editMessage(sentMessage.getContentRaw()).setActionRows().queue();
@@ -77,12 +74,12 @@ public class SearchSubmenu extends Paginator {
         }
     }
 
-    private MessageEmbed generateEmbed(){
+    private MessageEmbed generateEmbed() {
         EmbedManager eb = new EmbedManager();
-        if(isMovie){
+        if (isMovie) {
             EmbedBuilder embed = eb.generateMovieInfoEmbed(movieInfo);
-            return  embed.build();
-        }else{
+            return embed.build();
+        } else {
             return eb.generateTvInfoEmbed(tvInfo).build();
         }
     }
@@ -90,18 +87,18 @@ public class SearchSubmenu extends Paginator {
 
     @Override
     protected void showPage() {
-        if(IS_SLASH_COMMAND){
+        if (IS_SLASH_COMMAND) {
             SLASH_EVENT.getHook()
                     .editOriginal(MarkdownSanitizer.escape("Getting more info for: " + searchResult.getActualTitle()))
                     .setEmbeds(infoEmbed)
                     .setActionRows(getPaginatorButtonsAsActionRow())
                     .queue(message -> sentMessage = message);
-        }else if(MESSAGE.getAuthor().getId().matches(MESSAGE.getJDA().getSelfUser().getId())){ //check to see if we sent the message that we're replying to
+        } else if (MESSAGE.getAuthor().getId().matches(MESSAGE.getJDA().getSelfUser().getId())) { //check to see if we sent the message that we're replying to
             Message toSend = new MessageBuilder().setEmbeds(infoEmbed).append(MarkdownSanitizer.escape("Getting more info for: " + searchResult.getActualTitle()))
                     .setActionRows(getPaginatorButtonsAsActionRow())
                     .build();
             MESSAGE.editMessage(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
-        }else{//since there is no other message, just make a new one
+        } else {//since there is no other message, just make a new one
             Message toSend = new MessageBuilder().setEmbeds(infoEmbed).append(MarkdownSanitizer.escape("Getting more info for: " + searchResult.getActualTitle()))
                     .setActionRows(getPaginatorButtonsAsActionRow())
                     .build();
@@ -109,14 +106,14 @@ public class SearchSubmenu extends Paginator {
         }
     }
 
-    private String requestMedia(){
+    private String requestMedia() {
         OverseerApiCaller caller = new OverseerApiCaller();
         String mediaTitle;
         RequestTemplate.RequestBuilder request = new RequestTemplate.RequestBuilder()
                 .setMediaType(isMovie);
 
-        if(isMovie){
-            if(!canRequest){
+        if (isMovie) {
+            if (!canRequest) {
                 //inform the user that we cant do that
                 return MarkdownSanitizer.escape("Cannot request " + movieInfo.getTitle() + ". Movie is either already requested or available on Plex");
             }
@@ -124,8 +121,8 @@ public class SearchSubmenu extends Paginator {
             mediaTitle = movieInfo.getTitle();
             //set the movie ID number
             request.setMediaId(movieInfo.getId());
-        }else{//if not movie, must be tv show
-            if(!canRequest){
+        } else {//if not movie, must be tv show
+            if (!canRequest) {
                 //inform the user that we cant do that
                 return MarkdownSanitizer.escape("Cannot request " + tvInfo.getName() + ". Show is either already fully requested or fully available on Plex");
             }
@@ -139,7 +136,7 @@ public class SearchSubmenu extends Paginator {
         //build request
         String requestJson = request.build();
         boolean success = caller.requestMedia(requestJson);
-        if(success){
+        if (success) {
             canRequest = false;
             return MarkdownSanitizer.escape(mediaTitle + " was successfully added to the request list!");
         }
@@ -147,7 +144,7 @@ public class SearchSubmenu extends Paginator {
 
     }
 
-    public static class Builder extends Paginator.Builder<SearchSubmenu.Builder, SearchSubmenu>{
+    public static class Builder extends Paginator.Builder<SearchSubmenu.Builder, SearchSubmenu> {
 
         private Result searchResults = null;
 
@@ -155,7 +152,7 @@ public class SearchSubmenu extends Paginator {
         @Override
         public SearchSubmenu build() {
             //validate stuff
-            if(!runChecks()){
+            if (!runChecks()) {
                 throw new IllegalArgumentException("Cannot build, invalid arguments!");
             }
 
@@ -164,13 +161,13 @@ public class SearchSubmenu extends Paginator {
 
         @Override
         protected boolean runAdditionalChecks() {
-            if(searchResults == null){
+            if (searchResults == null) {
                 throw new IllegalArgumentException("You MUST provide search results!");
             }
             return true;
         }
 
-        public final Builder setSearchResults(Result searchResult){
+        public final Builder setSearchResults(Result searchResult) {
             this.searchResults = searchResult;
             return this;
         }

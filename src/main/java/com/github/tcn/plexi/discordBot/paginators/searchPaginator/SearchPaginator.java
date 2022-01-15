@@ -1,7 +1,7 @@
 package com.github.tcn.plexi.discordBot.paginators.searchPaginator;
 
-import com.github.tcn.plexi.discordBot.eventHandlers.ButtonManager;
 import com.github.tcn.plexi.discordBot.EmbedManager;
+import com.github.tcn.plexi.discordBot.eventHandlers.ButtonManager;
 import com.github.tcn.plexi.discordBot.paginators.Paginator;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.search.Result;
@@ -17,19 +17,18 @@ public class SearchPaginator extends Paginator {
     private final SearchSubmenu.Builder submenuBuilder = new SearchSubmenu.Builder();
 
 
-
-    public SearchPaginator(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap, MediaSearch searchResults, ButtonManager buttonManager){
+    public SearchPaginator(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap, MediaSearch searchResults, ButtonManager buttonManager) {
         super(message, event, userId, numberOfPages, wrap, buttonManager);
-        BUTTON_MANAGER.addListener(getID(), this::onButtonClick );
+        BUTTON_MANAGER.addListener(getID(), this::onButtonClick);
         this.SEARCH_RESULTS = searchResults;
         //we should set up the submenu
         submenuBuilder.setButtonManager(buttonManager);
 
         //register the required buttons - changes with number of pages
-        if(numberOfPages == 1){
+        if (numberOfPages == 1) {
             addStopButton();
             addButton(Button.success(getID() + ":select", "Select This"));
-        }else{
+        } else {
             addButton(Button.primary(getID() + ":previous", "◀️ Go Left"));
             addStopButton();
             addButton(Button.success(getID() + ":select", "Select This"));
@@ -47,20 +46,18 @@ public class SearchPaginator extends Paginator {
 
             if (!buttonName[0].equals(getID())) {
                 //now just go through the buttons that we support and see which one was clicked
-                if (buttonName[2].equals("previous")){
+                if (buttonName[2].equals("previous")) {
                     decPageNum();
-                } else if (buttonName[2].equals("next")){
+                } else if (buttonName[2].equals("next")) {
                     incPageNum();
-                } else if (buttonName[2].equals("select")){
+                } else if (buttonName[2].equals("select")) {
                     enterSubmenu();
 
                     //we dont want to show the wrong thing so return and cancel the page update
                     return;
-                }else if(buttonName[0].equals("submenuAccept")){
+                } else if (buttonName[0].equals("submenuAccept")) {
                     System.out.println("Submenu button!");
-                }
-
-                else{
+                } else {
                     //This is a button for a different message
                     return;
                 }
@@ -70,16 +67,16 @@ public class SearchPaginator extends Paginator {
         }
     }
 
-    protected void enterSubmenu(){
+    protected void enterSubmenu() {
         //get a reference to the search result
         Result result = SEARCH_RESULTS.getResults().get(currentPage);
 
         //finish setting up the submenu
-        if(IS_SLASH_COMMAND && sentMessage == null){
+        if (IS_SLASH_COMMAND && sentMessage == null) {
             submenuBuilder.SetSlashCommand(SLASH_EVENT);
-        }else if(sentMessage != null){
+        } else if (sentMessage != null) {
             submenuBuilder.SetMessage(sentMessage);
-        }else{
+        } else {
             submenuBuilder.SetMessage(MESSAGE);
         }
         submenuBuilder.setUserId(USER_ID);
@@ -90,40 +87,38 @@ public class SearchPaginator extends Paginator {
     }
 
 
-
-
     @Override
     protected void showPage() {
         //if there is only one page, just go straight to the submenu
-        if(NUMBER_OF_PAGES == 1){
+        if (NUMBER_OF_PAGES == 1) {
             enterSubmenu();
             return;
         }
 
         EmbedManager manager = new EmbedManager();
-        if(IS_SLASH_COMMAND && sentMessage == null){
+        if (IS_SLASH_COMMAND && sentMessage == null) {
             SLASH_EVENT.getHook()
                     .editOriginal("Search Results")
                     .setEmbeds(manager.generateMediaSearchEmbed(SEARCH_RESULTS, currentPage).build())
                     .setActionRows(getPaginatorButtonsAsActionRow())
                     .queue(message -> sentMessage = message);
 
-        }else{
+        } else {
             //check to see if we have already responded once
-            if(sentMessage == null){
+            if (sentMessage == null) {
                 Message toSend = new MessageBuilder()
                         .setEmbeds(manager.generateMediaSearchEmbed(SEARCH_RESULTS, currentPage).build())
                         .append("Search Results")
                         .setActionRows(getPaginatorButtonsAsActionRow())
                         .build();
                 MESSAGE.reply(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
-            }else{
+            } else {
                 sentMessage.editMessageEmbeds(manager.generateMediaSearchEmbed(SEARCH_RESULTS, currentPage).build()).queue();
             }
         }
     }
 
-    public static class Builder extends Paginator.Builder<SearchPaginator.Builder, SearchPaginator>{
+    public static class Builder extends Paginator.Builder<SearchPaginator.Builder, SearchPaginator> {
         private int numOfPages;
         private MediaSearch searchResults = null;
 
@@ -131,7 +126,7 @@ public class SearchPaginator extends Paginator {
         @Override
         public SearchPaginator build() {
             //validate stuff
-            if(!runChecks()){
+            if (!runChecks()) {
                 throw new IllegalArgumentException("Cannot build, invalid arguments!");
             }
             //strip out the people from the search result
@@ -143,14 +138,14 @@ public class SearchPaginator extends Paginator {
 
         @Override
         protected boolean runAdditionalChecks() {
-            if(searchResults == null){
+            if (searchResults == null) {
                 throw new IllegalArgumentException("You MUST provide search results!");
             }
             return true;
         }
 
 
-        public final Builder setSearchResults(MediaSearch searchResults){
+        public final Builder setSearchResults(MediaSearch searchResults) {
             this.searchResults = searchResults;
             return this;
         }

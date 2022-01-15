@@ -8,7 +8,7 @@ The second iteration of Plexi, A discord bot that integrates with [Overseerr](ht
 <div align="center">
   <br />
   <p>
-    <a href="https://github.com/Team-Creative-Name/Plexi-V2/actions/workflows/buildMain.yml"><img src="https://github.com/Team-Creative-Name/Plexi-V2/actions/workflows/buildMain.yml/badge.svg">
+    <a href="https://github.com/Team-Creative-Name/Plexi-V2/actions/workflows/buildMain.yml"><img src="https://github.com/Team-Creative-Name/Plexi-V2/actions/workflows/buildMain.yml/badge.svg"></a>
     <a href="https://github.com/Team-Creative-Name/Plexi-V2/issues"><img src="https://img.shields.io/github/issues/Team-Creative-Name/Plexi-V2" alt="Issues" /></a>
     <a href="https://github.com/Team-Creative-Name/Plexi-V2/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Team-Creative-Name/Plexi-V2" alt="License" /></a>
   </p>

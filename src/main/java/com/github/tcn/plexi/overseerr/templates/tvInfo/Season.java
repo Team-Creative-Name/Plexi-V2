@@ -1,4 +1,3 @@
-
 package com.github.tcn.plexi.overseerr.templates.tvInfo;
 
 
@@ -32,13 +31,11 @@ public class Season {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Season() {
     }
 
     /**
-     * 
      * @param overview
      * @param episodeCount
      * @param airDate

@@ -1,4 +1,3 @@
-
 package com.github.tcn.plexi.overseerr.templates.tvInfo;
 
 
@@ -23,13 +22,11 @@ public class Network {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Network() {
     }
 
     /**
-     * 
      * @param logoPath
      * @param name
      * @param originCountry

@@ -1,4 +1,3 @@
-
 package com.github.tcn.plexi.overseerr.templates.tvInfo;
 
 
@@ -26,13 +25,11 @@ public class Season__1 {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Season__1() {
     }
 
     /**
-     * 
      * @param createdAt
      * @param id
      * @param seasonNumber

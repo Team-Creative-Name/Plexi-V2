@@ -17,9 +17,9 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
-public class InfoCommand extends CommandTemplate{
+public class InfoCommand extends CommandTemplate {
 
-    public InfoCommand(){
+    public InfoCommand() {
         //add slash command with options
         CommandData command = new CommandData(getCommandName(), getSlashHelp());
 
@@ -39,26 +39,26 @@ public class InfoCommand extends CommandTemplate{
 
     @Override
     public void executeTextCommand(User author, TextChannel channel, Message message, String content, GuildMessageReceivedEvent event) {
-       String[] args = content.split(" ", 2);
-       //check to see if there are actually 2 args
-        if(args.length != 2){
+        String[] args = content.split(" ", 2);
+        //check to see if there are actually 2 args
+        if (args.length != 2) {
             message.reply("malformed Command").queue();
             return;
         }
 
-        try{
+        try {
             //check the media type
-            if(args[0].toLowerCase().matches("tv|television|telly|tele|t")){
+            if (args[0].toLowerCase().matches("tv|television|telly|tele|t")) {
                 MessageEmbed embed = getInfoEmbed(false, args[1]).build();
                 message.reply(MarkdownSanitizer.escape("Info for: " + embed.getTitle())).setEmbeds(embed).queue();
 
-            }else if(args[0].toLowerCase().matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m")){
+            } else if (args[0].toLowerCase().matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m")) {
                 MessageEmbed embed = getInfoEmbed(true, args[1]).build();
                 message.reply(MarkdownSanitizer.escape("Info for: " + embed.getTitle())).setEmbeds(embed).queue();
-            }else{
+            } else {
                 message.reply("Malformed command! - Please specify `movie` or `tv`").queue();
             }
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             message.reply(e.getMessage()).queue();
         }
 
@@ -70,41 +70,41 @@ public class InfoCommand extends CommandTemplate{
         event.deferReply().queue();
 
         //check the media type
-        if(event.getOptions().get(0).getAsString().toLowerCase().matches("tv|television|telly|tele|t")){
+        if (event.getOptions().get(0).getAsString().toLowerCase().matches("tv|television|telly|tele|t")) {
             MessageEmbed embed = getInfoEmbed(false, event.getOptions().get(1).getAsString()).build();
             event.getHook().editOriginal(MarkdownSanitizer.escape("Info for: " + embed.getTitle())).setEmbeds(embed).queue();
-        }else if(event.getOptions().get(0).getAsString().toLowerCase().matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m")){
+        } else if (event.getOptions().get(0).getAsString().toLowerCase().matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m")) {
             MessageEmbed embed = getInfoEmbed(true, event.getOptions().get(1).getAsString()).build();
-            event.getHook().editOriginal( MarkdownSanitizer.escape("Info for: " + embed.getTitle())).setEmbeds(embed).queue();
-        }else{
+            event.getHook().editOriginal(MarkdownSanitizer.escape("Info for: " + embed.getTitle())).setEmbeds(embed).queue();
+        } else {
             event.getHook().editOriginal("Malformed command! - Please specify `movie` or `tv`").queue();
         }
     }
 
-    private EmbedBuilder getInfoEmbed(boolean isMovie, String mediaId) throws IllegalArgumentException{
+    private EmbedBuilder getInfoEmbed(boolean isMovie, String mediaId) throws IllegalArgumentException {
         OverseerApiCaller caller = new OverseerApiCaller();
         EmbedManager eb = new EmbedManager();
         int mediaIdAsInt;
         //check to make sure the media ID is usable
-        try{
+        try {
             mediaIdAsInt = Integer.parseInt(mediaId);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalArgumentException("Media id is not an integer number");
         }
-        if(isMovie){
+        if (isMovie) {
             MovieInfo info = caller.getMovieInfo(mediaIdAsInt);
             //check to make sure there is info
-            if(info != null){
+            if (info != null) {
                 return eb.generateMovieInfoEmbed(info);
-            }else{
+            } else {
                 throw new IllegalArgumentException("Invalid movie ID");
             }
-        }else{
+        } else {
             TvInfo info = caller.getTvInfo(mediaIdAsInt);
             //check to make sure the info exists
-            if(info != null){
+            if (info != null) {
                 return eb.generateTvInfoEmbed(info);
-            }else{
+            } else {
                 throw new IllegalArgumentException("Invalid tv ID");
             }
         }

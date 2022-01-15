@@ -1,10 +1,10 @@
-
 package com.github.tcn.plexi.overseerr.templates.movieInfo;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 
 public class MediaInfo {
@@ -274,8 +274,8 @@ public class MediaInfo {
         this.plexUrl = plexUrl;
     }
 
-    public boolean isRequested(){
-        if ((requests != null) && !requests.isEmpty()){
+    public boolean isRequested() {
+        if ((requests != null) && !requests.isEmpty()) {
             return true;
         }
 

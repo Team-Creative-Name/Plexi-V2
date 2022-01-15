@@ -1,4 +1,3 @@
-
 package com.github.tcn.plexi.overseerr.templates.movieInfo;
 
 import com.google.gson.annotations.Expose;

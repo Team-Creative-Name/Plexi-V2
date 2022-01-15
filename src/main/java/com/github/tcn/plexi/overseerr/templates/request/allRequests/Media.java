@@ -1,10 +1,9 @@
-
 package com.github.tcn.plexi.overseerr.templates.request.allRequests;
-
-import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 
 public class Media {
@@ -75,13 +74,11 @@ public class Media {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Media() {
     }
 
     /**
-     * 
      * @param tvdbId
      * @param externalServiceId
      * @param externalServiceSlug

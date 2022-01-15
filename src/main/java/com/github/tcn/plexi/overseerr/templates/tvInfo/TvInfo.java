@@ -1,16 +1,18 @@
-
 package com.github.tcn.plexi.overseerr.templates.tvInfo;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TvInfo {
 
 
+    //new variables added by me
+    boolean[] isRequested;
+    List<Integer> unrequestedSeasons;
+    boolean isFullyRequested;
     @SerializedName("episodeRunTime")
     @Expose
     private List<Integer> episodeRunTime = null;
@@ -99,21 +101,14 @@ public class TvInfo {
     @Expose
     private MediaInfo mediaInfo;
 
-    //new variables added by me
-    boolean[] isRequested;
-    List<Integer> unrequestedSeasons;
-    boolean isFullyRequested;
-
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public TvInfo() {
     }
 
     /**
-     * 
      * @param keywords
      * @param networks
      * @param type
@@ -183,13 +178,13 @@ public class TvInfo {
         return episodeRunTime;
     }
 
-    public int getAvgEpisodeRuntime(){
-        if(episodeRunTime == null || episodeRunTime.size() == 0){
+    public int getAvgEpisodeRuntime() {
+        if (episodeRunTime == null || episodeRunTime.size() == 0) {
             //This will only happen if there are no episodes, so it would be 0
             return 0;
         }
         int avgRuntime = 0;
-        for(Integer runtimes : episodeRunTime){
+        for (Integer runtimes : episodeRunTime) {
             avgRuntime += runtimes;
         }
 
@@ -269,16 +264,16 @@ public class TvInfo {
         return networks;
     }
 
-    public String getFirstNetwork(){
-        if(networks == null || networks.size() == 0){
-            return "Unknown";
-        }else{
-            return networks.get(0).getName();
-        }
-    }
-
     public void setNetworks(List<Network> networks) {
         this.networks = networks;
+    }
+
+    public String getFirstNetwork() {
+        if (networks == null || networks.size() == 0) {
+            return "Unknown";
+        } else {
+            return networks.get(0).getName();
+        }
     }
 
     public Integer getNumberOfEpisodes() {
@@ -433,9 +428,9 @@ public class TvInfo {
         this.mediaInfo = mediaInfo;
     }
 
-    public boolean isFullyRequested(){
+    public boolean isFullyRequested() {
         //optimize in case we have to call more than once
-        if(isRequested != null){
+        if (isRequested != null) {
             return isFullyRequested;
         }
 
@@ -443,11 +438,11 @@ public class TvInfo {
         unrequestedSeasons = new ArrayList<>();
 
         //if mediaInfo is null then there are no requests. Just request everything
-        if(mediaInfo == null){
+        if (mediaInfo == null) {
             isFullyRequested = false;
             //put all of the unrequested items in a list
-            for(int i = 0; i < isRequested.length; i++){
-                if(!isRequested[i]){
+            for (int i = 0; i < isRequested.length; i++) {
+                if (!isRequested[i]) {
                     unrequestedSeasons.add(i + 1);
                 }
             }
@@ -455,22 +450,21 @@ public class TvInfo {
         }
 
 
-
         //get an array of what is requested and whats not
-        for(Request request : getMediaInfo().getRequests()){
-            for(Season__1 season : request.getSeasons()){
+        for (Request request : getMediaInfo().getRequests()) {
+            for (Season__1 season : request.getSeasons()) {
                 isRequested[season.getSeasonNumber() - 1] = true;
             }
         }
 
         //put all of the unrequested items in a list
-        for(int i = 0; i < isRequested.length; i++){
-            if(!isRequested[i]){
+        for (int i = 0; i < isRequested.length; i++) {
+            if (!isRequested[i]) {
                 unrequestedSeasons.add(i + 1);
             }
         }
 
-        if(unrequestedSeasons.size() == 0){
+        if (unrequestedSeasons.size() == 0) {
             isFullyRequested = true;
             return true;
         }
@@ -478,24 +472,24 @@ public class TvInfo {
         return false;
     }
 
-    public boolean isFullyAvailable(){
+    public boolean isFullyAvailable() {
         return (mediaInfo != null) && getMediaInfo().getStatus() == 5;
     }
 
-    public boolean allowRequests(){
+    public boolean allowRequests() {
         return !isFullyRequested() && !isFullyAvailable();
     }
 
-    public List<Integer> getUnrequestedSeasons(){
+    public List<Integer> getUnrequestedSeasons() {
         return unrequestedSeasons;
     }
 
-    public String getRequestStatus(){
-        if(isFullyRequested){
-           return  "Fully Requested";
-        }else if(!getUnrequestedSeasons().isEmpty()){
+    public String getRequestStatus() {
+        if (isFullyRequested) {
+            return "Fully Requested";
+        } else if (!getUnrequestedSeasons().isEmpty()) {
             return "Partially Requested";
-        }else{
+        } else {
             return "Not Requested";
         }
     }

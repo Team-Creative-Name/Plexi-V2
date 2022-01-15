@@ -26,7 +26,7 @@ public abstract class Paginator {
     protected Message sentMessage; //track the message that we sent in response to a command
     protected List<Button> buttonList = new ArrayList<>(); //Keeps track of any buttons that we need to add;
 
-    public Paginator(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap, ButtonManager buttonManager){
+    public Paginator(Message message, SlashCommandEvent event, long userId, int numberOfPages, boolean wrap, ButtonManager buttonManager) {
         SLASH_EVENT = event;
         MESSAGE = message;
         USER_ID = userId;
@@ -35,11 +35,11 @@ public abstract class Paginator {
         BUTTON_MANAGER = buttonManager;
 
         //for simplicity, lets keep a boolean value that tells us if we are using a slash command
-        if(MESSAGE == null && SLASH_EVENT != null){
+        if (MESSAGE == null && SLASH_EVENT != null) {
             IS_SLASH_COMMAND = true;
-        }else if(MESSAGE != null && SLASH_EVENT == null){
+        } else if (MESSAGE != null && SLASH_EVENT == null) {
             IS_SLASH_COMMAND = false;
-        }else{
+        } else {
             throw new IllegalArgumentException("Cannot have both MESSAGE and SLASH_EVENT set in a paginator!");
         }
     }
@@ -48,67 +48,67 @@ public abstract class Paginator {
 
     protected abstract void showPage();
 
-    public void paginate(int pageNum){
+    public void paginate(int pageNum) {
         //validate the number and put it within the range if outside
-        if(pageNum <1){
+        if (pageNum < 1) {
             currentPage = 1;
-        }else if(pageNum > NUMBER_OF_PAGES){
+        } else if (pageNum > NUMBER_OF_PAGES) {
             currentPage = NUMBER_OF_PAGES;
         }
         showPage();
     }
 
     //methods that the subclass will need
-    public String getID(){
-        if(IS_SLASH_COMMAND){
+    public String getID() {
+        if (IS_SLASH_COMMAND) {
             return SLASH_EVENT.getHook().retrieveOriginal().complete().getId() + ":" + USER_ID;
         }
-       return MESSAGE.getId() + ":" + USER_ID;
+        return MESSAGE.getId() + ":" + USER_ID;
     }
 
-    public Long getEventId(){
-        if(IS_SLASH_COMMAND){
+    public Long getEventId() {
+        if (IS_SLASH_COMMAND) {
             return Long.parseLong(SLASH_EVENT.getId());
         }
         return Long.parseLong(MESSAGE.getId());
     }
 
-    protected void incPageNum(){
+    protected void incPageNum() {
         //are we at the end of the list
-        if(currentPage == NUMBER_OF_PAGES - 1 && WRAP){
+        if (currentPage == NUMBER_OF_PAGES - 1 && WRAP) {
             currentPage = 0;
-        }else{
+        } else {
             currentPage++;
         }
     }
 
-    protected void decPageNum(){
+    protected void decPageNum() {
         //are we at the beginning of the list
-        if(currentPage == 0 && WRAP){
+        if (currentPage == 0 && WRAP) {
             currentPage = NUMBER_OF_PAGES - 1;
-        }else{
+        } else {
             currentPage--;
         }
     }
 
-    protected void addButton(Button toAdd){
-        if(buttonList.size() < 5){
+    protected void addButton(Button toAdd) {
+        if (buttonList.size() < 5) {
             buttonList.add(toAdd);
-        }else{
+        } else {
             LoggerFactory.getLogger("Plexi: Paginator").error("Cannot have more than five buttons on a message! Button \"" + toAdd.getLabel() + "\" will not be added.");
         }
     }
 
-    protected void addStopButton(){
+    protected void addStopButton() {
         addButton(Button.danger("endButton", Emoji.fromUnicode("\uD83D\uDDD1️")));
     }
 
-    protected ActionRow getPaginatorButtonsAsActionRow(){
+    protected ActionRow getPaginatorButtonsAsActionRow() {
         return ActionRow.of(buttonList);
     }
 
     @SuppressWarnings("unchecked")
-    protected abstract static class Builder<T extends Builder<T,V>, V extends Paginator>{
+    protected abstract static class Builder<T extends Builder<T, V>, V extends Paginator> {
         protected Message MESSAGE; //The message that we respond to. Only exists if this paginator is in response to a text command
         protected SlashCommandEvent EVENT; //The event that we respond to. Only exists if this paginator is in response to a slash command
         protected long USER_ID; //The ID of the user that we bind to
@@ -117,14 +117,14 @@ public abstract class Paginator {
 
         public abstract V build();
 
-        protected boolean runChecks(){
-            if(MESSAGE == null && EVENT == null){
+        protected boolean runChecks() {
+            if (MESSAGE == null && EVENT == null) {
                 throw new IllegalArgumentException("Either message or event must be set!");
             }
-            if(USER_ID == 0L){
+            if (USER_ID == 0L) {
                 throw new IllegalArgumentException("User ID must be set!");
             }
-            if(BUTTON_MANAGER == null){
+            if (BUTTON_MANAGER == null) {
                 throw new IllegalArgumentException("The buttonManager must be set!");
             }
 
@@ -135,27 +135,27 @@ public abstract class Paginator {
 
         protected abstract boolean runAdditionalChecks();
 
-        public final T SetMessage(Message message){
+        public final T SetMessage(Message message) {
             this.MESSAGE = message;
             return (T) this;
         }
 
-        public final T SetSlashCommand(SlashCommandEvent event){
+        public final T SetSlashCommand(SlashCommandEvent event) {
             this.EVENT = event;
             return (T) this;
         }
 
-        public final T setUserId(long userId){
+        public final T setUserId(long userId) {
             this.USER_ID = userId;
             return (T) this;
         }
 
-        public final T wrapPages(boolean wrap){
+        public final T wrapPages(boolean wrap) {
             this.WRAP = wrap;
             return (T) this;
         }
 
-        public final T setButtonManager(ButtonManager BUTTON_MANAGER){
+        public final T setButtonManager(ButtonManager BUTTON_MANAGER) {
             this.BUTTON_MANAGER = BUTTON_MANAGER;
             return (T) this;
         }

@@ -1,4 +1,3 @@
-
 package com.github.tcn.plexi.overseerr.templates.request.allRequests;
 
 
@@ -23,13 +22,11 @@ public class PageInfo {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public PageInfo() {
     }
 
     /**
-     * 
      * @param pages
      * @param pageSize
      * @param page

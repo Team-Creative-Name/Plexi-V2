@@ -11,7 +11,6 @@ import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
-
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;

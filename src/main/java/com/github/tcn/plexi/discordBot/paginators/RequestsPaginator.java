@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.ButtonInteraction;
 
-public class RequestsPaginator extends Paginator{
+public class RequestsPaginator extends Paginator {
 
     final MediaRequests REQUESTS;
 
@@ -19,7 +19,7 @@ public class RequestsPaginator extends Paginator{
         BUTTON_MANAGER.addListener(getID(), this::onButtonClick);
 
         //add buttons
-        if(numberOfPages != 1){
+        if (numberOfPages != 1) {
             addButton(Button.primary(getID() + ":previous", "◀️ Go Left"));
             addStopButton();
             addButton(Button.primary(getID() + ":next", "Go Right ▶️️"));
@@ -28,18 +28,18 @@ public class RequestsPaginator extends Paginator{
 
     @Override
     public void onButtonClick(ButtonInteraction interaction) {
-        if(interaction.getUser().getIdLong() != USER_ID){
+        if (interaction.getUser().getIdLong() != USER_ID) {
             return;
         }
 
         String[] pressedButton = interaction.getComponentId().split(":");
 
-        if(!getID().equals(pressedButton[0])){
-            if("previous".equals(pressedButton[2])){
+        if (!getID().equals(pressedButton[0])) {
+            if ("previous".equals(pressedButton[2])) {
                 decPageNum();
-            }else if("next".equals(pressedButton[2])){
+            } else if ("next".equals(pressedButton[2])) {
                 incPageNum();
-            }else{
+            } else {
                 //if a rouge button is pressed and we get to this point somehow, we dont need to update the page, return
                 return;
             }
@@ -52,29 +52,29 @@ public class RequestsPaginator extends Paginator{
     protected void showPage() {
 
         EmbedManager manager = new EmbedManager();
-        if(IS_SLASH_COMMAND && sentMessage == null){
+        if (IS_SLASH_COMMAND && sentMessage == null) {
             SLASH_EVENT.getHook()
                     .editOriginal("Requests:")
                     .setEmbeds(manager.createRequestEmbed(REQUESTS, currentPage).build())
                     .setActionRows(getPaginatorButtonsAsActionRow())
                     .queue(message -> sentMessage = message);
 
-        }else{
+        } else {
             //check to see if we have already responded once
-            if(sentMessage == null){
+            if (sentMessage == null) {
                 Message toSend = new MessageBuilder()
                         .setEmbeds(manager.createRequestEmbed(REQUESTS, currentPage).build())
                         .append("Requests:")
                         .setActionRows(getPaginatorButtonsAsActionRow())
                         .build();
                 MESSAGE.reply(toSend).mentionRepliedUser(false).queue(message -> sentMessage = message);
-            }else{
+            } else {
                 sentMessage.editMessageEmbeds(manager.createRequestEmbed(REQUESTS, currentPage).build()).queue();
             }
         }
     }
 
-    public static class Builder extends Paginator.Builder<RequestsPaginator.Builder, RequestsPaginator>{
+    public static class Builder extends Paginator.Builder<RequestsPaginator.Builder, RequestsPaginator> {
         private int numOfPages;
         private MediaRequests requests;
 
@@ -82,7 +82,7 @@ public class RequestsPaginator extends Paginator{
         @Override
         public RequestsPaginator build() {
             //validate stuff
-            if(!runChecks()){
+            if (!runChecks()) {
                 throw new IllegalArgumentException("Cannot build, invalid arguments!");
             }
 
@@ -93,14 +93,14 @@ public class RequestsPaginator extends Paginator{
 
         @Override
         protected boolean runAdditionalChecks() {
-            if(requests == null){
+            if (requests == null) {
                 throw new IllegalArgumentException("It seems that there aren't any requests. Use the request command to request something!");
             }
             return true;
         }
 
 
-        public final RequestsPaginator.Builder setRequests(MediaRequests requests){
+        public final RequestsPaginator.Builder setRequests(MediaRequests requests) {
             this.requests = requests;
             return this;
         }
