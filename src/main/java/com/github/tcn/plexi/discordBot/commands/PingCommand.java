@@ -1,5 +1,6 @@
 package com.github.tcn.plexi.discordBot.commands;
 
+import com.github.tcn.plexi.Settings;
 import com.github.tcn.plexi.discordBot.EmbedManager;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import net.dv8tion.jda.api.JDA;
@@ -46,12 +47,13 @@ public class PingCommand extends CommandTemplate {
 
     @Override
     public String getSlashHelp() {
-        return "Gets Plexi's ping time to the various enabled apis";
+            return "Gets the current ping time to various api endpoints.";
     }
 
     @Override
     public String getChatHelp() {
-        return getSlashHelp();
+        return "Gets the current ping time to various api endpoints.\n" +
+                "USAGE: " + Settings.getInstance().getPrefix() + "ping";
     }
 
     @Override

@@ -64,6 +64,8 @@ public class CommandHandler extends ListenerAdapter {
         buttonManager.onEvent(event);
     }
 
+
+
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event){
         //check to make sure the message is meant for us

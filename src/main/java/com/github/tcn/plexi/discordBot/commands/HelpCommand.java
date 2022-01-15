@@ -1,5 +1,6 @@
 package com.github.tcn.plexi.discordBot.commands;
 
+import com.github.tcn.plexi.Settings;
 import com.github.tcn.plexi.discordBot.EmbedManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -26,18 +27,18 @@ public class HelpCommand extends CommandTemplate {
     }
 
     private EmbedBuilder generateHelpEmbed(boolean isChatCommand){
-        EmbedManager manager = new EmbedManager();
-        return manager.getHelpEmbed(isChatCommand);
+        return new EmbedManager().getHelpEmbed(isChatCommand);
     }
 
     @Override
     public String getSlashHelp() {
-        return "Returns a list of commands and what they do";
+        return "Shows this message with the version number, support info, and available commands.";
     }
 
     @Override
     public String getChatHelp() {
-        return getSlashHelp();
+        return "Shows this message with the version number, support info, and available commands.\n" +
+                "USAGE: /help";
     }
 
     @Override

@@ -157,12 +157,13 @@ public class ViewRequestsCommand extends CommandTemplate{
 
     @Override
     public String getSlashHelp() {
-        return "returns all requests matching the given parameters";
+        return "Returns all requests matching the given parameters.";
     }
 
     @Override
     public String getChatHelp() {
-        return "Returns all requests in specified increments\nUSAGE: " + Settings.getInstance().getPrefix() + "[Max_Number_To_Display]";
+        return "Returns all requests in specified increments.\n" +
+                "USAGE: " + Settings.getInstance().getPrefix() + "view-requests [number_to_display]";
     }
 
     @Override

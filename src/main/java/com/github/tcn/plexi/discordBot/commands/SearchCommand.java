@@ -117,12 +117,13 @@ public class SearchCommand extends CommandTemplate {
 
     @Override
     public String getSlashHelp() {
-        return "Searches Overseerr for the requested media";
+        return "Searches Overseerr for the requested media.";
     }
 
     @Override
     public String getChatHelp() {
-        return "Searches Overseerr for the requested media\nUSAGE: " + Settings.getInstance().getPrefix() + "[tv|movie] {query}";
+        return "Searches Overseerr for the requested media.\n" +
+                "USAGE: " + Settings.getInstance().getPrefix() + "search [tv|movie] {query}";
     }
 
     @Override

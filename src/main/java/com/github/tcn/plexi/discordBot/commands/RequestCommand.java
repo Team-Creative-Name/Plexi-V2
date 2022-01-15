@@ -108,12 +108,13 @@ public class RequestCommand extends CommandTemplate{
 
     @Override
     public String getSlashHelp() {
-        return "Requests media given the TMDb id and media type";
+        return "Requests media given the TMDb id and media type.";
     }
 
     @Override
     public String getChatHelp() {
-        return "Requests media given the TMDb id and media type\nUSAGE: " + Settings.getInstance().getPrefix() + "request {tv|movie} {TMDb_ID}";
+        return "Requests media given the TMDb id and media type.\n" +
+                "USAGE: " + Settings.getInstance().getPrefix() + "request {tv|movie} {TMDb_ID}";
     }
 
     @Override

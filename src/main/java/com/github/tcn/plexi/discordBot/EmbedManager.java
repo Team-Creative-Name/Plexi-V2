@@ -23,8 +23,8 @@ import java.util.Set;
 public class EmbedManager {
 
     public EmbedBuilder getHelpEmbed(boolean isChatCommand){
-        String prefix = Settings.getInstance().getPrefix();
         Settings settings = Settings.getInstance();
+        String prefix = settings.getPrefix();
         Set<CommandTemplate> commandSet = DiscordBot.getInstance().getCommandHandler().getCommandSet();
 
         EmbedBuilder eb = new EmbedBuilder()
@@ -32,19 +32,19 @@ public class EmbedManager {
                 .setTitle("Help - Plexi Commands:")
                 .setDescription("Plexi Version " + settings.getVersionNumber() + ", Branch: " + settings.getBranchName() + ", Parent Commit: " + settings.getParentHash() +
                         "\n\nFor additional help with Plexi, please contact " + DiscordBot.getInstance().getJDAInstance().getUserById(Settings.getInstance().getOwnerID()) +
-                        "\n And check out [Plexi on Github](https://github.com/Team-Creative-Name/plexi-V2)" +
-                        "\n\n Options enclosed in {} are mandatory, [] are optional\n")
+                        "\n And check out [Plexi on Github](https://github.com/Team-Creative-Name/plexi-V2)")
                 .setFooter(getRandomSplash(), Settings.getInstance().getHostedIconURL());
-
 
         if(!isChatCommand){
             for(CommandTemplate command : commandSet){
-                eb.addField(prefix+command.getCommandName(), "`"+command.getSlashHelp()+"`",false);
+                eb.addField("/" + command.getCommandName(), "`"+command.getSlashHelp()+"`",false);
             }
+
         }else{
             for(CommandTemplate command : commandSet){
                 eb.addField(prefix+command.getCommandName(), "`"+command.getChatHelp()+"`",false);
             }
+            eb.getDescriptionBuilder().append("\n\n Options enclosed in {} are mandatory, [] are optional\n");
         }
 
         return eb;
@@ -61,7 +61,7 @@ public class EmbedManager {
         if(result.getMediaType().equals("movie")){
             eb.setTitle(stringVerifier(result.getTitle(),1), getTmdbMovieUrl(result.getId()));
             eb.addField("Release Date", stringVerifier(result.getReleaseDate(),8),true);
-        }else{
+        }else{ //if not movie then it would be a tv show
             eb.setTitle(stringVerifier(result.getName(),1), getTmdbTvUrl(result.getId()));
             eb.addField("First Air Date", stringVerifier(result.getFirstAirDate(),8),true);
         }
@@ -74,7 +74,6 @@ public class EmbedManager {
         eb.setDescription(stringVerifier(result.getOverview(),2));
         eb.addField("TMDB ID", stringVerifier(Integer.toString(result.getId()), 3),true);
         eb.addField("Type", stringVerifier(result.getMediaType(), 5), true);
-
 
         eb.setFooter(stringVerifier("Page " + (resultNum + 1) + " of " + (searchResult.getResults().size()),1));
         return eb;
@@ -206,7 +205,7 @@ public class EmbedManager {
     // 9. status int
     //10. general Error
     private String stringVerifier(String toCheck, int fieldID) {
-        if (toCheck == null) {
+        if (toCheck == null) { //put in default values if something is missing
             switch (fieldID) {
                 case 1:
                     return "TITLE";
@@ -228,14 +227,14 @@ public class EmbedManager {
             }
             //shouldn't ever get here unless some idiot (me) forgets to add a case for a new function
             return "N/A";
-        } else if (fieldID == 8) {
+        } else if (fieldID == 8) { // format the date returned by the API as something that is more readable
                 try {
                     Date date = new SimpleDateFormat("yyyy-MM-dd").parse(toCheck);
                     return new SimpleDateFormat("MM/dd/yyyy").format(date);
                 } catch (Exception e) {
                     return "Unknown";
                 }
-        }else if(fieldID == 9){
+        }else if(fieldID == 9){ // change Overseerr's number based availability value into something people understand
             switch (toCheck){
                 case "2":
                     return "Pending";

@@ -113,12 +113,13 @@ public class InfoCommand extends CommandTemplate{
 
     @Override
     public String getSlashHelp() {
-        return "Gets information about a certain bit of media given the type and TMDb ID number";
+        return "Gets all information on a title given its TMDb id number.";
     }
 
     @Override
     public String getChatHelp() {
-        return "Gets information about a certain bit of media given the type and TMDb ID number\nUSAGE: " + Settings.getInstance().getPrefix() + "info {tv|movie} {TMDb_ID}";
+        return "Gets all information on a title given its TMDb id number.\n" +
+                "USAGE: " + Settings.getInstance().getPrefix() + "info {tv|movie} {TMDb_ID}";
     }
 
     @Override
