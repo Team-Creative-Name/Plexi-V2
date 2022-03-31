@@ -1,9 +1,9 @@
-
 package com.github.tcn.plexi.overseerr.templates.movieInfo;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 
 public class MovieInfo {
@@ -262,12 +262,12 @@ public class MovieInfo {
         this.mediaInfo = mediaInfo;
     }
 
-    public boolean isAvailable(){
+    public boolean isAvailable() {
         return (mediaInfo != null) && getMediaInfo().getStatus() == 5;
     }
 
-    public boolean allowRequests(){
-        boolean isReq = (mediaInfo != null ) && getMediaInfo().isRequested();
+    public boolean allowRequests() {
+        boolean isReq = (mediaInfo != null) && getMediaInfo().isRequested();
         boolean isAv = isAvailable();
 
 

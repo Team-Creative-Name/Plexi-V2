@@ -1,4 +1,3 @@
-
 package com.github.tcn.plexi.overseerr.templates.tvInfo;
 
 
@@ -17,13 +16,11 @@ public class Keyword {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Keyword() {
     }
 
     /**
-     * 
      * @param name
      * @param id
      */

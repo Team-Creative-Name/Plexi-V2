@@ -1,5 +1,6 @@
 package com.github.tcn.plexi.discordBot.commands;
 
+import com.github.tcn.plexi.Settings;
 import com.github.tcn.plexi.discordBot.EmbedManager;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
 import net.dv8tion.jda.api.JDA;
@@ -13,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public class PingCommand extends CommandTemplate {
 
-    public PingCommand(){
+    public PingCommand() {
         registerSlashCommand();
     }
 
@@ -22,22 +23,22 @@ public class PingCommand extends CommandTemplate {
         EmbedManager eb = new EmbedManager();
         OverseerApiCaller apiCaller = new OverseerApiCaller();
         JDA jda = event.getJDA();
-        try{
+        try {
             reply(event, eb.createPingEmbed(jda.getGatewayPing(), jda.getRestPing().submit().get(), apiCaller.getPingTime()).build());
-        }catch (Exception e){
+        } catch (Exception e) {
             LoggerFactory.getLogger("Plexi: PingCommand").error("Unable to calculate ping time for one or more items: " + e.getLocalizedMessage());
         }
     }
 
 
     @Override
-    public void executeSlashCommand(SlashCommandEvent event) {
+    public void executeSlashCommand(SlashCommandEvent slashCommandEvent) {
         EmbedManager eb = new EmbedManager();
         OverseerApiCaller apiCaller = new OverseerApiCaller();
-        JDA jda = event.getJDA();
-        try{
-            reply(event, eb.createPingEmbed(jda.getGatewayPing(), jda.getRestPing().submit().get(), apiCaller.getPingTime()).build());
-        }catch (Exception e){
+        JDA jda = slashCommandEvent.getJDA();
+        try {
+            reply(slashCommandEvent, eb.createPingEmbed(jda.getGatewayPing(), jda.getRestPing().submit().get(), apiCaller.getPingTime()).build());
+        } catch (Exception e) {
             LoggerFactory.getLogger("Plexi: PingCommand").error("Unable to calculate ping time for one or more items: " + e.getLocalizedMessage());
         }
 
@@ -46,12 +47,13 @@ public class PingCommand extends CommandTemplate {
 
     @Override
     public String getSlashHelp() {
-        return "Gets Plexi's ping time to the various enabled apis";
+        return "Gets the current ping time to various api endpoints.";
     }
 
     @Override
     public String getChatHelp() {
-        return getSlashHelp();
+        return "Gets the current ping time to various api endpoints.\n" +
+                "USAGE: " + Settings.getInstance().getPrefix() + "ping";
     }
 
     @Override

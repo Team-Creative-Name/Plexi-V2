@@ -1,8 +1,8 @@
 package com.github.tcn.plexi.gui;
 
 
-import com.github.tcn.plexi.discordBot.DiscordBot;
 import com.github.tcn.plexi.Settings;
+import com.github.tcn.plexi.discordBot.DiscordBot;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -13,7 +13,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MainView extends JFrame {
 
@@ -30,9 +29,9 @@ public class MainView extends JFrame {
 
     public MainView() {
         //set title of window
-        if(!settings.getBranchName().matches("main")){
-            setTitle("Plexi " + settings.getVersionNumber() + "  [" + settings.getBranchName() + ":" +settings.getParentHash() +"]");
-        }else{
+        if (!settings.getBranchName().matches("main")) {
+            setTitle("Plexi " + settings.getVersionNumber() + "  [" + settings.getBranchName() + ":" + settings.getParentHash() + "]");
+        } else {
             setTitle("Plexi " + settings.getVersionNumber());
         }
 
@@ -116,7 +115,7 @@ public class MainView extends JFrame {
 
         //set window properties
         setSize(400, 355);
-        setMinimumSize(new Dimension(400,355));
+        setMinimumSize(new Dimension(400, 355));
         setLocationRelativeTo(null);
 
     }

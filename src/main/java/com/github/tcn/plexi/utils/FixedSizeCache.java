@@ -12,7 +12,7 @@ public class FixedSizeCache<K, V> {
 
     @SuppressWarnings("unchecked")
     public FixedSizeCache(int size) {
-        if(size < 1)
+        if (size < 1)
             throw new IllegalArgumentException("Cache size must be at least 1!");
         this.keys = (K[]) new Object[size];
     }
@@ -27,7 +27,7 @@ public class FixedSizeCache<K, V> {
 
     //This method has been modified to allow overwriting a key for multilayered menus
     public void add(K key, V value) {
-        if(keys[currIndex] != null) {
+        if (keys[currIndex] != null) {
             map.remove(keys[currIndex]);
         }
         map.put(key, value);
@@ -36,8 +36,8 @@ public class FixedSizeCache<K, V> {
     }
 
     //submenus will require us to remove the reference to the old buttons in order to handle new ones
-    public void remove(K key){
-        if(!contains(key)){
+    public void remove(K key) {
+        if (!contains(key)) {
             return;
         }
     }

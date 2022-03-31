@@ -15,21 +15,21 @@ import java.io.IOException;
 
 public class OverseerApiCaller {
 
-    public MediaSearch Search(String query){
+    public MediaSearch Search(String query) {
         OkHttpClient client = new OkHttpClient();
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         Request request = new Request.Builder()
-                .url(Settings.getInstance().getOverseerrUrl() +"/api/v1/search?query=" + MiscUtils.urlEncode(query))
+                .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/search?query=" + MiscUtils.urlEncode(query))
                 .addHeader("x-api-key", Settings.getInstance().getOverseerrKey())
                 .addHeader("accept", "application/json")
                 .build();
 
-        try(Response response = client.newCall(request).execute()){
-            if(!response.isSuccessful()){
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
                 throw new IOException("Unexpected response from Overseerr: " + response);
             }
 
-            return gson.fromJson(response.body().string(),MediaSearch.class);
+            return gson.fromJson(response.body().string(), MediaSearch.class);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -37,7 +37,7 @@ public class OverseerApiCaller {
         return null;
     }
 
-    public TvInfo getTvInfo(int tmdbId){
+    public TvInfo getTvInfo(int tmdbId) {
         OkHttpClient client = new OkHttpClient();
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         Request request = new Request.Builder()
@@ -45,20 +45,20 @@ public class OverseerApiCaller {
                 .addHeader("x-api-key", Settings.getInstance().getOverseerrKey())
                 .addHeader("accept", "application/json")
                 .build();
-        try(Response response = client.newCall(request).execute()){
-            if(!response.isSuccessful()){
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
                 throw new IOException("Unexpected response from Overseerr: " + response);
             }
 
             return gson.fromJson(response.body().string(), TvInfo.class);
 
-        }catch (IOException e){
+        } catch (IOException e) {
             LoggerFactory.getLogger("Plexi: Overseerr-API").error("Unable to get more info about tv show: " + tmdbId);
         }
         return null;
     }
 
-    public MovieInfo getMovieInfo(int tmdbId){
+    public MovieInfo getMovieInfo(int tmdbId) {
         OkHttpClient client = new OkHttpClient();
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         Request request = new Request.Builder()
@@ -67,74 +67,74 @@ public class OverseerApiCaller {
                 .addHeader("accept", "application/json")
                 .build();
 
-        try (Response response = client.newCall(request).execute()){
-            if(!response.isSuccessful()){
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
                 throw new IOException("Unexpected response from overseerr: " + response);
             }
             return gson.fromJson(response.body().string(), MovieInfo.class);
 
-        }catch (IOException e){
+        } catch (IOException e) {
             LoggerFactory.getLogger("Plexi: Overseerr-API").error("Unable to get more info about movie: " + tmdbId);
         }
         return null;
     }
 
-    public MediaRequests getMediaRequests(String status, String sort, String number){
+    public MediaRequests getMediaRequests(String status, String sort, String number) {
         //lets get all of our values to something that we can actually use
-        if(status == null){
+        if (status == null) {
             status = "processing";
         }
-        if(sort == null){
+        if (sort == null) {
             sort = "added";
         }
-        if(number == null){
+        if (number == null) {
             number = "20"; //this is the default for overseerr's api
         }
 
         OkHttpClient client = new OkHttpClient();
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         Request request = new Request.Builder()
-                .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/request?take=" + MiscUtils.urlEncode(number) + "&skip=0&filter=" + MiscUtils.urlEncode(status) + "&sort=" + MiscUtils.urlEncode(sort)+ "&requestedBy=1")
+                .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/request?take=" + MiscUtils.urlEncode(number) + "&skip=0&filter=" + MiscUtils.urlEncode(status) + "&sort=" + MiscUtils.urlEncode(sort) + "&requestedBy=1")
                 .addHeader("x-api-key", Settings.getInstance().getOverseerrKey())
                 .addHeader("accept", "application/json")
                 .build();
 
-        try (Response response = client.newCall(request).execute()){
-            if(!response.isSuccessful()){
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
                 throw new IOException("Unexpected response from overseerr: " + response);
             }
             String response1 = response.body().string();
             return gson.fromJson(response1, MediaRequests.class);
 
-        }catch (IOException e){
+        } catch (IOException e) {
             LoggerFactory.getLogger("Plexi: Overseerr-API").error("Unable to get requests");
         }
         return null;
     }
 
-    public long getPingTime(){
+    public long getPingTime() {
         long responseTime = -1;
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(Settings.getInstance().getOverseerrUrl()+"/api/v1/status")
+                .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/status")
                 .addHeader("accept", "application/json")
                 .build();
 
 
-        try(Response response = client.newCall(request).execute()){
-            if(response != null){
+        try (Response response = client.newCall(request).execute()) {
+            if (response != null) {
                 response.close();
                 responseTime = response.receivedResponseAtMillis() - response.sentRequestAtMillis();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             LoggerFactory.getLogger("Plexi: OverseerrApiCaller").error("Unable to communicate with Overseerr!");
         }
 
         return responseTime;
     }
 
-    public boolean requestMedia(String requestJSON){
+    public boolean requestMedia(String requestJSON) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/request")
@@ -143,13 +143,13 @@ public class OverseerApiCaller {
                 .post(RequestBody.create(requestJSON, MediaType.parse("application/json")))
                 .build();
 
-        try (Response response = client.newCall(request).execute()){
-            if(!response.isSuccessful()){
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
                 throw new IOException("Unexpected response from overseerr: " + response);
             }
             return response.isSuccessful();
 
-        }catch (IOException e){
+        } catch (IOException e) {
             LoggerFactory.getLogger("Plexi: Overseerr-API").error("Unable to request media!");
         }
         return false;

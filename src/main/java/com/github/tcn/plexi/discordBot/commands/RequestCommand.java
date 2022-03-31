@@ -15,9 +15,9 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
-public class RequestCommand extends CommandTemplate{
+public class RequestCommand extends CommandTemplate {
 
-    public RequestCommand(){
+    public RequestCommand() {
         CommandData command = new CommandData(getCommandName(), getSlashHelp());
 
         OptionData mediaType = new OptionData(OptionType.STRING, "media_type", "The type of media you are requesting", true);
@@ -25,7 +25,7 @@ public class RequestCommand extends CommandTemplate{
                 .addChoice("movie", "movie");
 
         command.addOptions(mediaType)
-            .addOption(OptionType.INTEGER, "tmdb_id", "The TMDb ID number of the media you are requesting", true);
+                .addOption(OptionType.INTEGER, "tmdb_id", "The TMDb ID number of the media you are requesting", true);
 
         registerSlashCommand(command);
 
@@ -36,26 +36,26 @@ public class RequestCommand extends CommandTemplate{
     public void executeTextCommand(User author, TextChannel channel, Message message, String content, GuildMessageReceivedEvent event) {
         int mediaId;
         boolean isMovie;
-        try{
+        try {
             String temp;
             //get the media type (should be first argument)
             temp = content.substring(0, content.indexOf(' '));
 
             //lets check the media argument to make sure that its something we recognize
-            if(temp.toLowerCase().matches("((m(ovie)?|film|feature|flick)s?)|(cine(matic)?)")){
+            if (temp.toLowerCase().matches("((m(ovie)?|film|feature|flick)s?)|(cine(matic)?)")) {
                 isMovie = true;
-            }else if(temp.toLowerCase().matches("tv|television|telly|tele|t|s|show")){
+            } else if (temp.toLowerCase().matches("tv|television|telly|tele|t|s|show")) {
                 isMovie = false;
-            }else{
+            } else {
                 throw new IllegalArgumentException("Invalid media type!");
             }
 
-            temp = content.substring(content.indexOf(' ') +1);
+            temp = content.substring(content.indexOf(' ') + 1);
             //lets also make sure that the id is just the Id and nothing else
             mediaId = Integer.parseInt(temp);
 
-        }catch (Exception e){
-            message.reply("Malformed Command, request command should be in the format `" + Settings.getInstance().getPrefix() +"request tv|movie mediaID`").queue();
+        } catch (Exception e) {
+            message.reply("Malformed Command, request command should be in the format `" + Settings.getInstance().getPrefix() + "request tv|movie mediaID`").queue();
             return;
         }
         message.reply(requestMedia(isMovie, String.valueOf(mediaId))).queue();
@@ -69,26 +69,26 @@ public class RequestCommand extends CommandTemplate{
         event.getHook().editOriginal(requestMedia(isMovie, event.getOptions().get(1).getAsString())).queue();
     }
 
-    private String requestMedia(boolean isMovie, String idNum){
+    private String requestMedia(boolean isMovie, String idNum) {
         OverseerApiCaller caller = new OverseerApiCaller();
         String mediaTitle;
         RequestTemplate.RequestBuilder request = new RequestTemplate.RequestBuilder()
                 .setMediaType(isMovie)
                 .setMediaId(Integer.parseInt(idNum));
 
-        if(isMovie){
+        if (isMovie) {
             //create the movie object so we can check to see if we should request
             MovieInfo info = caller.getMovieInfo(Integer.parseInt(idNum));
-            if(!info.allowRequests()){
+            if (!info.allowRequests()) {
                 //inform the user that we cant do that
                 return MarkdownSanitizer.escape("Cannot request " + info.getTitle() + ". Movie is either already requested or available on Plex");
             }
             //set the movie title
             mediaTitle = info.getTitle();
-        }else{//if not movie, must be tv show
+        } else {//if not movie, must be tv show
             //create tvInfo object so we can check to see if we should request
             TvInfo info = caller.getTvInfo(Integer.parseInt(idNum));
-            if(!info.allowRequests()){
+            if (!info.allowRequests()) {
                 //inform the user that we cant do that
                 return MarkdownSanitizer.escape("Cannot request " + info.getName() + ". Show is either already fully requested or fully available on Plex");
             }
@@ -100,7 +100,7 @@ public class RequestCommand extends CommandTemplate{
         //build request
         String requestJson = request.build();
         boolean success = caller.requestMedia(requestJson);
-        if(success){
+        if (success) {
             return MarkdownSanitizer.escape(mediaTitle + " was successfully added to the request list!");
         }
         return "Error requesting media!";
@@ -108,12 +108,13 @@ public class RequestCommand extends CommandTemplate{
 
     @Override
     public String getSlashHelp() {
-        return "Requests media given the TMDb id and media type";
+        return "Requests media given the TMDb id and media type.";
     }
 
     @Override
     public String getChatHelp() {
-        return "Requests media given the TMDb id and media type\nUSAGE: " + Settings.getInstance().getPrefix() + "request {tv|movie} {TMDb_ID}";
+        return "Requests media given the TMDb id and media type.\n" +
+                "USAGE: " + Settings.getInstance().getPrefix() + "request {tv|movie} {TMDb_ID}";
     }
 
     @Override

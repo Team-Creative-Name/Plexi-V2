@@ -17,7 +17,6 @@ repositories {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
     }
-    jcenter()
 }
 def mainClassName
 mainClassName = "com.github.tcn.plexi.Plexi"

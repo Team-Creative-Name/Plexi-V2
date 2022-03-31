@@ -1,4 +1,3 @@
-
 package com.github.tcn.plexi.overseerr.templates.tvInfo;
 
 
@@ -29,13 +28,11 @@ public class RelatedVideo {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public RelatedVideo() {
     }
 
     /**
-     * 
      * @param site
      * @param size
      * @param name

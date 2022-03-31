@@ -1,4 +1,3 @@
-
 package com.github.tcn.plexi.overseerr.templates.request.allRequests;
 
 
@@ -59,13 +58,11 @@ public class ModifiedBy {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public ModifiedBy() {
     }
 
     /**
-     * 
      * @param plexUsername
      * @param movieQuotaLimit
      * @param requestCount

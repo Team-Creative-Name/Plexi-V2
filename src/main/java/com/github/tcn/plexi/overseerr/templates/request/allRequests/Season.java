@@ -1,4 +1,3 @@
-
 package com.github.tcn.plexi.overseerr.templates.request.allRequests;
 
 
@@ -26,13 +25,11 @@ public class Season {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Season() {
     }
 
     /**
-     * 
      * @param createdAt
      * @param id
      * @param seasonNumber

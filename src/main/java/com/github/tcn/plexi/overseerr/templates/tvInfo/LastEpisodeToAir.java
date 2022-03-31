@@ -1,4 +1,3 @@
-
 package com.github.tcn.plexi.overseerr.templates.tvInfo;
 
 
@@ -38,13 +37,11 @@ public class LastEpisodeToAir {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public LastEpisodeToAir() {
     }
 
     /**
-     * 
      * @param overview
      * @param productionCode
      * @param voteAverage

@@ -16,11 +16,11 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class ViewRequestsCommand extends CommandTemplate{
+public class ViewRequestsCommand extends CommandTemplate {
 
     private final ButtonManager BUTTON_MANAGER;
 
-    public ViewRequestsCommand(ButtonManager buttons){
+    public ViewRequestsCommand(ButtonManager buttons) {
         BUTTON_MANAGER = buttons;
 
         //this is going to be our most complex slash command yet.
@@ -52,17 +52,16 @@ public class ViewRequestsCommand extends CommandTemplate{
     }
 
 
-
     @Override
     public void executeTextCommand(User author, TextChannel channel, Message message, String content, GuildMessageReceivedEvent event) {
         //This version of the command only supports one option
         String number = "20";
 
-        if(content.matches("^-?\\d+$")){
+        if (content.matches("^-?\\d+$")) {
             int testInt = Integer.parseInt(content);
 
             //now lets make sure that the number isnt too big
-            if( testInt < 0  || 500 < testInt){
+            if (testInt < 0 || 500 < testInt) {
                 System.out.println("Invalid number, resetting to 20");
                 number = "20";
             }
@@ -73,7 +72,7 @@ public class ViewRequestsCommand extends CommandTemplate{
         MediaRequests requests = new OverseerApiCaller().getMediaRequests("processing", "added", number);
 
         //make sure there is a result
-        if(requests.getResults().isEmpty()){
+        if (requests.getResults().isEmpty()) {
             reply(event, "Sorry, there aren't any requests matching the requested parameters.");
             return;
         }
@@ -99,8 +98,8 @@ public class ViewRequestsCommand extends CommandTemplate{
         String sort = "added";
         String number = "20";
 
-        for(OptionMapping option : event.getOptions()){
-            switch (option.getName().toLowerCase()){
+        for (OptionMapping option : event.getOptions()) {
+            switch (option.getName().toLowerCase()) {
                 case "media-type":
                     mediaType = option.getAsString();
                     break;
@@ -113,11 +112,11 @@ public class ViewRequestsCommand extends CommandTemplate{
                 case "number":
                     //lets check to make sure that it is an integer
 
-                    if(option.getAsString().matches(("^-?\\d+$"))){
+                    if (option.getAsString().matches(("^-?\\d+$"))) {
                         int testInt = Integer.parseInt(option.getAsString());
 
                         //now lets make sure that the number isnt too big
-                        if( testInt < 0  || 500 < testInt){
+                        if (testInt < 0 || 500 < testInt) {
                             System.out.println("Invalid number, resetting to 20");
                             number = "20";
                         }
@@ -131,15 +130,15 @@ public class ViewRequestsCommand extends CommandTemplate{
         MediaRequests requests = new OverseerApiCaller().getMediaRequests(status, sort, number);
 
         //make sure there is a result
-        if(requests.getResults().isEmpty()){
+        if (requests.getResults().isEmpty()) {
             event.getHook().editOriginal("Sorry, there aren't any requests matching the requested parameters.").queue();
             return;
         }
 
         //filter the media type if set to something other than all
-        if(mediaType.matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m")){
+        if (mediaType.matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m")) {
             MiscUtils.filterByType(requests, "movie");
-        }else if(mediaType.matches("tv|television|telly|tele|t")){
+        } else if (mediaType.matches("tv|television|telly|tele|t")) {
             MiscUtils.filterByType(requests, "tv");
         }
 
@@ -157,12 +156,13 @@ public class ViewRequestsCommand extends CommandTemplate{
 
     @Override
     public String getSlashHelp() {
-        return "returns all requests matching the given parameters";
+        return "Returns all requests matching the given parameters.";
     }
 
     @Override
     public String getChatHelp() {
-        return "Returns all requests in specified increments\nUSAGE: " + Settings.getInstance().getPrefix() + "[Max_Number_To_Display]";
+        return "Returns all requests in specified increments.\n" +
+                "USAGE: " + Settings.getInstance().getPrefix() + "view-requests [number_to_display]";
     }
 
     @Override

@@ -1,10 +1,9 @@
-
 package com.github.tcn.plexi.overseerr.templates.request.allRequests;
-
-import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 
 public class Request {
@@ -60,13 +59,11 @@ public class Request {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Request() {
     }
 
     /**
-     * 
      * @param seasons
      * @param rootFolder
      * @param languageProfileId
