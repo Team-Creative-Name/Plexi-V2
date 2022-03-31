@@ -1,5 +1,6 @@
 package com.github.tcn.plexi.discordBot.commands;
 
+import com.github.tcn.plexi.Settings;
 import com.github.tcn.plexi.discordBot.EmbedManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -37,7 +38,7 @@ public class HelpCommand extends CommandTemplate {
     @Override
     public String getChatHelp() {
         return "Shows this message with the version number, support info, and available commands.\n" +
-                "USAGE: /help";
+                "USAGE: " + Settings.getInstance().getPrefix() + "help";
     }
 
     @Override
