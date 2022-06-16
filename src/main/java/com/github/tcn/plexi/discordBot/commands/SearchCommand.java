@@ -48,17 +48,17 @@ public class SearchCommand extends CommandTemplate {
         String mediaName;
         if (args[0].toLowerCase().matches("tv|television|telly|tele|t") && args.length == 2) {
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + args[1] + "\" in tv");
-            results = new OverseerApiCaller().Search(args[1]);
+            results = new OverseerApiCaller().search(args[1]);
             MiscUtils.filterByType(results, "tv");
             mediaName = args[1];
         } else if (args[0].toLowerCase().matches("movie|film|feature|flick|cinematic|cine|movies|films|features|flicks|m") && args.length == 2) {
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + args[1] + "\" in movies");
-            results = new OverseerApiCaller().Search(args[1]);
+            results = new OverseerApiCaller().search(args[1]);
             MiscUtils.filterByType(results, "movie");
             mediaName = args[1];
         } else {
             LoggerFactory.getLogger("Plexi: SearchCommand").info("Searching for: \"" + content + "\" in any media type");
-            results = new OverseerApiCaller().Search(MiscUtils.urlEncode(content));
+            results = new OverseerApiCaller().search(MiscUtils.urlEncode(content));
             MiscUtils.stripActors(results);
             mediaName = content;
         }
@@ -86,7 +86,7 @@ public class SearchCommand extends CommandTemplate {
         event.deferReply().setEphemeral(false).queue();
 
         //now lets go ahead and grab the search results
-        MediaSearch results = new OverseerApiCaller().Search(event.getOptions().get(0).getAsString());
+        MediaSearch results = new OverseerApiCaller().search(event.getOptions().get(0).getAsString());
 
         //filter the search results if requested
         if (event.getOptions().size() == 2) {

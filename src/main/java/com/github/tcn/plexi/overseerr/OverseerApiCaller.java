@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class OverseerApiCaller {
 
-    public MediaSearch Search(String query) {
+    public MediaSearch search(String query) {
         OkHttpClient client = new OkHttpClient();
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         Request request = new Request.Builder()
