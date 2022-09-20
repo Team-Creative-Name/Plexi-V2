@@ -63,4 +63,8 @@ public class MiscUtils {
         //This is a bit of a hack, but it seems to cover everything that I need. (I think...)
         return URLEncoder.encode(toEncode, StandardCharsets.UTF_8).replace("+", "%20").replace("*", "%2A");
     }
+
+    public static String StringMask(String toObfuscate, int numberShown){
+        return toObfuscate.replaceAll(".(?=.{"+numberShown+"})", "X");
+    }
 }

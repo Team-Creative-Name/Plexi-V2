@@ -1,6 +1,7 @@
 package com.github.tcn.plexi;
 
 import com.github.tcn.plexi.discordBot.DiscordBot;
+import com.github.tcn.plexi.utils.MiscUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -122,7 +123,7 @@ public class Settings {
 
             //Load settings
             token = properties.getProperty("token").replaceAll("^\"|\"$", "");
-            plexiLogger.info("Bot Token: " + token);
+            plexiLogger.info("Bot Token: " + MiscUtils.StringMask(token, 10));
             ownerId = properties.getProperty("ownerID").replaceAll("^\"|\"$", "");
             plexiLogger.info("Owner ID: " + ownerId);
             prefix = properties.getProperty("prefix").replaceAll("^\"|\"$", "");
