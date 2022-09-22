@@ -1,6 +1,8 @@
 package com.github.tcn.plexi.discordBot.commands;
 
 import com.github.tcn.plexi.Settings;
+import com.github.tcn.plexi.overseerr.OverseerApiCaller;
+import com.github.tcn.plexi.overseerr.templates.users.UserPages;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -26,6 +28,10 @@ public class LinkCommand extends CommandTemplate{
     @Override
     public void executeSlashCommand(SlashCommandEvent event) {
         reply(event, "sup", false);
+        OverseerApiCaller caller = new OverseerApiCaller();
+        UserPages Users = caller.getOverseerrUsers();
+
+        System.out.println("BREAK HERE");
     }
 
     @Override

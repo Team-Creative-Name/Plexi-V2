@@ -5,6 +5,8 @@ import com.github.tcn.plexi.overseerr.templates.movieInfo.MovieInfo;
 import com.github.tcn.plexi.overseerr.templates.request.allRequests.MediaRequests;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
+import com.github.tcn.plexi.overseerr.templates.users.Result;
+import com.github.tcn.plexi.overseerr.templates.users.UserPages;
 import com.github.tcn.plexi.utils.MiscUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,6 +14,7 @@ import okhttp3.*;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 public class OverseerApiCaller {
 
@@ -153,5 +156,36 @@ public class OverseerApiCaller {
             LoggerFactory.getLogger("Plexi: Overseerr-API").error("Unable to request media!");
         }
         return false;
+    }
+
+    //The Overseerr API returns pages of users instead of a json with everyone. We'll need everyone so we'll get them all
+        //before passing it somewhere.
+    public List<Result> getOverseerrUsers(){
+        OkHttpClient client = new OkHttpClient();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
+        Request request = new Request.Builder()
+                .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/user")
+                .addHeader("accept", "application/json")
+                .addHeader("x-api-key", Settings.getInstance().getOverseerrKey())
+                .build();
+
+        try(Response response = client.newCall(request).execute()){
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected response from overseerr: " + response);
+            }
+            String response1 = response.body().string();
+
+            //
+            return gson.fromJson(response1, UserPages.class).getResults();
+        }catch (Exception e){
+            LoggerFactory.getLogger("Plexi: Overseerr-API").error("Unable to get the list of Overseerr Users!");
+        }
+        return null;
+    }
+
+    public Result getOverseerrUserPage(int skip){
+        //TODO Handle large numbers of users
+        return null;
     }
 }

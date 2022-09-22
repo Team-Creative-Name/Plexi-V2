@@ -67,4 +67,64 @@ public class MiscUtils {
     public static String StringMask(String toObfuscate, int numberShown){
         return toObfuscate.replaceAll(".(?=.{"+numberShown+"})", "X");
     }
+
+    public static String OverseerrPermIntDecypherer(int permInt){
+        switch (permInt){
+            case 0:
+                return "No Permissions Given to User";
+            case 2:
+                return "Administrator";
+            case 8:
+                return "User Manager";
+            case 16:
+                return "Request Manager";
+            case 32:
+                return "Able to Request All Media";
+            case 64:
+                return "Able to Vote on Media";
+            case 128:
+                return "Auto Approve All Requests";
+            case 256:
+                return "Auto Approve Movie Requests";
+            case 512:
+                return "Auto Approve TV Requests";
+            case 1024:
+                return "Request 4K Media";
+            case 2048:
+                return "Request 4K Movies";
+            case 4096:
+                return "Request 4K Television";
+            case 8192:
+                return "Request Advanced Media Options";
+            case 16384:
+                return "View Requested Media";
+            case 32768:
+                return "Auto Approve 4K Requests";
+            case 65536:
+                return "Auto Approve 4K Movie Requests";
+            case 131072:
+                return "Auto Approve 4K TV Requests";
+            case 262144:
+                return "Request Movies";
+            case 524288:
+                return "Request TV";
+            case 1048576:
+                return "Manage Issues";
+            case 2097152:
+                return "View Issues";
+            case 4194304:
+                return "Create Issues";
+            case 8388608:
+                return "Auto Request Media";
+            case 16777216:
+                return "Auto Request Movies";
+            case 33554432:
+                return "Auto Request TV";
+            case 67108864:
+                return "View Recently Watched Media";
+            case 134217728:
+                return "View Watchlists";
+        }
+        return "Unable to decipher permission integer.";
+    }
 }
