@@ -29,6 +29,7 @@ dependencies {
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
     // Trove Collections
     implementation group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
+    implementation 'org.xerial:sqlite-jdbc:3.39.3.0'
 }
 
 task versionText(){
