@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class OverseerApiCaller {
 
@@ -165,7 +166,7 @@ public class OverseerApiCaller {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
         Request request = new Request.Builder()
-                .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/user")
+                .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/user?take=2&sort=created")
                 .addHeader("accept", "application/json")
                 .addHeader("x-api-key", Settings.getInstance().getOverseerrKey())
                 .build();
@@ -174,18 +175,43 @@ public class OverseerApiCaller {
             if (!response.isSuccessful()) {
                 throw new IOException("Unexpected response from overseerr: " + response);
             }
-            String response1 = response.body().string();
+            //String response1 = response.body().string();
+            UserPages users = gson.fromJson(response.body().string(), UserPages.class);
 
-            //
-            return gson.fromJson(response1, UserPages.class).getResults();
+            //check to see if there are more pages than this one
+            if(!Objects.equals(users.getPageInfo().getPages(), users.getPageInfo().getPage())){
+                users.getResults().addAll(getOverseerrUserPage(50, client, gson));
+            }
+
+
+            return users.getResults();
         }catch (Exception e){
             LoggerFactory.getLogger("Plexi: Overseerr-API").error("Unable to get the list of Overseerr Users!");
         }
         return null;
     }
 
-    public Result getOverseerrUserPage(int skip){
-        //TODO Handle large numbers of users
-        return null;
+    private List<Result> getOverseerrUserPage(int skip, OkHttpClient client, Gson gson){
+        Request request = new Request.Builder()
+                .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/user?take=2&skip=" + skip + "&sort=created")
+                .addHeader("accept", "application/json")
+                .addHeader("x-api-key", Settings.getInstance().getOverseerrKey())
+                .build();
+
+
+        try(Response response = client.newCall(request).execute()){
+            if(!response.isSuccessful()){
+                throw  new IOException("Unexpected response from overseerr: \" + response");
+            }
+
+            UserPages users = gson.fromJson(response.body().string(), UserPages.class);
+
+            if(!Objects.equals(users.getPageInfo().getPages(), users.getPageInfo().getPage())){
+                users.getResults().addAll(getOverseerrUserPage((2*users.getPageInfo().getPage()), client, gson));
+            }
+            return users.getResults();
+        }catch (Exception e){
+         throw new UnknownError();
+        }
     }
 }
