@@ -8,6 +8,8 @@ import com.github.tcn.plexi.overseerr.templates.request.allRequests.Request;
 import com.github.tcn.plexi.overseerr.templates.search.MediaSearch;
 import com.github.tcn.plexi.overseerr.templates.search.Result;
 import com.github.tcn.plexi.overseerr.templates.tvInfo.TvInfo;
+import com.github.tcn.plexi.overseerr.templates.users.UserResult;
+import com.github.tcn.plexi.utils.MiscUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
@@ -175,6 +177,17 @@ public class EmbedManager {
         return eb;
     }
 
+    public EmbedBuilder createUserEmbed(UserResult user){
+        EmbedBuilder eb = new EmbedBuilder()
+                .setColor(new Color(0x00Ae86))
+                .setThumbnail(user.getAvatar())
+                .setTitle(user.getDisplayName())
+                .addField("Email Address: ", stringVerifier(user.getEmail(),8), true)
+                .addField("Permission level", MiscUtils.overseerrPermIntDecypherer(user.getPermissions()), true);
+
+        return eb;
+    }
+
     //in this new implementation, the function automatically determines the size of the splash file
     private String getRandomSplash(){
         List<String> splashList= Settings.getInstance().getSplashList();
@@ -189,6 +202,7 @@ public class EmbedManager {
 
         return "Error loading spashes!";
     }
+
 
 
     //Methods that clean up information

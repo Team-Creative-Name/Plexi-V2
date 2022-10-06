@@ -68,7 +68,7 @@ public class MiscUtils {
         return toObfuscate.replaceAll(".(?=.{"+numberShown+"})", "X");
     }
 
-    public static String OverseerrPermIntDecypherer(int permInt){
+    public static String overseerrPermIntDecypherer(int permInt){
         switch (permInt){
             case 0:
                 return "No Permissions Given to User";

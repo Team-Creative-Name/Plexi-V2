@@ -12,7 +12,7 @@ public class UserPages {
     private PageInfo pageInfo;
     @SerializedName("results")
     @Expose
-    private List<Result> results = null;
+    private List<UserResult> results = null;
 
     public PageInfo getPageInfo() {
         return pageInfo;
@@ -22,11 +22,11 @@ public class UserPages {
         this.pageInfo = pageInfo;
     }
 
-    public List<Result> getResults() {
+    public List<UserResult> getResults() {
         return results;
     }
 
-    public void setResults(List<Result> results) {
+    public void setResults(List<UserResult> results) {
         this.results = results;
     }
 
