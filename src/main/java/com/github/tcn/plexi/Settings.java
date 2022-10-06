@@ -2,7 +2,7 @@ package com.github.tcn.plexi;
 
 import com.github.tcn.plexi.discordBot.DiscordBot;
 import com.github.tcn.plexi.overseerr.OverseerApiCaller;
-import com.github.tcn.plexi.overseerr.templates.users.Result;
+import com.github.tcn.plexi.overseerr.templates.users.UserResult;
 import com.github.tcn.plexi.utils.MiscUtils;
 import com.github.tcn.plexi.utils.database.template.User;
 import okhttp3.OkHttpClient;
@@ -96,11 +96,6 @@ public class Settings {
      */
     //attempt to set all of the global variables
     private void initVariables() {
-
-        OverseerApiCaller caller = new OverseerApiCaller();
-        List<Result> user = caller.getOverseerrUsers();
-        System.out.println("HAHAHAHHDHSJAKFHKDJLSA");
-
 
         try {
             //first attempt to get the resource path and jar path

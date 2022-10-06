@@ -192,7 +192,7 @@ public class OverseerApiCaller {
         return null;
     }
 
-    private List<Result> getOverseerrUserPage(int skip, OkHttpClient client, Gson gson){
+    private List<UserResult> getOverseerrUserPage(int skip, OkHttpClient client, Gson gson){
         Request request = new Request.Builder()
                 .url(Settings.getInstance().getOverseerrUrl() + "/api/v1/user?take=2&skip=" + skip + "&sort=created")
                 .addHeader("accept", "application/json")
