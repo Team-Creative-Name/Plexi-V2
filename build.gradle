@@ -22,7 +22,7 @@ def mainClassName
 mainClassName = "com.github.tcn.plexi.Plexi"
 dependencies {
     compile group: 'junit', name: 'junit', version: '4.13.2'
-    compile 'com.google.code.gson:gson:2.9.0'
+    compile 'com.google.code.gson:gson:2.10'
     compile 'net.dv8tion:JDA:4.4.0_352'
     compile 'com.squareup.okhttp3:okhttp:4.9.3'
     compile 'com.typesafe:config:1.4.2'
